@@ -14,10 +14,11 @@
 .wb-graph-link{color:#6f8a66}
 .wb-graph-link:hover{background:#eef5ea;color:var(--green)}
 
-.wb-studio{display:grid;grid-template-columns:minmax(420px,.9fr) minmax(520px,1.1fr);grid-template-areas:"problem code" "problem coach" "problem reflect" "foot foot";gap:18px;align-items:start}
+.wb-studio{display:grid;grid-template-columns:minmax(420px,.9fr) minmax(520px,1.1fr);grid-template-areas:"problem code" "problem approach" "problem coach" "problem reflect" "foot foot";gap:18px;align-items:start}
 .wb-problem{grid-area:problem;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;scrollbar-gutter:stable}
 .wb-problem>.wb-card-head{position:sticky;top:0;z-index:2;background:#fff;box-shadow:0 5px 10px -12px #203f3266}
 .wb-studio .wb-code-panel{grid-area:code}
+.wb-approach{grid-area:approach}
 .wb-reflect{grid-area:reflect}
 .wb-foot{grid-area:foot}
 .wb-coach-col{grid-area:coach;align-self:stretch;min-width:0}
@@ -124,7 +125,7 @@
 .wb-studio .wb-bottom .text-button,.wb-studio .wb-versions summary{font-size:12px}
 
 @media(max-width:1220px){
-  .wb-studio{grid-template-columns:minmax(0,1fr);grid-template-areas:"problem" "code" "coach" "reflect" "foot"}
+  .wb-studio{grid-template-columns:minmax(0,1fr);grid-template-areas:"problem" "code" "approach" "coach" "reflect" "foot"}
   .wb-problem{position:static;max-height:none;overflow:visible}
   .wb-coach-col .coach-panel{position:static;height:auto;min-height:0;max-height:none}
   .wb-studio .coach-log{max-height:440px}

@@ -74,6 +74,8 @@ def main():
                 problem_box=page.locator(".wb-problem").bounding_box()
                 code_box=page.locator(".wb-code-panel").bounding_box()
                 assert problem_box and code_box and code_box["x"] > problem_box["x"] and abs(code_box["y"] - problem_box["y"]) < 80
+                approach_box=page.locator(".wb-approach").bounding_box()
+                assert approach_box and approach_box["x"] >= code_box["x"] and approach_box["y"] > code_box["y"]
                 page.screenshot(path=str(ROOT/"artifacts/learning-workbench.png"),full_page=True)
                 assert path.read_bytes()==before
                 expect(page.get_by_role("button",name="开始计时",exact=True)).to_be_visible()
