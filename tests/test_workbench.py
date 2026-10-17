@@ -116,6 +116,15 @@ class WorkbenchTests(unittest.TestCase):
         self.assertEqual(self.state_path.read_bytes(),original)
         self.assertTrue((self.root/"solutions/lc42"/(run["run_id"]+".py")).exists())
 
+    def test_workbench_description_contains_readable_problem_statement(self):
+        data=self.store.describe(self.state,"42")
+        statement=data["statement"]
+        self.assertIn("下雨后",statement["text"])
+        self.assertEqual(len(statement["constraints"]),2)
+        self.assertEqual(len(statement["examples"]),4)
+        self.assertTrue(statement["url"].endswith("trapping-rain-water/"))
+        self.assertEqual(statement["method"],"trap(height)")
+
     def test_complete_uses_verified_run_and_saves_review_metadata(self):
         run=self.store.run(self.payload,TODAY)
         result=self.store.complete(self.state,{**self.payload,"run_id":run["run_id"],"result":"independent"},TODAY)

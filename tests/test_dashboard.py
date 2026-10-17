@@ -51,6 +51,10 @@ class DashboardTests(unittest.TestCase):
         self.assertTrue(all(r["recorded"] for r in data["plan"]["tasks"]))
         for asset in ("/", "/app.js", "/style.css", "/graph.js", "/graph.css", "/workbench.js", "/workbench.css", "/favicon.svg", "/api/log", "/api/export", "/api/health", "/api/workbench?id=42"):
             self.assertEqual(self.request(asset)[0], 200)
+        status, problem = self.request("/api/problem?id=42")
+        self.assertEqual(status, 200)
+        self.assertIn("下雨后", problem["statement"]["text"])
+        self.assertEqual(len(problem["statement"]["examples"]), 4)
         self.assertEqual(self.state.read_bytes(), self.original)
         self.assertEqual(self.log.read_bytes(), self.original_log)
 

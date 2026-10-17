@@ -64,6 +64,11 @@ def main():
                 page.locator('[data-node="problem:42"] .graph-node-circle').click()
                 page.get_by_role("button",name="开始本题练习",exact=True).click()
                 expect(page.get_by_label("Python 代码",exact=True)).to_have_value(solution_start := "class Solution:\n    def trap(self, height):\n        # 先说明变量含义，再完成你的实现\n        pass\n")
+                expect(page.locator("[data-problem-statement]")).to_be_visible()
+                expect(page.locator("[data-problem-statement]")).to_contain_text("下雨后")
+                expect(page.locator("[data-problem-statement]")).to_contain_text("约束条件")
+                expect(page.locator("[data-problem-statement]")).to_contain_text("示例 1")
+                expect(page.locator(".wb-statement-link")).to_have_attribute("href", "https://leetcode.cn/problems/trapping-rain-water/")
                 page.screenshot(path=str(ROOT/"artifacts/learning-workbench.png"),full_page=True)
                 assert path.read_bytes()==before
                 expect(page.get_by_role("button",name="开始计时",exact=True)).to_be_visible()

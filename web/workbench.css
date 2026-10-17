@@ -40,6 +40,27 @@
 .wb-studio label{font-size:12px;color:#56704b}
 .wb-studio .form-row{gap:14px}
 .wb-studio .wb-description{font-size:13.5px;line-height:1.95;color:#4f6247;margin-bottom:12px}
+.wb-statement{margin:0 0 17px;padding:16px 17px 14px;background:linear-gradient(135deg,#f5faf1,#fbfdf9 72%);border:1px solid #dfead9;border-radius:14px;box-shadow:inset 3px 0 0 #8fc18a}
+.wb-statement-lead{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start}
+.wb-statement-label{display:inline-flex;align-items:center;white-space:nowrap;padding:5px 8px;border-radius:7px;background:#e2f1dc;color:#477346;font-size:10px;font-weight:650;letter-spacing:.3px}
+.wb-statement-lead p{margin:1px 0 0;color:#40593c;font-size:13.5px;line-height:1.9}
+.wb-statement-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:14px;margin-top:15px}
+.wb-statement-block{min-width:0;padding-top:12px;border-top:1px solid #e1eadc}
+.wb-statement-block h3{margin:0 0 8px;color:#6a8061;font-size:10px;font-weight:650;letter-spacing:.6px}
+.wb-statement-block ul{margin:0;padding-left:18px;color:#71836b;font-size:11px;line-height:1.8}
+.wb-statement-block li{padding-left:2px}
+.wb-examples{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.wb-examples h3{grid-column:1/-1;margin-bottom:0}
+.wb-example{min-width:0;padding:9px 10px;border:1px solid #e5ecdf;border-radius:9px;background:#fff}
+.wb-example-title{margin-bottom:6px;color:#66845f;font-size:10px;font-weight:650}
+.wb-example dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 7px;align-items:start}
+.wb-example dt{color:#a0ac99;font-size:9px;line-height:1.65}
+.wb-example dd{min-width:0;margin:0;color:#53694d;font-size:10px;line-height:1.65;overflow-wrap:anywhere}
+.wb-example code{font:10px/1.65 Consolas,"Microsoft YaHei",monospace;color:#587451;white-space:pre-wrap;overflow-wrap:anywhere}
+.wb-example-note{grid-column:1/-1;color:#8a9881!important}
+.wb-statement-link{display:inline-flex;align-items:center;gap:5px;margin-top:13px;color:#5a8960;font-size:10px;text-decoration:none}
+.wb-statement-link:hover{text-decoration:underline;color:#3f7149}
+.wb-statement-link svg{width:13px;height:13px}
 .wb-studio .wb-contract{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:11.5px;color:#7d8c75;margin-bottom:12px}
 .wb-studio .wb-contract span{color:#a0aa93;font-size:11px}
 .wb-cases{border:1px solid #e6ece0;border-radius:11px;padding:0 13px;margin-bottom:16px;background:#fbfcf9}
@@ -87,6 +108,9 @@
 }
 @media(max-width:680px){
   .wb-think{grid-template-columns:1fr}
+  .wb-statement-lead{grid-template-columns:1fr;gap:8px}
+  .wb-statement-grid{grid-template-columns:1fr}
+  .wb-examples{grid-template-columns:1fr}
   .wb-card-head{padding:17px 16px 12px}
   .wb-studio .panel-body{padding:0 16px 18px}
   .wb-results{padding:14px 16px 18px}

@@ -15,9 +15,9 @@ from urllib.parse import parse_qs, urlsplit
 from urllib.request import Request, urlopen
 
 try:
-    from . import assistant, coach, coach_ai, insights, knowledge, learner, workbench
+    from . import assistant, catalog, coach, coach_ai, insights, knowledge, learner, problem_bank, statements, workbench
 except ImportError:
-    import assistant, coach, coach_ai, insights, knowledge, learner, workbench
+    import assistant, catalog, coach, coach_ai, insights, knowledge, learner, problem_bank, statements, workbench
 
 ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / "web"
@@ -175,6 +175,13 @@ def make_server(state_path, log_path, port=8765, fixed_date=None):
                 elif url.path == "/api/workbench":
                     pid = parse_qs(url.query).get("id", [""])[0]
                     self.send_json(200, workspace.describe(coach.load(state_path), pid))
+                elif url.path == "/api/problem":
+                    # 题面：今日计划、口述复习、推荐和图谱里点题名时查看，只读。
+                    pid = coach.problem_id(parse_qs(url.query).get("id", [""])[0])
+                    row = coach.problem(coach.load(state_path), pid)
+                    row["difficulty"] = (catalog.CATALOG.get(pid) or {}).get("difficulty", "")
+                    self.send_json(200, {"problem": row, "statement": statements.view(pid, problem_bank.get_exercise(pid)),
+                                         "workbench": pid in problem_bank.BANK})
                 elif url.path == "/api/coach/settings":
                     self.send_json(200, coach_ai.load_settings(state_path.parent))
                 elif url.path == "/api/workbench/agent":

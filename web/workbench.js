@@ -197,15 +197,28 @@ window.AlgoWorkbench = (() => {
     }
 
     function formMarkup() {
-      const exercise=info.exercise, row=info.problem;
+      const exercise=info.exercise, row=info.problem, statement=info.statement || {};
       const statusText={learned:"已掌握",learning:"待间隔验证",needs_review:"需要巩固",needs_calibration:"历史状态待校准",new:"待学习"}[row.status] || row.status;
       const step=(n,eyebrow,title,extra="")=>`<div class="wb-card-head"><span class="wb-step" aria-hidden="true">${n}</span><div class="wb-card-title"><span class="eyebrow">${eyebrow}</span><h2>${title}</h2>${extra}</div>`;
+      const statementText=statement.text || exercise?.description || "这道题尚未配置题面，可以先让聊天教练说明题意。";
+      const constraints=statement.constraints || [];
+      const paramNotes=statement.param_notes || [];
+      const examples=statement.examples || [];
+      const statementBody=`<div class="wb-statement" data-problem-statement>
+          <div class="wb-statement-lead"><span class="wb-statement-label">题目要求</span><p>${esc(statementText)}</p></div>
+          <div class="wb-statement-grid">
+            ${constraints.length ? `<section class="wb-statement-block"><h3>约束条件</h3><ul>${constraints.map(item=>`<li>${esc(item)}</li>`).join("")}</ul></section>` : ""}
+            ${paramNotes.length ? `<section class="wb-statement-block"><h3>参数说明</h3><ul>${paramNotes.map(item=>`<li>${esc(item)}</li>`).join("")}</ul></section>` : ""}
+            ${examples.length ? `<section class="wb-statement-block wb-examples"><h3>示例</h3>${examples.map((example,index)=>`<article class="wb-example"><div class="wb-example-title">示例 ${index+1}</div><dl><dt>输入</dt><dd><code>${esc(example.input)}</code></dd><dt>输出</dt><dd><code>${esc(example.output)}</code></dd>${example.note ? `<dd class="wb-example-note">${esc(example.note)}</dd>` : ""}</dl></article>`).join("")}</section>` : ""}
+          </div>
+          ${statement.url ? `<a class="wb-statement-link" href="${esc(statement.url)}" target="_blank" rel="noreferrer">${icon("arrow")}查看力扣原题（完整描述以原题为准）</a>` : ""}
+        </div>`;
       // 主栏按“理清问题 → 写代码验证 → 复盘”自上而下；教练固定在右栏，窄屏时排到代码之后。
       return `<div id="wb-conflict" class="notice" hidden><div><p>本机有尚未同步的草稿，磁盘版本也已变化。请选择保留哪一份。</p><div class="wb-conflict-actions"><button class="button secondary" data-wb="use-local">保留本机草稿</button><button class="button secondary" data-wb="use-remote">使用磁盘草稿</button></div></div></div><p id="wb-error" class="wb-error" role="alert"></p>
       <div class="wb-studio">
         <section class="panel wb-problem">${step(1,"理清问题",`LC${esc(id)} · ${esc(row.title)}`,`<p class="wb-meta"><span>${esc(row.topic)}</span><span class="wb-status status-${esc(row.status)}">${esc(statusText)}</span>${info.patterns.map(p=>`<span class="badge neutral">${esc(p.title)}</span>`).join("")}</p>`)}</div>
           <div class="panel-body">
-            <p class="wb-description">${esc(exercise?.description || "这道题尚未配置本地题意和用例，可以先让聊天教练检查。")}</p>
+            ${statementBody}
             ${exercise?`<p class="wb-contract">方法 <code>Solution.${esc(exercise.method)}(${esc(exercise.params.join(", "))})</code><span>输入参数按顺序填写，已提供 ListNode、TreeNode、List 和 Optional。</span></p><details class="wb-cases"><summary>${icon("layers")}本地基础用例 · ${exercise.cases.length} 组</summary><div class="wb-default-cases">${exercise.cases.map(c=>`<details><summary>${esc(c.name)}</summary><pre>${esc(JSON.stringify({args:c.args,expected:c.expected},null,2))}</pre></details>`).join("")}</div></details>`:""}
             <div class="wb-think"><label>我的核心思路<textarea data-wb-field="idea" rows="3" maxlength="2000" placeholder="先用自己的话解释：题型、关键变量各代表什么。"></textarea></label><label>一个边界情况<textarea data-wb-field="boundary" rows="3" maxlength="2000" placeholder="最小输入、重复值、空节点或指针相遇时会怎样？"></textarea></label></div>
             <div class="wb-hintbar"><div class="wb-hintbar-row"><span class="wb-hintbar-title">${icon("bulb")}卡住了？逐层提示</span><div class="wb-hint-buttons">${[1,2,3].map(n=>`<button class="button secondary" data-wb="hint" data-level="${n}">提示 ${n}</button>`).join("")}</div><button class="text-button" data-action="coach" data-id="${esc(id)}">聊天教练 ${icon("arrow")}</button></div><p id="wb-hint-note" class="form-hint"></p><div id="wb-hints"></div></div>

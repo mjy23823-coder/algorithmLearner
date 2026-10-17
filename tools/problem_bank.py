@@ -2,9 +2,10 @@
 from copy import deepcopy
 
 try:
-    from . import catalog
+    from . import catalog, statements
 except ImportError:
     import catalog
+    import statements
 
 
 def case(args, expected, name=""):
@@ -108,6 +109,9 @@ def get_exercise(pid):
     if pid not in BANK:
         return None
     value = deepcopy(BANK[pid])
+    # description 用完整题意（页面、教练和智能体都读它），原来的一句话简述保留在 summary。
+    value["summary"] = value["description"]
+    value["description"] = statements.text(pid) or value["description"]
     args = ", ".join(value["params"])
     value["starter"] = f"class Solution:\n    def {value['method']}(self, {args}):\n        # 先说明变量含义，再完成你的实现\n        pass\n"
     value["hints"] = ["先用自己的话解释输入和输出，再判断属于哪种题型。",

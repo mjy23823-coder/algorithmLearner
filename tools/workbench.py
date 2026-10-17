@@ -9,9 +9,9 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 
 try:
-    from . import agent, coach, coach_ai, knowledge, learner, problem_bank, code_runner
+    from . import agent, coach, coach_ai, knowledge, learner, problem_bank, code_runner, statements
 except ImportError:
-    import agent, coach, coach_ai, knowledge, learner, problem_bank, code_runner
+    import agent, coach, coach_ai, knowledge, learner, problem_bank, code_runner, statements
 
 DRAFT_FIELDS = ("code", "idea", "time_complexity", "space_complexity", "boundary", "takeaway", "recognition", "followup")
 MOCK_DIMENSIONS = {"recognition": "题型识别", "communication": "沟通表达", "code": "代码正确性",
@@ -161,6 +161,7 @@ class Workbench:
         # 模板列表只依据项目题解规则，与状态无关；未做过的题也能看到。
         patterns = [p for p in knowledge.PATTERNS if pid in p["problem_ids"]]
         return {"problem": coach.problem(state, pid), "exercise": exercise, "draft": draft, "versions": versions,
+                "statement": statements.view(pid, exercise),
                 "patterns": patterns, "history": history, "server_now": utc_now().isoformat(),
                 "coach": {**coach_ai.load_settings(self.root),
                           "transcript": coach_ai.read_transcript(self.root, pid, draft.get("session_id")),
