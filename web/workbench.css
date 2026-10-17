@@ -14,8 +14,9 @@
 .wb-graph-link{color:#6f8a66}
 .wb-graph-link:hover{background:#eef5ea;color:var(--green)}
 
-.wb-studio{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,400px);grid-template-areas:"problem coach" "code coach" "reflect coach" "foot coach";gap:18px;align-items:start}
-.wb-problem{grid-area:problem}
+.wb-studio{display:grid;grid-template-columns:minmax(420px,.9fr) minmax(520px,1.1fr);grid-template-areas:"problem code" "problem coach" "problem reflect" "foot foot";gap:18px;align-items:start}
+.wb-problem{grid-area:problem;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;scrollbar-gutter:stable}
+.wb-problem>.wb-card-head{position:sticky;top:0;z-index:2;background:#fff;box-shadow:0 5px 10px -12px #203f3266}
 .wb-studio .wb-code-panel{grid-area:code}
 .wb-reflect{grid-area:reflect}
 .wb-foot{grid-area:foot}
@@ -44,7 +45,7 @@
 .wb-statement-lead{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start}
 .wb-statement-label{display:inline-flex;align-items:center;white-space:nowrap;padding:5px 8px;border-radius:7px;background:#e2f1dc;color:#477346;font-size:10px;font-weight:650;letter-spacing:.3px}
 .wb-statement-lead p{margin:1px 0 0;color:#40593c;font-size:13.5px;line-height:1.9}
-.wb-statement-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:14px;margin-top:15px}
+.wb-statement-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:15px}
 .wb-statement-block{min-width:0;padding-top:12px;border-top:1px solid #e1eadc}
 .wb-statement-block h3{margin:0 0 8px;color:#6a8061;font-size:10px;font-weight:650;letter-spacing:.6px}
 .wb-statement-block ul{margin:0;padding-left:18px;color:#71836b;font-size:11px;line-height:1.8}
@@ -122,8 +123,9 @@
 .wb-studio .wb-bottom{font-size:11px}
 .wb-studio .wb-bottom .text-button,.wb-studio .wb-versions summary{font-size:12px}
 
-@media(max-width:1180px){
+@media(max-width:1220px){
   .wb-studio{grid-template-columns:minmax(0,1fr);grid-template-areas:"problem" "code" "coach" "reflect" "foot"}
+  .wb-problem{position:static;max-height:none;overflow:visible}
   .wb-coach-col .coach-panel{position:static;height:auto;min-height:0;max-height:none}
   .wb-studio .coach-log{max-height:440px}
 }
