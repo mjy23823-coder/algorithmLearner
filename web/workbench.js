@@ -7,6 +7,70 @@ window.AlgoWorkbench = (() => {
   const fields = ["code", "idea", "time_complexity", "space_complexity", "boundary", "takeaway"];
   function choose(id) { if (/^[1-9]\d{0,5}$/.test(String(id))) {selected = String(id);try{localStorage.setItem("algorithm-workbench-selected",selected);}catch{}} }
   function cached(id) { try { return JSON.parse(localStorage.getItem(CACHE+id) || "null"); } catch { return null; } }
+
+  function figureBars(figure, esc) {
+    const values = Array.isArray(figure.value) ? figure.value.map(Number).filter(Number.isFinite) : [];
+    if (!values.length) return "";
+    const width = 520, height = 190, left = 32, right = 12, top = 16, bottom = 30, base = height - bottom;
+    const leftMax = [], rightMax = [];
+    let maxLeft = 0, maxRight = 0;
+    values.forEach((value, index) => { maxLeft = Math.max(maxLeft, value); leftMax[index] = maxLeft; });
+    values.slice().reverse().forEach((value, reverseIndex) => { maxRight = Math.max(maxRight, value); rightMax[values.length - 1 - reverseIndex] = maxRight; });
+    const waterLevels = values.map((value, index) => Math.max(0, Math.min(leftMax[index], rightMax[index]) - value));
+    const maxLevel = Math.max(1, ...values, ...values.map((value, index) => value + waterLevels[index]));
+    const unit = (base - top) / maxLevel, slot = (width - left - right) / values.length, barWidth = Math.max(3, slot - 3);
+    const x = index => left + index * slot + (slot - barWidth) / 2;
+    const y = value => base - value * unit;
+    const bars = values.map((value, index) => {
+      const water = figure.water && waterLevels[index] > 0 ? `<rect class="wb-bar-water" x="${x(index).toFixed(1)}" y="${y(value + waterLevels[index]).toFixed(1)}" width="${barWidth.toFixed(1)}" height="${(waterLevels[index] * unit).toFixed(1)}" rx="1"/>` : "";
+      const barHeight = Math.max(0, value * unit);
+      return `${water}<rect class="wb-bar-solid" x="${x(index).toFixed(1)}" y="${y(value).toFixed(1)}" width="${barWidth.toFixed(1)}" height="${barHeight.toFixed(1)}" rx="1"/><text class="wb-visual-index" x="${(x(index) + barWidth / 2).toFixed(1)}" y="${height - 10}" text-anchor="middle">${index}</text>`;
+    }).join("");
+    const marks = [0, maxLevel].map(value => `<text class="wb-visual-scale" x="${left - 8}" y="${(y(value) + 4).toFixed(1)}" text-anchor="end">${value}</text>`).join("");
+    return `<div class="wb-visual wb-visual-bars"><div class="wb-visual-caption">${esc(figure.label || "数组")} · 柱状图${figure.water ? `<span class="wb-visual-legend"><i></i>积水</span>` : ""}</div><svg data-visual="bars" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(figure.label || "数组")}柱状图"><title>${esc(figure.label || "数组")}柱状图${figure.water ? "，蓝色区域表示积水" : ""}</title><path class="wb-visual-axis" d="M${left} ${top}V${base}H${width - right}"/>${marks}${bars}</svg></div>`;
+  }
+
+  function figureTree(figure, esc) {
+    const values = Array.isArray(figure.value) ? figure.value : [];
+    if (!values.some(value => value !== null && value !== undefined)) return "";
+    const nodes = [], byIndex = new Map(); let order = 0, maxDepth = 0;
+    function visit(index, depth) {
+      if (index >= values.length || values[index] === null || values[index] === undefined) return;
+      const node = {index, depth, order: order++, value: values[index]};
+      nodes.push(node); byIndex.set(index, node); maxDepth = Math.max(maxDepth, depth);
+      visit(index * 2 + 1, depth + 1); visit(index * 2 + 2, depth + 1);
+    }
+    visit(0, 0);
+    const width = Math.max(360, Math.min(720, nodes.length * 68)), height = Math.max(110, 58 + maxDepth * 58);
+    const step = width / (nodes.length + 1);
+    nodes.forEach(node => { node.x = step * (node.order + 1); node.y = 28 + node.depth * 54; });
+    const edges = nodes.map(node => {
+      const parent = byIndex.get(Math.floor((node.index - 1) / 2));
+      return parent ? `<line class="wb-tree-edge" x1="${parent.x.toFixed(1)}" y1="${(parent.y + 16).toFixed(1)}" x2="${node.x.toFixed(1)}" y2="${(node.y - 16).toFixed(1)}"/>` : "";
+    }).join("");
+    const circles = nodes.map(node => `<g class="wb-tree-node"><circle cx="${node.x.toFixed(1)}" cy="${node.y.toFixed(1)}" r="16"/><text x="${node.x.toFixed(1)}" y="${(node.y + 4).toFixed(1)}" text-anchor="middle">${esc(node.value)}</text></g>`).join("");
+    return `<div class="wb-visual wb-visual-tree"><div class="wb-visual-caption">${esc(figure.label || "树")} · 节点关系图</div><svg data-visual="tree" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(figure.label || "二叉树")}节点关系图"><title>${esc(figure.label || "二叉树")}节点关系图</title>${edges}${circles}</svg></div>`;
+  }
+
+  function figureList(figure, esc) {
+    const values = Array.isArray(figure.value) ? figure.value : [];
+    const width = Math.max(250, values.length * 68 + 34), height = 92, center = 42;
+    if (!values.length) return `<div class="wb-visual wb-visual-list"><div class="wb-visual-caption">${esc(figure.label || "链表")}</div><div class="wb-list-empty">空链表</div></div>`;
+    const nodes = values.map((value, index) => {
+      const x = 17 + index * 68;
+      const next = index < values.length - 1 ? `<line class="wb-list-arrow" x1="${x + 42}" y1="${center}" x2="${x + 61}" y2="${center}"/><path class="wb-list-arrow-head" d="M${x + 56} ${center - 5}l6 5-6 5"/>` : "";
+      return `${next}<rect class="wb-list-node" x="${x}" y="${center - 17}" width="42" height="34" rx="8"/><text x="${x + 21}" y="${center + 4}" text-anchor="middle">${esc(value)}</text>`;
+    }).join("");
+    return `<div class="wb-visual wb-visual-list"><div class="wb-visual-caption">${esc(figure.label || "链表")} · 指针方向</div><svg data-visual="list" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(figure.label || "链表")}节点和指针方向"><title>${esc(figure.label || "链表")}节点和指针方向</title>${nodes}</svg></div>`;
+  }
+
+  function figureMarkup(figure, esc) {
+    if (!figure || !figure.kind) return "";
+    if (figure.kind === "bars") return figureBars(figure, esc);
+    if (figure.kind === "tree") return figureTree(figure, esc);
+    if (figure.kind === "list") return figureList(figure, esc);
+    return "";
+  }
   function page(data, {esc, icon}) {
     // 可练的题：待学队列、已有记录，以及今日计划和画像推荐的新题。
     const rows = new Map([...data.plan.candidates, ...data.plan.tasks, ...data.next_new, ...data.queue].map(row => [row.id, row]));
@@ -209,7 +273,7 @@ window.AlgoWorkbench = (() => {
           <div class="wb-statement-grid">
             ${constraints.length ? `<section class="wb-statement-block"><h3>约束条件</h3><ul>${constraints.map(item=>`<li>${esc(item)}</li>`).join("")}</ul></section>` : ""}
             ${paramNotes.length ? `<section class="wb-statement-block"><h3>参数说明</h3><ul>${paramNotes.map(item=>`<li>${esc(item)}</li>`).join("")}</ul></section>` : ""}
-            ${examples.length ? `<section class="wb-statement-block wb-examples"><h3>示例</h3>${examples.map((example,index)=>`<article class="wb-example"><div class="wb-example-title">示例 ${index+1}</div><dl><dt>输入</dt><dd><code>${esc(example.input)}</code></dd><dt>输出</dt><dd><code>${esc(example.output)}</code></dd>${example.note ? `<dd class="wb-example-note">${esc(example.note)}</dd>` : ""}</dl></article>`).join("")}</section>` : ""}
+            ${examples.length ? `<section class="wb-statement-block wb-examples"><h3>示例</h3>${examples.map((example,index)=>`<article class="wb-example ${(example.figures || []).length && index === 0 ? "wb-example-featured" : ""}"><div class="wb-example-title">示例 ${index+1}</div>${(example.figures || []).length ? `<div class="wb-example-visuals">${example.figures.map(figure=>figureMarkup(figure,esc)).join("")}</div>` : ""}<dl><dt>输入</dt><dd><code>${esc(example.input)}</code></dd><dt>输出</dt><dd><code>${esc(example.output)}</code></dd>${example.note ? `<dd class="wb-example-note">${esc(example.note)}</dd>` : ""}</dl></article>`).join("")}</section>` : ""}
           </div>
           ${statement.url ? `<a class="wb-statement-link" href="${esc(statement.url)}" target="_blank" rel="noreferrer">${icon("arrow")}查看力扣原题（完整描述以原题为准）</a>` : ""}
         </div>`;

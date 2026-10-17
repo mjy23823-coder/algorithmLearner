@@ -69,6 +69,8 @@ def main():
                 expect(page.locator("[data-problem-statement]")).to_contain_text("约束条件")
                 expect(page.locator("[data-problem-statement]")).to_contain_text("示例 1")
                 expect(page.locator(".wb-statement-link")).to_have_attribute("href", "https://leetcode.cn/problems/trapping-rain-water/")
+                expect(page.locator('[data-visual="bars"]')).to_have_count(4)
+                assert page.locator(".wb-bar-water").count() > 0
                 page.screenshot(path=str(ROOT/"artifacts/learning-workbench.png"),full_page=True)
                 assert path.read_bytes()==before
                 expect(page.get_by_role("button",name="开始计时",exact=True)).to_be_visible()

@@ -124,6 +124,9 @@ class WorkbenchTests(unittest.TestCase):
         self.assertEqual(len(statement["examples"]),4)
         self.assertTrue(statement["url"].endswith("trapping-rain-water/"))
         self.assertEqual(statement["method"],"trap(height)")
+        self.assertTrue(any(figure["kind"] == "bars" for figure in statement["examples"][0]["figures"]))
+        self.assertTrue(any(figure["kind"] == "tree" for figure in self.store.describe(self.state,"94")["statement"]["examples"][0]["figures"]))
+        self.assertTrue(any(figure["kind"] == "list" for figure in self.store.describe(self.state,"206")["statement"]["examples"][0]["figures"]))
 
     def test_complete_uses_verified_run_and_saves_review_metadata(self):
         run=self.store.run(self.payload,TODAY)

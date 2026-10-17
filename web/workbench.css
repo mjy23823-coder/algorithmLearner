@@ -52,7 +52,28 @@
 .wb-examples{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .wb-examples h3{grid-column:1/-1;margin-bottom:0}
 .wb-example{min-width:0;padding:9px 10px;border:1px solid #e5ecdf;border-radius:9px;background:#fff}
+.wb-example-featured{grid-column:1/-1}
+.wb-example-featured .wb-visual-bars svg{min-height:170px}
 .wb-example-title{margin-bottom:6px;color:#66845f;font-size:10px;font-weight:650}
+.wb-example-visuals{display:grid;gap:7px;margin:0 -2px 9px}
+.wb-visual{min-width:0;border:1px solid #e7eee2;border-radius:9px;background:#fbfdf9;overflow:hidden}
+.wb-visual-caption{display:flex;align-items:center;gap:8px;padding:7px 9px 0;color:#7b9074;font-size:9px;line-height:1.5}
+.wb-visual svg{display:block;width:100%;height:auto;padding:4px 7px 3px}
+.wb-visual-bars svg{min-height:112px}
+.wb-visual-axis{fill:none;stroke:#a9b9a2;stroke-width:1.2}
+.wb-bar-solid{fill:#27342c}
+.wb-bar-water{fill:#5b91c2;opacity:.95}
+.wb-visual-scale,.wb-visual-index{fill:#9aaa94;font:9px Consolas,"Microsoft YaHei",sans-serif}
+.wb-visual-legend{display:inline-flex;align-items:center;gap:4px;margin-left:auto;color:#7195bb}
+.wb-visual-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;background:#5b91c2}
+.wb-tree-edge{stroke:#a9c1a4;stroke-width:1.5}
+.wb-tree-node circle{fill:#e2f0dc;stroke:#6c9b72;stroke-width:1.5}
+.wb-tree-node text,.wb-list-node+text{fill:#466544;font:11px Consolas,"Microsoft YaHei",sans-serif}
+.wb-list-arrow{stroke:#82a884;stroke-width:1.6}
+.wb-list-arrow-head{fill:none;stroke:#82a884;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.wb-list-node{fill:#e5f1e1;stroke:#6c9b72;stroke-width:1.4}
+.wb-visual-list text{fill:#466544;font:11px Consolas,"Microsoft YaHei",sans-serif}
+.wb-list-empty{padding:14px;color:#9aa994;font-size:10px}
 .wb-example dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 7px;align-items:start}
 .wb-example dt{color:#a0ac99;font-size:9px;line-height:1.65}
 .wb-example dd{min-width:0;margin:0;color:#53694d;font-size:10px;line-height:1.65;overflow-wrap:anywhere}
