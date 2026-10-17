@@ -1,0 +1,30 @@
+{
+  "id": "75",
+  "run_id": "7bc36e4ee3a0437b8b7f6277b6ca0ee5",
+  "code": "class Solution:\n    def sortColors(self, nums: list[int]) -> None:\n        \"\"\"\n        Do not return anything, modify nums in-place instead.\n        \"\"\"\n        left = 0\n        right = len(nums)-1\n        \n        for i in range(len(nums)):\n            while i<=right:\n                if nums[i]==0:\n                    nums[left]=nums[i]\n                 elif nums[i]==1:\n                     continue\n                 else:\n                    nums[right]=nums[i]\n                    right--\n\n        \n\n\n        \n",
+  "code_hash": "a7e8e1917d21187bc6b9150986fabd5100c9ce9d90ff060d219818a5c6dacf12",
+  "session_id": "74ec8d22c72240009b1e1820fe6b86bf",
+  "practice_date": "2026-10-17",
+  "extra_cases": [],
+  "created_at": "2026-10-17T15:51:23.809633+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [],
+    "stdout": "",
+    "error": "SyntaxError（代码第 13 行、第 34 列）：unindent does not match any outer indentation level",
+    "error_detail": {
+      "kind": "syntax",
+      "name": "SyntaxError",
+      "message": "unindent does not match any outer indentation level",
+      "line": 13,
+      "column": 34,
+      "text": "                 elif nums[i]==1:"
+    },
+    "total": 3,
+    "passed_count": 0,
+    "elapsed_ms": 79,
+    "builtin_count": 3,
+    "passed": false
+  },
+  "source_path": "solutions/lc75/7bc36e4ee3a0437b8b7f6277b6ca0ee5.py"
+}

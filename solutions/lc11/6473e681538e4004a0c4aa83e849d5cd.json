@@ -1,0 +1,22 @@
+{
+  "id": "11",
+  "run_id": "6473e681538e4004a0c4aa83e849d5cd",
+  "code": "class Solution:\n    def maxArea(self, height):\n        left = 0\n        right = len(height)-1\n        max_area = 0\n        while left<=right:\n            max_area = max(max_area,min(height[left],height[right])*(right-left))\n            if height[left]<height[right]:\n                left+=1\n            if height[left]>height[right]:\n                right-=1\n        return max_area  \n    ",
+  "code_hash": "4a6e96a3aa4128712ab218895d06582d3d5c0d6391c8a31929cb9caefa0066bf",
+  "session_id": "38df8d870aea4ee9ac179c4905cec96e",
+  "practice_date": "2026-10-17",
+  "extra_cases": [],
+  "created_at": "2026-10-17T14:10:15.348841+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [],
+    "stdout": "",
+    "error": "运行超过 5 秒，已终止；请检查循环终止条件",
+    "total": 3,
+    "passed_count": 0,
+    "elapsed_ms": 5015,
+    "builtin_count": 3,
+    "passed": false
+  },
+  "source_path": "solutions/lc11/6473e681538e4004a0c4aa83e849d5cd.py"
+}

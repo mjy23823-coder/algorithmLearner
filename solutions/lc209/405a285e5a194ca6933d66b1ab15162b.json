@@ -1,0 +1,69 @@
+{
+  "id": "209",
+  "run_id": "405a285e5a194ca6933d66b1ab15162b",
+  "code": "class Solution:\n    def minSubArrayLen(self, target, nums):\n        min_window_size = float(\"inf\")\n        sum=0\n        left =0\n        for right in range(0,len(nums)):\n            sum+=nums[right]\n            while sum>=target:\n                sum-=nums[left]\n                left+=1\n                min_window_size=min(min_window_size,right-left+1)\n        if min_window_size == float(\"inf\"):\n            return 0\n        return min_window_size\n",
+  "code_hash": "ad7a838ed84a5da16832836a5760e20c4aaa62ce3daa12beab38048b8b064983",
+  "session_id": "7b07e8553c1040399b11a73983c6e09f",
+  "practice_date": "2026-10-17",
+  "extra_cases": [],
+  "created_at": "2026-10-17T13:15:15.954378+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": false,
+        "args": [
+          7,
+          [
+            2,
+            3,
+            1,
+            2,
+            4,
+            3
+          ]
+        ],
+        "expected": 2,
+        "actual": 1
+      },
+      {
+        "name": "用例 2",
+        "passed": false,
+        "args": [
+          4,
+          [
+            1,
+            4,
+            4
+          ]
+        ],
+        "expected": 1,
+        "actual": 0
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          11,
+          [
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "expected": 0,
+        "actual": 0
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 1,
+    "elapsed_ms": 94,
+    "builtin_count": 3,
+    "passed": false
+  },
+  "source_path": "solutions/lc209/405a285e5a194ca6933d66b1ab15162b.py"
+}

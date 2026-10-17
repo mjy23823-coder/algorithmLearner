@@ -1,0 +1,22 @@
+{
+  "id": "209",
+  "run_id": "51b64df05c5141a38d1281b4ca6b4dd8",
+  "code": "class Solution:\n    def minSubArrayLen(self, target, nums):\n        min_window_size = float(\"inf\")\n        sum=0\n        left =0\n        for right in range(0,len(nums)):\n            sum+=nums[right]\n            while sum>target:\n                sum-=nums[left]\n                left+=1\n            if sum == target:\n                min_window_size=min(min_window_size,right-left+1)\n        if min_window_size == float(\"inf\")\n            return 0\n        return min_window_size\n",
+  "code_hash": "f2a3f73393918d8ad07cb8c72a68fe0d105638f96219d23ef874243b24c1fb47",
+  "session_id": "7b07e8553c1040399b11a73983c6e09f",
+  "practice_date": "2026-10-17",
+  "extra_cases": [],
+  "created_at": "2026-10-17T13:10:10.971205+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [],
+    "stdout": "",
+    "error": "SyntaxError：invalid syntax (submission.py, line 13)",
+    "total": 3,
+    "passed_count": 0,
+    "elapsed_ms": 93,
+    "builtin_count": 3,
+    "passed": false
+  },
+  "source_path": "solutions/lc209/51b64df05c5141a38d1281b4ca6b4dd8.py"
+}

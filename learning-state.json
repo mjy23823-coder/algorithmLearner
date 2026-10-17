@@ -62,9 +62,48 @@
     "209": {
       "title": "长度最小的子数组",
       "topic": "滑动窗口",
-      "last_done": "2026-10-13",
-      "count": 1,
-      "status": "needs_calibration"
+      "last_done": "2026-10-17",
+      "count": 2,
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-20",
+      "history": [
+        {
+          "date": "2026-10-17",
+          "result": "hinted",
+          "kind": "calibration",
+          "before": {
+            "title": "长度最小的子数组",
+            "topic": "滑动窗口",
+            "last_done": "2026-10-13",
+            "count": 1,
+            "status": "needs_calibration"
+          },
+          "minutes": 13,
+          "note": "没仔细看题目将大于等于只看成了等于",
+          "error_tags": [],
+          "pattern_ids": [
+            "window"
+          ],
+          "idea": "本题是双指针+滑动窗口的题目，想要一个sum，存储多个数组相加后的结果,min_windowSIZE存储返回结果，当sun》目标值时，左滑窗向右边收缩，减去最左边的数，如果相等的话更新最小滑窗的长度",
+          "time_complexity": "O(n)",
+          "space_complexity": "O(1)",
+          "boundary": "达不到目标的话返回0",
+          "takeaway": "没仔细看题目将大于等于只看成了等于",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "f616a85e7d9b4766bd20941be7ba9dfd",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "95bb509e8fc1f23f17de6403950a0655112646b5be4a8b75f59f4d8068462953"
+          },
+          "code_path": "solutions/lc209/f616a85e7d9b4766bd20941be7ba9dfd.py",
+          "elapsed_seconds": 766,
+          "hints_used": 0,
+          "coach_hints": 3
+        }
+      ]
     },
     "450": {
       "title": "删除二叉搜索树中的节点",
@@ -145,13 +184,21 @@
       }
     },
     "11": {
-      "count": 1,
+      "count": 2,
       "title": "盛最多水的容器",
       "topic": "双指针",
-      "last_done": "2026-10-11",
+      "last_done": "2026-10-17",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-14",
+      "next_due": "2026-10-20",
+      "first_done": "2026-10-11",
+      "count_is_lower_bound": true,
+      "history_import": {
+        "source": "learning-log.md",
+        "audit_id": "learning-log-recovery-2026-10-17",
+        "imported_on": "2026-10-17",
+        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+      },
       "history": [
         {
           "date": "2026-10-11",
@@ -178,16 +225,53 @@
               }
             ]
           }
+        },
+        {
+          "date": "2026-10-17",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "盛最多水的容器",
+            "topic": "双指针",
+            "last_done": "2026-10-11",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-14",
+            "first_done": "2026-10-11",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "minutes": 14,
+          "note": "相向双指针，难度不大",
+          "error_tags": [],
+          "pattern_ids": [
+            "opposing_pointers"
+          ],
+          "idea": "本题采用相向双指针，一个left,一个right，两边那个低就更新那边，但是left要小于right，记录每次所能盛水的面积之后取最大值",
+          "time_complexity": "O(n)",
+          "space_complexity": "O(1)",
+          "boundary": "边界就是left《right",
+          "takeaway": "相向双指针，难度不大",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "414cdf6d40f44c48a9313338c0114356",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "9a48930d9bc13ad5c18393e5d6ee6be26b526e04c5bdd4172e95de9c303d8c87"
+          },
+          "code_path": "solutions/lc11/414cdf6d40f44c48a9313338c0114356.py",
+          "elapsed_seconds": 839,
+          "hints_used": 0,
+          "coach_hints": 2
         }
-      ],
-      "first_done": "2026-10-11",
-      "count_is_lower_bound": true,
-      "history_import": {
-        "source": "learning-log.md",
-        "audit_id": "learning-log-recovery-2026-10-17",
-        "imported_on": "2026-10-17",
-        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      }
+      ]
     },
     "20": {
       "count": 2,
@@ -1812,12 +1896,95 @@
         "imported_on": "2026-10-17",
         "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
       }
+    },
+    "42": {
+      "count": 1,
+      "title": "接雨水",
+      "topic": "双指针",
+      "last_done": "2026-10-17",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-20",
+      "history": [
+        {
+          "date": "2026-10-17",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 6,
+          "note": "理解了本道题的解题思路，最开始也是一直搞不懂这个的解题思路，知道思路后能自己独立写出代码",
+          "error_tags": [],
+          "pattern_ids": [
+            "opposing_pointers"
+          ],
+          "idea": "想不出来",
+          "time_complexity": "O(n)",
+          "space_complexity": "O(1)",
+          "boundary": "",
+          "takeaway": "理解了本道题的解题思路，最开始也是一直搞不懂这个的解题思路，知道思路后能自己独立写出代码",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "4f1fe74fc45c485f8a2b604aff5cb89a",
+            "passed": true,
+            "passed_count": 4,
+            "total": 4,
+            "code_hash": "295124a07b83ddcafa011c244900ace40f24542c5986971df2fc7b236d78be2c"
+          },
+          "code_path": "solutions/lc42/4f1fe74fc45c485f8a2b604aff5cb89a.py",
+          "elapsed_seconds": 318,
+          "hints_used": 3,
+          "coach_hints": 3
+        }
+      ],
+      "first_done": "2026-10-17"
+    },
+    "75": {
+      "count": 1,
+      "title": "颜色分类",
+      "topic": "双指针",
+      "last_done": "2026-10-17",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-20",
+      "history": [
+        {
+          "date": "2026-10-17",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 7,
+          "note": "需要要三个指针，两个指针维护不够",
+          "error_tags": [],
+          "pattern_ids": [
+            "write_pointer"
+          ],
+          "idea": "利用左右双指针left,right，哪边小就往哪边移动，但是想要满足left《right，当然想要先交换之后再进行移动，之后就是循环",
+          "time_complexity": "O(n)",
+          "space_complexity": "O(1)",
+          "boundary": "左指针不能大于右指针",
+          "takeaway": "需要要三个指针，两个指针维护不够",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "f67f3dc4830a4ec29a1bef8faee6b582",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "a2d21e881316272e6e48241e9d47a0d34fba23bbe93ee61c086720ad4c661fbb"
+          },
+          "code_path": "solutions/lc75/f67f3dc4830a4ec29a1bef8faee6b582.py",
+          "elapsed_seconds": 407,
+          "hints_used": 0,
+          "coach_hints": 5
+        }
+      ],
+      "first_done": "2026-10-17"
     }
   },
-  "next_new": [
-    "42",
-    "209"
-  ],
+  "next_new": [],
   "next_review": [
     "1",
     "217",
@@ -1851,9 +2018,7 @@
     "230",
     "501",
     "543",
-    "11",
     "26",
-    "209",
     "3",
     "669",
     "438",
@@ -1861,20 +2026,54 @@
     "236",
     "15",
     "16",
+    "11",
+    "209",
+    "42",
+    "75",
     "27",
     "538",
     "450",
     "242"
   ],
   "session": {
-    "last_date": "2026-10-16",
+    "last_date": "2026-10-17",
     "last_completed": [
-      "27",
-      "538",
-      "15",
-      "16"
+      "209",
+      "11",
+      "42",
+      "75"
     ],
     "open_questions": [],
     "next_action": "先安排到期复习，再推进双指针/滑动窗口新题"
+  },
+  "_requests": {
+    "3d4b5a32-25ad-4552-99bf-3b9a0b6076be": {
+      "message": "LC209 已记录，下次复习 2026-10-20",
+      "result": "hinted",
+      "next_due": "2026-10-20",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "af967817-8c39-4fc5-8709-adaa856c3043": {
+      "message": "LC11 已记录，下次复习 2026-10-20",
+      "result": "hinted",
+      "next_due": "2026-10-20",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "a19b0fcc-1cba-4cf0-947e-4254755f9e98": {
+      "message": "LC42 已记录，下次复习 2026-10-20",
+      "result": "hinted",
+      "next_due": "2026-10-20",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "4c01cfb6-f7df-4cc8-888f-198306b89ac7": {
+      "message": "LC75 已记录，下次复习 2026-10-20",
+      "result": "hinted",
+      "next_due": "2026-10-20",
+      "status": "needs_review",
+      "mock_review": null
+    }
   }
 }

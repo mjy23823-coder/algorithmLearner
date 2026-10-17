@@ -1,0 +1,69 @@
+{
+  "id": "209",
+  "run_id": "6b42c4d8da944c9a878aa16b44d2c5c6",
+  "code": "class Solution:\n    def minSubArrayLen(self, target, nums):\n        min_window_size = inf\n        sum=0\n        left =0\n        for right in range(0,len(nums)):\n            sum+=nums[right]\n            if sum == target:\n                min_window_size=min(min_window_size,right-left+1)\n            while sum>target:\n                sum-=nums[left]\n                left+=1\n           \n        return min_window_size\n\n",
+  "code_hash": "d13f46171c32cfb8e89c077a831589e8307788b1017adb1f1d9f704ccff8912e",
+  "session_id": "7b07e8553c1040399b11a73983c6e09f",
+  "practice_date": "2026-10-17",
+  "extra_cases": [],
+  "created_at": "2026-10-17T13:06:18.096856+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": false,
+        "args": [
+          7,
+          [
+            2,
+            3,
+            1,
+            2,
+            4,
+            3
+          ]
+        ],
+        "expected": 2,
+        "error": "NameError（代码第 3 行）：name 'inf' is not defined"
+      },
+      {
+        "name": "用例 2",
+        "passed": false,
+        "args": [
+          4,
+          [
+            1,
+            4,
+            4
+          ]
+        ],
+        "expected": 1,
+        "error": "NameError（代码第 3 行）：name 'inf' is not defined"
+      },
+      {
+        "name": "用例 3",
+        "passed": false,
+        "args": [
+          11,
+          [
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "expected": 0,
+        "error": "NameError（代码第 3 行）：name 'inf' is not defined"
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 0,
+    "elapsed_ms": 93,
+    "builtin_count": 3,
+    "passed": false
+  },
+  "source_path": "solutions/lc209/6b42c4d8da944c9a878aa16b44d2c5c6.py"
+}
