@@ -58,6 +58,14 @@ class RunnerTests(unittest.TestCase):
         result=code_runner.run_code("class Solution:\n    def containsDuplicate(self,nums):\n        while True: pass",exercise,timeout=.4)
         self.assertIn("已终止",result["error"])
 
+    def test_syntax_error_returns_structured_location_for_the_editor(self):
+        code="class Solution:\n    def containsDuplicate(self,nums):\n        if True\n            return False"
+        result=code_runner.run_code(code,problem_bank.get_exercise("217"))
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["error_detail"]["kind"],"syntax")
+        self.assertEqual(result["error_detail"]["line"],3)
+        self.assertIn("invalid syntax",result["error"].lower())
+
     def test_user_code_cannot_use_file_import_or_reflection_helpers(self):
         with tempfile.TemporaryDirectory() as folder:
             target=Path(folder)/"should-not-exist.txt"

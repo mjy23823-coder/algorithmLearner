@@ -253,6 +253,13 @@ def capture(judge, got, args):
 
 
 def describe_error(exc, filename="submission.py"):
+    if isinstance(exc, SyntaxError):
+        line = getattr(exc, "lineno", None)
+        column = getattr(exc, "offset", None)
+        location = f"代码第 {line} 行" if line else "代码"
+        if column:
+            location += f"、第 {column} 列"
+        return f"SyntaxError（{location}）：{getattr(exc, 'msg', None) or str(exc)[:1500]}"
     tb, line = exc.__traceback__, None
     while tb:
         if tb.tb_frame.f_code.co_filename == filename:
@@ -260,6 +267,14 @@ def describe_error(exc, filename="submission.py"):
         tb = tb.tb_next
     location = f"（代码第 {line} 行）" if line else ""
     return f"{type(exc).__name__}{location}：{str(exc)[:1500]}"
+
+
+def error_detail(exc):
+    if not isinstance(exc, SyntaxError):
+        return None
+    return {"kind": "syntax", "name": "SyntaxError", "message": getattr(exc, "msg", None) or str(exc),
+            "line": getattr(exc, "lineno", None), "column": getattr(exc, "offset", None),
+            "text": (getattr(exc, "text", None) or "").rstrip("\r\n")}
 
 
 def generated_args(make, index, codecs, seed):
@@ -392,7 +407,8 @@ def main():
                                 "error": describe_error(exc)})
         response = {"cases": results, "stdout": "".join(output), "error": None}
     except Exception as exc:
-        response = {"cases": [], "stdout": "".join(output), "error": f"{type(exc).__name__}：{str(exc)[:2000]}"}
+        response = {"cases": [], "stdout": "".join(output), "error": describe_error(exc),
+                    "error_detail": error_detail(exc)}
     sys.stdout.write(json.dumps(response, ensure_ascii=False, allow_nan=False))
 
 

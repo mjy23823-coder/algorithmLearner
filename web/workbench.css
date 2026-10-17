@@ -156,3 +156,18 @@
 .wb-test-case summary{color:#64746b}
 .wb-test-case dt{color:#718078}
 .wb-hintbar #wb-hint-note{color:#7c7763}
+
+/* 轻量 Python 编辑器：高亮层、Tab 补全和语法错误定位 */
+.wb-code-pane{position:relative;min-width:0;height:100%;overflow:hidden;background:#f8faf6}
+.wb-code-pane #wb-highlight{position:absolute;inset:0;margin:0;padding:17px 14px;overflow:hidden;white-space:pre;tab-size:4;pointer-events:none;font:13px/23px Consolas,"Microsoft YaHei",monospace;color:#40564a;z-index:0}
+.wb-code-pane textarea[data-wb-field="code"]{position:absolute;inset:0;width:100%;height:100%;z-index:1;color:transparent;-webkit-text-fill-color:transparent;caret-color:#294e38;background:transparent;overflow:auto}
+.wb-code-pane textarea[data-wb-field="code"]::selection{background:#b9d7bd;color:transparent;-webkit-text-fill-color:transparent}
+.py-keyword{color:#8a4f9d;font-weight:600}.py-builtin{color:#2f7188}.py-string{color:#a15f2d}.py-number{color:#8b6b2d}.py-comment{color:#87978c;font-style:italic}.py-name{color:#40564a}
+.wb-completions{position:absolute;z-index:5;min-width:180px;max-width:240px;padding:5px;border:1px solid #cbdccc;border-radius:9px;background:#fff;box-shadow:0 12px 26px #203f3226}
+.wb-completions button{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;border:0;border-radius:6px;background:transparent;padding:6px 8px;color:#40564a;text-align:left;font:12px Consolas,"Microsoft YaHei",monospace}
+.wb-completions button[aria-selected="true"],.wb-completions button:hover{background:#eaf3e8;color:#285d47}.wb-completions small{font:10px "Microsoft YaHei",sans-serif;color:#87968d}
+.wb-error-detail{margin:0 0 13px;padding:14px 16px;border:1px solid #efcfbd;border-radius:9px;background:#fff8f3;color:#714f3f}
+.wb-error-head{display:flex;align-items:center;gap:10px;justify-content:space-between}.wb-error-head strong{font-size:13px;color:#9b553f}.wb-error-head span{font-size:10px;color:#a7745b}.wb-error-message{margin-top:7px;font:12px/1.7 Consolas,"Microsoft YaHei",monospace;color:#8c5a45}
+.wb-error-source{display:grid;grid-template-columns:34px minmax(0,1fr);margin:10px 0;padding:8px 0;border:1px solid #f0dcd0;border-radius:7px;background:#fff;overflow:auto;font:12px/1.8 Consolas,"Microsoft YaHei",monospace;white-space:pre}
+.wb-error-source .wb-error-line{padding:0 8px;color:#b48670;text-align:right;border-right:1px solid #f0dcd0}.wb-error-source code{padding-left:10px;color:#664b40}.wb-error-caret{grid-column:2;color:#bd6345;padding-left:10px;font-weight:700}
+.wb-error-hint{font-size:11px;line-height:1.8;color:#7d6254}.wb-error-hint b{color:#9b553f}.wb-error-jump{margin-top:9px;min-height:30px;padding:6px 10px;font-size:11px;color:#8d5a43;border-color:#e7c2ae;background:#fff}

@@ -8,6 +8,57 @@ window.AlgoWorkbench = (() => {
   function choose(id) { if (/^[1-9]\d{0,5}$/.test(String(id))) {selected = String(id);try{localStorage.setItem("algorithm-workbench-selected",selected);}catch{}} }
   function cached(id) { try { return JSON.parse(localStorage.getItem(CACHE+id) || "null"); } catch { return null; } }
 
+  const PYTHON_KEYWORDS = new Set("and as assert async await break case class continue def del elif else except finally for from global if import in is lambda match nonlocal not or pass raise return try while with yield True False None".split(" "));
+  const PYTHON_BUILTINS = new Set("abs all any bool dict enumerate filter float int len list map max min print range reversed set sorted str sum tuple zip".split(" "));
+  const COMPLETIONS = [...new Set([...PYTHON_KEYWORDS, ...PYTHON_BUILTINS, "self", "nums", "target", "left", "right", "window", "current", "result", "answer", "append", "pop"])]
+    .sort((a,b) => a.localeCompare(b));
+
+  function highlightPython(source, esc) {
+    let out = "", index = 0;
+    const add = (className, value) => { out += className ? `<span class="py-${className}">${esc(value)}</span>` : esc(value); };
+    while (index < source.length) {
+      const char = source[index];
+      if (char === "#") {
+        const end = source.indexOf("\n", index);
+        const value = source.slice(index, end < 0 ? source.length : end);
+        add("comment", value); index += value.length; continue;
+      }
+      if (char === "'" || char === '"') {
+        const quote = char, start = index++;
+        while (index < source.length) {
+          if (source[index] === "\\") { index += 2; continue; }
+          if (source[index] === quote) { index++; break; }
+          index++;
+        }
+        add("string", source.slice(start, index)); continue;
+      }
+      if (/\d/.test(char)) {
+        const start = index++;
+        while (index < source.length && /[\w.]/.test(source[index])) index++;
+        add("number", source.slice(start, index)); continue;
+      }
+      if (/[A-Za-z_]/.test(char)) {
+        const start = index++;
+        while (index < source.length && /[A-Za-z0-9_]/.test(source[index])) index++;
+        const word = source.slice(start, index);
+        add(PYTHON_KEYWORDS.has(word) ? "keyword" : PYTHON_BUILTINS.has(word) ? "builtin" : "name", word); continue;
+      }
+      add("", char); index++;
+    }
+    return out || " ";
+  }
+
+  function syntaxHint(message) {
+    const text = String(message || "").toLowerCase();
+    if (text.includes("expected ':'")) return "这类语句通常需要以冒号结束，检查 if、for、while、def 或 class 行末。";
+    if (text.includes("unexpected indent")) return "这一行缩进多了一层，统一使用 4 个空格，并和同一代码块对齐。";
+    if (text.includes("unindent does not match")) return "这一行的缩进无法回到已有代码块，检查 Tab 和空格是否混用。";
+    if (text.includes("unterminated string")) return "字符串没有闭合，检查这一行前后的单引号或双引号。";
+    if (text.includes("was never closed") || text.includes("parenthesis")) return "括号没有成对闭合，向前检查最近的括号、方括号或花括号。";
+    if (text.includes("invalid syntax")) return "这一行的 Python 结构不完整，先检查本行和上一行的冒号、括号、引号与缩进。";
+    return "先定位到报错行，再检查这一行和上一行的语法结构。";
+  }
+
   function figureBars(figure, esc) {
     const values = Array.isArray(figure.value) ? figure.value.map(Number).filter(Number.isFinite) : [];
     if (!values.length) return "";
@@ -152,6 +203,37 @@ window.AlgoWorkbench = (() => {
     function updateEditor() {
       const code=get("code");
       root.querySelector("#wb-lines").textContent=code.value.split("\n").map((_,i)=>String(i+1)).join("\n");
+      root.querySelector("#wb-highlight").innerHTML=highlightPython(code.value,esc);
+    }
+    let completionItems = [], completionIndex = 0;
+    function hideCompletions() {
+      completionItems=[]; completionIndex=0;
+      const popup=root.querySelector("#wb-completions");
+      popup.hidden=true; popup.innerHTML="";
+    }
+    function codePrefix() {
+      const code=get("code"), before=code.value.slice(0,code.selectionStart);
+      const match=before.match(/[A-Za-z_][A-Za-z0-9_]*$/);
+      return match ? {before, prefix:match[0], start:code.selectionStart-match[0].length} : {before, prefix:"", start:code.selectionStart};
+    }
+    function renderCompletions(force=false) {
+      const code=get("code"), popup=root.querySelector("#wb-completions"), {prefix}=codePrefix();
+      if (!force && prefix.length < 2) { hideCompletions(); return; }
+      completionItems=COMPLETIONS.filter(word=>word.startsWith(prefix) && word!==prefix).slice(0,8);
+      if (!completionItems.length) { hideCompletions(); return; }
+      completionIndex=Math.min(completionIndex,completionItems.length-1);
+      popup.innerHTML=completionItems.map((word,index)=>`<button type="button" role="option" data-completion="${esc(word)}" aria-selected="${index===completionIndex}"><span>${esc(word)}</span><small>${PYTHON_KEYWORDS.has(word)?"关键字":PYTHON_BUILTINS.has(word)?"内置函数":"变量/方法"}</small></button>`).join("");
+      const before=code.value.slice(0,code.selectionStart), line=before.split("\n").length, column=before.length-(before.lastIndexOf("\n")+1);
+      popup.style.left=`${Math.min(Math.max(12,column*7.7),Math.max(12,code.clientWidth-190))}px`;
+      popup.style.top=`${Math.max(8,(line-1)*23+37-code.scrollTop)}px`;
+      popup.hidden=false;
+    }
+    function acceptCompletion(index=completionIndex) {
+      if (!completionItems.length) return false;
+      const code=get("code"), {start}=codePrefix(), word=completionItems[index];
+      code.setRangeText(word,start,code.selectionStart,"end");
+      hideCompletions(); updateEditor(); edited();
+      return true;
     }
     function currentRun() {
       if(!lastRun || !info || get("code").value !== runCode) return false;
@@ -252,9 +334,19 @@ window.AlgoWorkbench = (() => {
       root.querySelector("#wb-hint-note").textContent=used ? `本轮已看 ${used}，完成时按“提示后完成”记录。` : "先尝试自己的思路，需要时再逐层展开。";
       updateActions();
     }
+    function syntaxErrorMarkup(detail) {
+      if(!detail) return "";
+      const line=Number(detail.line)||0, column=Math.max(1,Number(detail.column)||1);
+      const source=detail.text || (get("code").value.split("\n")[line-1] || "");
+      const caret=" ".repeat(Math.max(0,column-1))+"^";
+      return `<section class="wb-error-detail"><div class="wb-error-head"><strong>${esc(detail.name || "SyntaxError")}</strong><span>${line ? `第 ${line} 行${detail.column ? ` · 第 ${detail.column} 列` : ""}` : "语法位置未知"}</span></div><p class="wb-error-message">${esc(detail.message || "语法结构不完整")}</p>${line ? `<pre class="wb-error-source"><span class="wb-error-line">${line}</span><code>${esc(source || " ")}</code><span class="wb-error-caret">${esc(caret)}</span></pre>` : ""}<p class="wb-error-hint"><b>怎么修：</b>${esc(syntaxHint(detail.message))}</p>${line ? `<button type="button" class="button secondary wb-error-jump" data-wb="goto-line" data-line="${line}">跳到第 ${line} 行</button>` : ""}</section>`;
+    }
+    function runErrorMarkup(result) {
+      return result.error_detail?.kind === "syntax" ? syntaxErrorMarkup(result.error_detail) : (result.error ? `<p class="wb-runtime-error">${esc(result.error)}</p>` : "");
+    }
     function showRun(run) {
       const result=run.result;
-      root.querySelector("#wb-test-results").innerHTML=`<div class="wb-test-summary ${result.passed?"pass":"fail"}">${icon(result.passed?"check":"info")}<strong>${result.passed?"本地用例全部通过":"还需要调整"}</strong><span>${result.passed_count} / ${result.total} · ${result.elapsed_ms} ms</span></div>${result.error?`<p class="wb-runtime-error">${esc(result.error)}</p>`:""}${result.cases.map(c=>`<details class="wb-test-case" ${!c.passed?"open":""}><summary><span class="${c.passed?"pass":"fail"}">${c.passed?"通过":"未通过"}</span>${esc(c.name)}</summary><dl><dt>输入参数</dt><dd><pre>${esc(JSON.stringify(c.args))}</pre></dd><dt>期望结果</dt><dd><pre>${esc(JSON.stringify(c.expected))}</pre></dd><dt>${c.error?"错误":"实际结果"}</dt><dd><pre>${esc(c.error || JSON.stringify(c.actual))}</pre></dd></dl></details>`).join("")}${result.stdout?`<details class="wb-test-case"><summary>调试输出</summary><pre>${esc(result.stdout)}</pre></details>`:""}<p class="form-hint">以上只证明这 ${result.total} 组本地用例的结果；平台提交、复杂度和思路表达仍需单独确认。</p>`;
+      root.querySelector("#wb-test-results").innerHTML=`<div class="wb-test-summary ${result.passed?"pass":"fail"}">${icon(result.passed?"check":"info")}<strong>${result.passed?"本地用例全部通过":"还需要调整"}</strong><span>${result.passed_count} / ${result.total} · ${result.elapsed_ms} ms</span></div>${runErrorMarkup(result)}${result.cases.map(c=>`<details class="wb-test-case" ${!c.passed?"open":""}><summary><span class="${c.passed?"pass":"fail"}">${c.passed?"通过":"未通过"}</span>${esc(c.name)}</summary><dl><dt>输入参数</dt><dd><pre>${esc(JSON.stringify(c.args))}</pre></dd><dt>期望结果</dt><dd><pre>${esc(JSON.stringify(c.expected))}</pre></dd><dt>${c.error?"错误":"实际结果"}</dt><dd><pre>${esc(c.error || JSON.stringify(c.actual))}</pre></dd></dl></details>`).join("")}${result.stdout?`<details class="wb-test-case"><summary>调试输出</summary><pre>${esc(result.stdout)}</pre></details>`:""}<p class="form-hint">以上只证明这 ${result.total} 组本地用例的结果；平台提交、复杂度和思路表达仍需单独确认。</p>`;
       if(!result.passed) root.querySelector("#wb-result").value="failed";
       else if(hints.length || coachHints) root.querySelector("#wb-result").value="hinted";
       updateActions();
@@ -287,7 +379,7 @@ window.AlgoWorkbench = (() => {
           </div>
         </section>
         <section class="panel wb-code-panel">${step(2,"写代码并验证","你的 Python 实现")}<div class="wb-card-tags"><span class="subtle-pill">Python 3</span><span id="wb-run-state" class="subtle-pill">尚未运行</span></div></div>
-          <div class="wb-code-editor"><pre id="wb-lines" aria-hidden="true">1</pre><textarea data-wb-field="code" aria-label="Python 代码" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off"></textarea></div>
+          <div class="wb-code-editor"><pre id="wb-lines" aria-hidden="true">1</pre><div class="wb-code-pane"><pre id="wb-highlight" aria-hidden="true"></pre><textarea data-wb-field="code" aria-label="Python 代码" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off"></textarea><div id="wb-completions" class="wb-completions" role="listbox" aria-label="代码补全" hidden></div></div></div>
           <div class="wb-code-actions"><span>Tab 缩进 · Ctrl+Enter 运行 · Ctrl+S 保存</span><div><button class="button secondary" data-wb="save">保存草稿</button><button class="button primary" data-wb="run">${icon("play")}运行本地用例</button></div></div>
           <div class="wb-results"><p id="wb-stale" class="wb-stale" hidden>代码或用例已修改，需要重新运行后才能记录结果。</p><div id="wb-test-results"><div class="empty">完成实现后，运行基础用例与自己补充的边界。</div></div><details class="wb-extra"><summary>追加自定义用例（JSON 数组）</summary><p class="form-hint">格式：[{"args": [按参数顺序填写], "expected": 期望结果}]。基础用例始终会运行。</p><textarea data-wb-field="extra_cases" rows="6" aria-label="自定义测试用例" spellcheck="false">[]</textarea></details></div>
         </section>
@@ -318,9 +410,16 @@ window.AlgoWorkbench = (() => {
         root.querySelector('[data-wb="timer"]').disabled=false;
         coachPanel=AlgoCoach.mount(root.querySelector("#wb-coach"),coachContext(info.coach.transcript));
         updateActions();
-        on(get("code"),"scroll",()=>{root.querySelector("#wb-lines").scrollTop=get("code").scrollTop;});
+        on(get("code"),"scroll",()=>{root.querySelector("#wb-lines").scrollTop=get("code").scrollTop;const highlight=root.querySelector("#wb-highlight");highlight.scrollTop=get("code").scrollTop;highlight.scrollLeft=get("code").scrollLeft;renderCompletions();});
         on(get("code"),"keydown",event=>{
-          if(event.key==="Tab") {event.preventDefault(); const el=get("code"); el.setRangeText("    ",el.selectionStart,el.selectionEnd,"end"); updateEditor(); edited();}
+          if(event.key==="Tab") {event.preventDefault(); if(!acceptCompletion()){const el=get("code"); el.setRangeText("    ",el.selectionStart,el.selectionEnd,"end"); updateEditor(); edited();} return;}
+          if((event.ctrlKey||event.metaKey)&&event.code==="Space") {event.preventDefault(); renderCompletions(true); return;}
+          if(!root.querySelector("#wb-completions").hidden && ["ArrowDown","ArrowUp","Enter","Escape"].includes(event.key)) {
+            if(event.key==="Escape"){hideCompletions();return;}
+            if(event.key==="ArrowDown"){event.preventDefault();completionIndex=(completionIndex+1)%completionItems.length;renderCompletions(true);return;}
+            if(event.key==="ArrowUp"){event.preventDefault();completionIndex=(completionIndex+completionItems.length-1)%completionItems.length;renderCompletions(true);return;}
+            if(event.key==="Enter" && acceptCompletion()){event.preventDefault();return;}
+          }
           if((event.ctrlKey||event.metaKey)&&event.key==="Enter") {event.preventDefault(); root.querySelector('[data-wb="run"]').click();}
           if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="s") {event.preventDefault(); save().catch(e=>message(e.message));}
         });
@@ -334,7 +433,7 @@ window.AlgoWorkbench = (() => {
     on(window,"scroll",active);
     on(root,"input",event=>{
       if(!event.target.matches("[data-wb-field], [name=wb-error-tag]")) return;
-      if(event.target===get("code")) updateEditor();
+      if(event.target===get("code")) { updateEditor(); renderCompletions(); }
       if(event.target.matches('[data-wb-field="idea"], [data-wb-field="boundary"], [data-wb-field="code"]') && !savedResult && !conflict) {
         lastInput=performance.now();
         if(since===null) startTimer();
@@ -348,9 +447,17 @@ window.AlgoWorkbench = (() => {
       try {await save(); choose(next); ui.onSelect();} catch(error){event.target.value=id;message(error.message);}
     });
     on(root,"click",async event=>{
+      const completion=event.target.closest("[data-completion]");
+      if(completion){acceptCompletion(completionItems.indexOf(completion.dataset.completion));return;}
       const control=event.target.closest("[data-wb]");
       if(!control || control.disabled || !info) return;
       const action=control.dataset.wb;
+      if(action==="goto-line") {
+        const line=Math.max(1,Number(control.dataset.line)||1), code=get("code"), lines=code.value.split("\n");
+        const start=lines.slice(0,line-1).reduce((sum,item)=>sum+item.length+1,0);
+        code.focus(); code.setSelectionRange(start,Math.min(code.value.length,start+lines[line-1].length));
+        code.scrollTop=Math.max(0,(line-1)*23-100); hideCompletions(); return;
+      }
       if(action==="timer") {
         if(since!==null) {pauseTimer();save().catch(e=>message(e.message));}
         else startTimer();
