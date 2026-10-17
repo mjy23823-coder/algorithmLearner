@@ -19,3 +19,6 @@ artifacts/
 
 # Windows 保留名，之前命令重定向时意外生成的文件
 NUL
+
+# mirasim 定时任务的本地配置
+.mirasim/
