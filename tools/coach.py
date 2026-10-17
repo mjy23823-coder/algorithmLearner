@@ -110,9 +110,24 @@ def save(path, state):
             raise ValueError("学习记录已被其他会话更新，请刷新后重试")
         if path.exists():
             shutil.copyfile(path, path.with_name(path.name + ".bak"))
+            rotate_backup(path)
         atomic_write(path, data)
     if isinstance(state, State):
         state.source_hash = digest(data)
+
+
+BACKUP_DAYS = 14
+
+
+def rotate_backup(path, today=None):
+    """每天第一次写入前，把当天开始时的进度存到 backups/，只保留最近 14 天（.bak 只保留上一次写入前的版本）。"""
+    folder = path.parent / "backups"
+    folder.mkdir(exist_ok=True)
+    target = folder / f"{path.stem}-{(today or date.today()).isoformat()}{path.suffix}"
+    if not target.exists():
+        shutil.copyfile(path, target)
+    for old in sorted(folder.glob(f"{path.stem}-????-??-??{path.suffix}"))[:-BACKUP_DAYS]:
+        old.unlink()
 
 
 def parse_date(s):

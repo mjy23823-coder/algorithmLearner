@@ -147,6 +147,25 @@ class PersistenceTests(unittest.TestCase):
             coach.save(self.path, stale)
         self.assertNotIn("239", coach.load(self.path)["completed"])
 
+    def test_daily_backups_keep_the_start_of_each_day_for_14_days(self):
+        original = self.path.read_bytes()
+        folder = self.path.parent / "backups"
+        folder.mkdir()
+        for i in range(16):
+            (folder / f"learning-state-2026-09-{i + 1:02d}.json").write_text("{}", encoding="utf-8")
+        state = coach.load(self.path)
+        record(state)
+        coach.save(self.path, state)
+        state = coach.load(self.path)
+        record(state, pid="239")
+        coach.save(self.path, state)
+        snapshots = sorted(p.name for p in folder.iterdir())
+        self.assertEqual(len(snapshots), coach.BACKUP_DAYS)
+        today = folder / f"learning-state-{date.today().isoformat()}.json"
+        # 当天第二次保存不覆盖：快照是当天第一次修改前的进度。
+        self.assertEqual(today.read_bytes(), original)
+        self.assertNotIn("learning-state-2026-09-01.json", snapshots)
+
     def test_wrap_appends_once_and_preserves_historical_bytes(self):
         original = self.log.read_bytes()
         state = coach.load(self.path)
