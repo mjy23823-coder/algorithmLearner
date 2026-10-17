@@ -1,0 +1,96 @@
+@charset "UTF-8";
+.workbench-page [hidden]{display:none!important}
+.workbench-page{max-width:1600px;padding:30px}.wb-toolbar{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:16px 20px;background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:20px}.wb-toolbar>label{display:flex;gap:12px;align-items:center;margin:0;flex:1;font-size:11px}.wb-toolbar select{max-width:380px;width:100%;font-size:12px}.wb-toolbar select,.wb-finish select{border:1px solid #dfe6dc;background:#fbfcfa;padding:9px 12px;border-radius:7px;color:#596d56}.wb-timer{display:flex;align-items:center;gap:11px}.wb-timer svg{height:17px;width:17px;color:#8c9d88}.wb-timer output{font:500 22px Consolas,monospace;color:#516c4c;min-width:68px}.wb-timer button{font-size:10px;min-height:33px}.wb-toolbar #wb-save-status{font-size:10px;color:#8a9982}.wb-layout{display:grid;grid-template-columns:minmax(270px,.8fr) minmax(0,1.5fr);gap:20px;align-items:start}.wb-left{min-width:0}.wb-layout .panel-header{padding:20px 21px 15px}.wb-layout .panel-body{padding:0 21px 22px}.wb-layout .panel-header h2{font-size:15px;line-height:1.8}.wb-layout .eyebrow{font-size:9px;margin-bottom:8px}.wb-description{font-size:12px;line-height:1.95;color:#788971;margin-bottom:17px}.wb-contract{font-size:10px;color:#8c9986;margin-bottom:8px;overflow-wrap:anywhere}.wb-contract code{color:#547151;background:#f1f6ed;border-radius:4px;padding:3px 5px;font-family:Consolas,monospace}.wb-layout .form-hint{margin-bottom:16px}.wb-patterns{display:flex;flex-wrap:wrap;gap:6px}.wb-hint-buttons{display:flex;gap:7px;margin-bottom:15px}.wb-hint-buttons .button{font-size:10px;min-height:32px;padding:7px 13px}.wb-hint{padding:12px;background:#f2f7ed;border:1px solid #e4ebdb;border-radius:7px;margin-top:9px;line-height:1.9;font-size:11px;color:#7f9173}.wb-hint b{color:#648052;font-weight:500;font-size:10px}.wb-hint p{margin-top:5px}.wb-default-cases details{border-bottom:1px solid var(--line);padding:11px 0}.wb-default-cases summary{font-size:11px;color:#8b9a80;cursor:pointer}.wb-default-cases pre,.wb-test-case pre,.wb-version-dialog pre{font:11px/1.8 Consolas,"Microsoft YaHei",monospace;white-space:pre-wrap;overflow-wrap:anywhere;color:#6b805f}.wb-code-editor{display:grid;grid-template-columns:42px minmax(0,1fr);height:380px;border-top:1px solid #e9ede6;border-bottom:1px solid #e9ede6;background:#f8faf6}.wb-code-editor #wb-lines{margin:0;padding:17px 9px 17px 0;overflow:hidden;text-align:right;color:#b0b9a8;line-height:23px;font-size:12px;font-family:Consolas,monospace;border-right:1px solid #e8eee2;user-select:none}.wb-code-editor textarea[data-wb-field="code"]{border:0;outline:none;resize:none;margin:0;border-radius:0;padding:17px 14px;background:transparent;font-family:Consolas,"Microsoft YaHei",monospace;font-size:13px;line-height:23px;white-space:pre;tab-size:4;color:#41573d;height:100%;overflow:auto}.wb-code-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 17px;background:#fff}.wb-code-actions>span{font-size:9px;color:#9ba78f}.wb-code-actions>div{display:flex;gap:8px}.wb-code-actions .button{font-size:10px;min-height:34px}.wb-test-summary{display:flex;gap:8px;align-items:center;padding:12px 13px;border-radius:7px;margin-bottom:13px;background:#f0f6e9;color:#64844d;font-size:11px}.wb-test-summary.fail{background:#fbf1e8;color:#ac8059}.wb-test-summary>svg{width:16px;height:16px}.wb-test-summary strong{font-weight:500}.wb-test-summary>span{margin-left:auto;font-size:10px}.wb-test-case{border:1px solid #e6ebdf;border-radius:7px;margin:8px 0;overflow:hidden}.wb-test-case summary{padding:11px 13px;font-size:11px;cursor:pointer;color:#75896a;display:flex;gap:12px}.wb-test-case .pass{color:#67935b}.wb-test-case .fail{color:#b67c52}.wb-test-case dl{margin:0;padding:6px 14px 10px;background:#fafcf7}.wb-test-case dt{font-size:9px;color:#9aa88f;margin-top:7px}.wb-test-case dd{margin:0}.wb-test-case pre{margin:4px 0;font-size:11px}.wb-runtime-error,.wb-error,.wb-stale{font-size:12px;line-height:1.8;color:#b16f57;background:#fff5ed;padding:10px 13px;border-radius:7px;overflow-wrap:anywhere}.wb-error:empty{display:none}.wb-error{margin-bottom:15px}.wb-stale{font-size:11px;margin-bottom:12px}.wb-extra{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}.wb-extra summary{font-size:11px;color:#839675;cursor:pointer;margin-bottom:12px}.wb-extra textarea{font-family:Consolas,monospace}.wb-error-tags{border:0;padding:0;margin:0 0 17px;display:flex;flex-wrap:wrap;gap:7px}.wb-error-tags legend{font-size:11px;color:#8a9c7b;margin-bottom:10px}.wb-error-tags label{display:flex;align-items:center;gap:5px;background:#f6f9f1;border:1px solid #e8edde;border-radius:5px;padding:7px 8px;font-size:10px;margin:0}.wb-error-tags input{accent-color:var(--green)}.wb-finish{display:flex;justify-content:space-between;gap:15px;align-items:flex-end;margin-top:20px;margin-bottom:12px}.wb-finish>label{margin:0;flex:1;max-width:220px}.wb-finish select{display:block;width:100%;margin-top:8px;font-size:11px}.wb-finish .button{font-size:11px}.wb-bottom{display:flex;justify-content:space-between;gap:12px;font-size:9px;color:#a0ad93;align-items:center}.wb-bottom .text-button{font-size:10px}.wb-versions summary{font-size:10px;color:#8b9a81;cursor:pointer}.wb-versions>button{display:block;padding:8px 0;font-size:10px}.wb-conflict-actions{display:flex;gap:9px;margin-top:10px}.wb-conflict-actions .button{font-size:10px}.wb-version-dialog{max-width:760px;width:calc(100% - 40px)}.wb-version-dialog pre{white-space:pre;overflow:auto;background:#f7faf3;padding:15px;max-height:60vh}.wb-layout .form-row{gap:15px}
+@media(max-width:1150px){.workbench-page{padding:26px 22px}.wb-layout{grid-template-columns:minmax(245px,.85fr) minmax(0,1.3fr);gap:15px}.wb-code-actions{align-items:flex-start;flex-wrap:wrap}.wb-toolbar{gap:14px}.wb-finish{align-items:stretch;flex-direction:column}.wb-finish>label{max-width:none}}
+@media(max-width:900px){.wb-layout{grid-template-columns:1fr}.wb-left{display:grid;grid-template-columns:1fr 1fr;gap:15px}.wb-left>.panel:first-child{grid-column:1/-1}.wb-toolbar>label{min-width:100%}.wb-code-editor{height:360px}}
+@media(max-width:680px){.sidebar nav{display:flex;overflow-x:auto;gap:2px;scrollbar-width:none}.sidebar .nav-button{flex:0 0 auto;min-width:74px;padding:10px 9px;font-size:10px}.sidebar .nav-button svg{width:12px;height:12px}.workbench-page{padding:22px 13px}.wb-toolbar{padding:14px;gap:12px}.wb-toolbar>label{flex-wrap:wrap;gap:7px}.wb-toolbar select{max-width:none}.wb-left{grid-template-columns:1fr}.wb-left>.panel:first-child{grid-column:auto}.wb-code-editor{grid-template-columns:32px 1fr;height:330px}.wb-code-editor textarea[data-wb-field="code"]{font-size:12px;padding-left:10px}.wb-code-actions .button{padding:8px 10px;font-size:9px}.wb-layout .panel-header{padding:19px 16px 13px}.wb-layout .panel-body{padding:0 16px 19px}.wb-bottom{flex-wrap:wrap}.wb-test-summary{flex-wrap:wrap}.wb-test-summary>span{margin-left:0}.wb-timer output{font-size:20px}}
+
+/* ---------- 工作台布局：主栏按 理清问题 → 写代码验证 → 复盘，教练固定在右栏 ---------- */
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.workbench-page .wb-toolbar{gap:18px;padding:11px 12px 11px 18px;margin-bottom:18px;border-radius:14px;box-shadow:0 1px 2px #203f320a}
+.wb-toolbar-label{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;color:#4f6a45;font-size:12px;font-weight:600}
+.wb-toolbar-label svg{width:16px;height:16px;color:#4f9a75}
+.workbench-page .wb-toolbar select{font-size:13px}
+.wb-graph-link{color:#6f8a66}
+.wb-graph-link:hover{background:#eef5ea;color:var(--green)}
+
+.wb-studio{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,400px);grid-template-areas:"problem coach" "code coach" "reflect coach" "foot coach";gap:18px;align-items:start}
+.wb-problem{grid-area:problem}
+.wb-studio .wb-code-panel{grid-area:code}
+.wb-reflect{grid-area:reflect}
+.wb-foot{grid-area:foot}
+.wb-coach-col{grid-area:coach;align-self:stretch;min-width:0}
+/* 卡片高度随对话增长，最多一屏；页面在顶部时也能看到输入框。 */
+.wb-coach-col .coach-panel{position:sticky;top:16px;max-height:calc(100vh - 32px);box-shadow:0 10px 30px -22px #203f3266}
+.wb-studio .coach-log{max-height:none;min-height:240px}
+
+.wb-card-head{display:flex;align-items:flex-start;gap:13px;padding:20px 22px 14px}
+.wb-step{flex:none;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--soft);color:var(--green);font-weight:650;font-size:13px;box-shadow:inset 0 0 0 1px #d5e5d1}
+.wb-card-title{flex:1;min-width:0}
+.wb-card-title .eyebrow{font-size:10px;letter-spacing:1.2px;margin-bottom:2px}
+.wb-card-title h2{font-size:16px;line-height:1.5}
+.wb-card-tags{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding-top:4px}
+.wb-meta{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;margin-top:6px;font-size:11.5px;color:#7d8c75}
+.wb-status{font-size:10.5px;padding:2px 8px;border-radius:99px;background:#f1f3ef;color:#76836f}
+.wb-status.status-learned{background:#e2f0da;color:#3c7437}
+.wb-status.status-learning{background:#e5eff0;color:#3c6c72}
+.wb-status.status-needs_review{background:#faefdc;color:#94652a}
+.wb-status.status-needs_calibration{background:#f4ece5;color:#9a7559}
+.wb-studio .panel-body{padding:0 22px 22px}
+.wb-studio label{font-size:12px;color:#56704b}
+.wb-studio .form-row{gap:14px}
+.wb-studio .wb-description{font-size:13.5px;line-height:1.95;color:#4f6247;margin-bottom:12px}
+.wb-studio .wb-contract{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:11.5px;color:#7d8c75;margin-bottom:12px}
+.wb-studio .wb-contract span{color:#a0aa93;font-size:11px}
+.wb-cases{border:1px solid #e6ece0;border-radius:11px;padding:0 13px;margin-bottom:16px;background:#fbfcf9}
+.wb-cases>summary{display:flex;align-items:center;gap:7px;padding:10px 0;font-size:12px;color:#56704b;cursor:pointer;list-style:none}
+.wb-cases>summary::-webkit-details-marker{display:none}
+.wb-cases>summary::after{content:"展开";margin-left:auto;font-size:11px;color:#9aa88f}
+.wb-cases[open]>summary::after{content:"收起"}
+.wb-cases>summary svg{width:15px;height:15px;color:#4f9a75}
+.wb-cases .wb-default-cases{padding-bottom:6px;border-top:1px solid #edf1e8}
+.wb-think{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.wb-think label{margin-bottom:0}
+.wb-think textarea{min-height:92px;resize:vertical;font-size:12.5px}
+
+.wb-hintbar{margin-top:16px;padding:11px 13px;border-radius:12px;background:linear-gradient(135deg,#fdf7ea,#fbfcf6);border:1px solid #f0e4c8}
+.wb-hintbar-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wb-hintbar-title{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#86602c}
+.wb-hintbar-title svg{width:16px;height:16px;color:#c08a3e}
+.wb-hintbar .wb-hint-buttons{margin:0;gap:6px}
+.wb-hintbar .wb-hint-buttons .button{min-height:29px;padding:4px 12px;font-size:11px;border-radius:99px;border-color:#e8d6b2;color:#86602c;background:#fff;width:auto}
+.wb-hintbar .wb-hint-buttons .button:hover:not(:disabled){background:#fff6e6}
+.wb-hintbar .text-button{margin-left:auto;font-size:11px}
+.wb-hintbar #wb-hint-note{margin:7px 0 0;font-size:11px;color:#a5906b}
+.wb-hintbar .wb-hint{background:#fff;border-color:#eee0c3;color:#6c5838;font-size:12px}
+.wb-hintbar .wb-hint b{color:#a37030}
+
+.wb-studio .wb-code-panel .wb-card-head{align-items:center}
+.wb-studio .wb-code-editor{height:420px}
+.wb-studio .wb-code-actions>span{font-size:10.5px}
+.wb-studio .wb-code-actions .button{font-size:12px;min-height:36px}
+.wb-results{padding:16px 22px 20px;border-top:1px solid #eef1ea}
+.wb-results .wb-test-summary{font-size:12.5px}
+.wb-results .wb-test-case summary{font-size:12px}
+.wb-results .empty{padding:20px 12px}
+.wb-reflect .wb-error-tags legend{font-size:12px;color:#56704b}
+.wb-reflect .wb-error-tags label{font-size:11px;color:#5f7655;margin:0}
+.wb-reflect .wb-finish .button{font-size:12px}
+.wb-foot{display:grid;gap:8px;padding:0 4px 12px}
+.wb-studio .wb-bottom{font-size:11px}
+.wb-studio .wb-bottom .text-button,.wb-studio .wb-versions summary{font-size:12px}
+
+@media(max-width:1180px){
+  .wb-studio{grid-template-columns:minmax(0,1fr);grid-template-areas:"problem" "code" "coach" "reflect" "foot"}
+  .wb-coach-col .coach-panel{position:static;height:auto;min-height:0;max-height:none}
+  .wb-studio .coach-log{max-height:440px}
+}
+@media(max-width:680px){
+  .wb-think{grid-template-columns:1fr}
+  .wb-card-head{padding:17px 16px 12px}
+  .wb-studio .panel-body{padding:0 16px 18px}
+  .wb-results{padding:14px 16px 18px}
+  .wb-studio .wb-code-editor{height:340px}
+  .wb-hintbar .text-button{margin-left:0}
+  .workbench-page .wb-toolbar{gap:10px;padding:12px 14px}
+}

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#245b46">
+  <title>循序 · 算法学习</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/graph.css">
+  <link rel="stylesheet" href="/workbench.css">
+  <link rel="stylesheet" href="/extras.css">
+  <script src="/coach.js" defer></script>
+  <script src="/workbench.js" defer></script>
+  <script src="/mock.js" defer></script>
+  <script src="/profile.js" defer></script>
+  <script src="/graph.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳至主要内容</a>
+  <aside class="sidebar">
+    <a href="#graph" class="brand"><span class="brand-mark">循</span><span>循序<span class="brand-sub">算法学习工作台</span></span></a>
+    <div class="workspace-label">我的学习空间</div>
+    <nav aria-label="主要导航">
+      <button data-view="graph" class="nav-button active"><span data-icon="network"></span>知识图谱<span class="nav-dot"></span></button>
+      <button data-view="today" class="nav-button"><span data-icon="home"></span>今日学习</button>
+      <button data-view="profile" class="nav-button"><span data-icon="user"></span>我的画像</button>
+      <button data-view="workbench" class="nav-button"><span data-icon="code"></span>练习工作台</button>
+      <button data-view="mock" class="nav-button"><span data-icon="clock"></span>模拟面试</button>
+      <button data-view="review" class="nav-button"><span data-icon="repeat"></span>复习队列<span id="review-count" class="nav-count">—</span></button>
+      <button data-view="problems" class="nav-button"><span data-icon="layers"></span>题目档案</button>
+      <button data-view="log" class="nav-button"><span data-icon="book"></span>学习记录</button>
+      <button data-view="weekly" class="nav-button"><span data-icon="chart"></span>能力周报</button>
+    </nav>
+    <div class="sidebar-note"><span class="little-label">LEARN · RECALL · GROW</span><p>让每次练习，<br>成为下一次的底气。</p><div class="note-line"></div><span>理解思路，比记住答案更重要。</span></div>
+    <div class="sidebar-bottom"><span class="avatar">Py</span><div><strong>Python 面试准备</strong><small>按自己的节奏，持续向前</small></div></div>
+  </aside>
+  <div class="app-shell">
+    <header class="topbar"><div class="breadcrumb">我的学习 <span>/</span> <strong id="breadcrumb">今日学习</strong></div><div class="topbar-actions"><span id="connection" class="connection"><i></i>正在连接</span><button class="icon-button" id="refresh" aria-label="刷新进度" title="刷新进度"><span data-icon="refresh"></span></button></div></header>
+    <main id="main" tabindex="-1"><div class="loading-state"><span class="loading-dot"></span>正在读取你的学习进度…</div></main>
+    <footer>循序 · 把练习变成积累 <span>数据保存在本机 · 与聊天教练同步</span></footer>
+  </div>
+  <dialog id="practice-dialog" aria-labelledby="practice-title">
+    <form id="practice-form">
+      <div class="dialog-heading"><div><span class="eyebrow">记录每一点进步</span><h2 id="practice-title">记录练习</h2></div><button type="button" class="icon-button" data-close aria-label="关闭"><span data-icon="close"></span></button></div>
+      <p class="muted">按这次真实完成情况记录，自动安排下一次复习。</p>
+      <div class="form-row"><label>LeetCode 题号<input name="id" inputmode="numeric" pattern="[1-9][0-9]{0,5}" required placeholder="例如 42"></label><label>练习用时（分钟）<input name="minutes" type="number" min="1" max="1440" placeholder="可留空"></label></div>
+      <label>题目名称<input name="title" required maxlength="100" placeholder="例如 接雨水"></label>
+      <label>所属专题<input name="topic" required maxlength="100" list="topic-options" placeholder="例如 双指针"></label>
+      <datalist id="topic-options"><option>双指针</option><option>滑动窗口</option><option>哈希</option><option>链表</option><option>二叉树</option><option>BST</option><option>栈与队列</option><option>动态规划</option><option>回溯</option></datalist>
+      <fieldset class="result-options"><legend>这次完成得怎么样？</legend><label><input type="radio" name="result" value="independent" required checked><span><strong>独立完成</strong><small>自己写出正确代码</small></span></label><label><input type="radio" name="result" value="hinted"><span><strong>提示后完成</strong><small>还需要再巩固</small></span></label><label><input type="radio" name="result" value="failed"><span><strong>暂未完成</strong><small>明天短时回忆</small></span></label></fieldset>
+      <label>一句话复盘<textarea name="note" rows="3" maxlength="2000" placeholder="核心思路、卡住的地方，或下次需要注意的边界…"></textarea></label>
+      <label class="check-label"><input name="mock" type="checkbox">这是一次限时模拟</label>
+      <p class="form-hint">同一道题同一天再次记录会更新本次结果，完成次数不会重复累加。</p>
+      <p class="form-error" role="alert"></p>
+      <div class="dialog-actions"><button type="button" class="button secondary" data-close>取消</button><button type="submit" class="button primary">保存练习</button></div>
+    </form>
+  </dialog>
+  <dialog id="wrap-dialog" aria-labelledby="wrap-title">
+    <form id="wrap-form"><div class="dialog-heading"><div><span class="eyebrow">给今天一个句号</span><h2 id="wrap-title">结束并保存</h2></div><button type="button" class="icon-button" data-close aria-label="关闭"><span data-icon="close"></span></button></div><p class="muted" id="wrap-description"></p><label>今天的收获或卡点<textarea name="note" rows="4" maxlength="2000" placeholder="例如：更清楚什么时候移动左指针了；下次注意空数组。"></textarea></label><label>留给下次的自己<textarea name="next_action" rows="2" maxlength="2000" placeholder="先复习到期题，再继续当前专题"></textarea></label><p class="form-hint">已记录题目、下次复习日期和这份总结会保存到学习日志。</p><p class="form-error" role="alert"></p><div class="dialog-actions"><button type="button" class="button secondary" data-close>再学一会</button><button type="submit" class="button primary">保存今日总结</button></div></form>
+  </dialog>
+  <dialog id="coach-dialog" aria-labelledby="coach-title">
+    <div class="dialog-heading"><div><span class="eyebrow">把管理与学习连起来</span><h2 id="coach-title">交给聊天教练</h2></div><button type="button" class="icon-button" data-close aria-label="关闭"><span data-icon="close"></span></button></div><p class="muted">复制下面的内容，发到当前项目的聊天会话。教练会从你的实际进度接着带练。</p><textarea id="coach-prompt" rows="10" readonly aria-label="发给聊天教练的学习指令"></textarea><div class="coach-disclosure"><span data-icon="spark"></span>面板负责计划与记录；讲题和代码检查在聊天中进行。</div><div class="dialog-actions"><button class="button primary" id="copy-prompt"><span data-icon="copy"></span>复制学习指令</button></div>
+  </dialog>
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <form id="settings-form"><div class="dialog-heading"><h2 id="settings-title">调整学习方向</h2><button type="button" class="icon-button" data-close aria-label="关闭"><span data-icon="close"></span></button></div><label>当前专题<input name="topic" required maxlength="100"></label><label>下一步计划<textarea name="next_action" maxlength="2000" rows="4"></textarea></label><p class="form-error" role="alert"></p><div class="dialog-actions"><button type="submit" class="button primary">保存方向</button></div></form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

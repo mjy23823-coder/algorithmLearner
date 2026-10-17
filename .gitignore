@@ -1,0 +1,21 @@
+# 仅本地版本管理，不配置远程仓库。
+
+# 本机运行数据：教练设置与 API Key、面板日志、AI 分析缓存，绝不进入版本库
+.runtime/
+
+# 进度备份（按日期轮换，由 tools/coach.py 维护）
+backups/
+learning-state.json.bak
+
+# 工作台草稿随输入自动保存，变化太频繁；运行过的代码版本保存在 solutions/lc<题号>/
+solutions/.drafts/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 测试截图与录屏，可由 tests/*_browser.py 重新生成
+artifacts/
+
+# Windows 保留名，之前命令重定向时意外生成的文件
+NUL

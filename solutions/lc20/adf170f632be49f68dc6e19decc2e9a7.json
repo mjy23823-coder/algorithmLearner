@@ -1,0 +1,59 @@
+{
+  "id": "20",
+  "run_id": "adf170f632be49f68dc6e19decc2e9a7",
+  "code": "class Solution:\n    def isValid(self, s):\n        # 先说明变量含义，再完成你的实现\n        pass\n",
+  "code_hash": "08f0739a6de5c71532f4535d6f038e82aa5e28fcd1ba802b6ac4db1522be895f",
+  "session_id": "0a608ffe86044bf7b1bfc2fb3592e046",
+  "practice_date": "2026-10-17",
+  "extra_cases": [],
+  "created_at": "2026-10-17T04:52:53.570687+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": false,
+        "args": [
+          "()[]{}"
+        ],
+        "expected": true,
+        "actual": null
+      },
+      {
+        "name": "用例 2",
+        "passed": false,
+        "args": [
+          "([)]"
+        ],
+        "expected": false,
+        "actual": null
+      },
+      {
+        "name": "用例 3",
+        "passed": false,
+        "args": [
+          "("
+        ],
+        "expected": false,
+        "actual": null
+      },
+      {
+        "name": "用例 4",
+        "passed": false,
+        "args": [
+          "{[]}"
+        ],
+        "expected": true,
+        "actual": null
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 4,
+    "passed_count": 0,
+    "elapsed_ms": 109,
+    "builtin_count": 4,
+    "passed": false
+  },
+  "source_path": "solutions/lc20/adf170f632be49f68dc6e19decc2e9a7.py"
+}

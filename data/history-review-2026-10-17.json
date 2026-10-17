@@ -1,0 +1,1020 @@
+{
+  "schema_version": 1,
+  "audit_id": "learning-log-recovery-2026-10-17",
+  "source": "learning-log.md",
+  "source_bytes": 47926,
+  "source_sha256": "420323535514489fcb967fa90db5bd03c2c7b80c1475540a2d4e1efa900abcf1",
+  "policy": "仅补缺失题目；次数是日志能确认的下限；未注明独立性用 historical；口述、计划和同日重复不增加次数",
+  "excluded": [
+    {
+      "date": "2026-09-23",
+      "ids": [
+        "144",
+        "94",
+        "145",
+        "102"
+      ],
+      "reason": "仅口述复盘，不追加完成记录",
+      "line": 498
+    },
+    {
+      "date": "2026-09-27",
+      "ids": [
+        "102"
+      ],
+      "reason": "短时回忆安排，不追加完成记录",
+      "line": 543
+    },
+    {
+      "ids": [
+        "42"
+      ],
+      "reason": "只有待学队列记录，不能计为练过"
+    }
+  ],
+  "records": [
+    {
+      "id": "1",
+      "title": "两数之和",
+      "topic": "哈希",
+      "events": [
+        {
+          "date": "2026-09-13",
+          "result": "historical",
+          "note": "哈希表保存已经出现的数字和下标；完成有记录，是否独立未注明",
+          "evidence": [
+            {
+              "line": 42,
+              "text": "### 今日完成题目"
+            },
+            {
+              "line": 44,
+              "text": "1. LeetCode 1. 两数之和"
+            },
+            {
+              "line": 100,
+              "text": "今天主要恢复了哈希表相关基础。`LC 1` 和 `LC 217` 掌握较好，`LC 242` 的思路正确，但 Python 字典语法需要继续熟悉。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "title": "盛最多水的容器",
+      "topic": "双指针",
+      "events": [
+        {
+          "date": "2026-10-11",
+          "result": "hinted",
+          "note": "讲解后修正指针边界和移动方向；计算面积后移动较短木板",
+          "evidence": [
+            {
+              "line": 825,
+              "text": "### LeetCode 11：盛最多水的容器"
+            },
+            {
+              "line": 827,
+              "text": "- 当前状态：已完成思路分析；首次代码尝试存在边界和指针更新错误，经过讲解完成修正。"
+            },
+            {
+              "line": 835,
+              "text": "- 完成：LC236 间隔复习、LC27 独立完成、LC11 思路学习与代码纠错。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "title": "有效的括号",
+      "topic": "栈",
+      "events": [
+        {
+          "date": "2026-09-16",
+          "result": "failed",
+          "note": "首次尝试未完整通过，不计完成",
+          "evidence": [
+            {
+              "line": 199,
+              "text": "1. LeetCode 20. 有效的括号"
+            },
+            {
+              "line": 201,
+              "text": "   - 今日状态：开始尝试独立写代码，主要在 Python 语法和栈逻辑上做纠正，尚未完整独立通过。"
+            },
+            {
+              "line": 236,
+              "text": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-09-17",
+          "result": "historical",
+          "note": "完成括号匹配，独立性未注明",
+          "evidence": [
+            {
+              "line": 255,
+              "text": "### 今日完成题目"
+            },
+            {
+              "line": 257,
+              "text": "1. LeetCode 20. 有效的括号"
+            },
+            {
+              "line": 279,
+              "text": "今天完成了栈专题的两道基础题。LC20 重点是括号匹配和最后判断栈是否清空；LC1047 重点是用栈顶判断是否发生相邻重复消除。整体对“栈顶”和“空栈判断”的理解明显增强。"
+            }
+          ],
+          "completion_confirmed": true
+        },
+        {
+          "date": "2026-09-19",
+          "result": "independent",
+          "note": "已独立完成；先判断空栈再匹配括号",
+          "evidence": [
+            {
+              "line": 328,
+              "text": "1. LeetCode 20. 有效的括号"
+            },
+            {
+              "line": 330,
+              "text": "   - 当前状态：已独立完成正确代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "94",
+      "title": "二叉树的中序遍历",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-22",
+          "result": "independent",
+          "note": "左中右；9-23 只口述，不另计完成次数",
+          "evidence": [
+            {
+              "line": 432,
+              "text": "### LeetCode 94. 二叉树的中序遍历"
+            },
+            {
+              "line": 434,
+              "text": "- 当前状态：已独立写出正确递归代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "98",
+      "title": "验证二叉搜索树",
+      "topic": "BST",
+      "events": [
+        {
+          "date": "2026-10-02",
+          "result": "historical",
+          "note": "上下界约束并严格比较；是否独立未注明",
+          "evidence": [
+            {
+              "line": 650,
+              "text": "3. **LeetCode 98. 验证二叉搜索树**"
+            },
+            {
+              "line": 651,
+              "text": "   - 当前状态：已理解并完成递归范围判断。"
+            },
+            {
+              "line": 660,
+              "text": "- LC112、LC700、LC98 今天完成后暂不立即二刷，按间隔复习安排。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "100",
+      "title": "相同的树",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-23",
+          "result": "historical",
+          "note": "日志确认补全并提交正确代码；整题是否无提示独立完成未明确",
+          "evidence": [
+            {
+              "line": 511,
+              "text": "### 后续练习：LeetCode 100. 相同的树"
+            },
+            {
+              "line": 513,
+              "text": "- 当前状态：已独立补全并提交正确递归代码。"
+            }
+          ],
+          "completion_confirmed": true
+        },
+        {
+          "date": "2026-09-26",
+          "result": "independent",
+          "note": "独立重写正确，用 and 将左右子树判断结果传回上层",
+          "evidence": [
+            {
+              "line": 523,
+              "text": "- LC100 相同的树：独立重写正确，能用 `and` 把左右子树的递归判断结果返回上层；注意注释中只有一边为空才是不相同。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "101",
+      "title": "对称二叉树",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-26",
+          "result": "hinted",
+          "note": "分层提示后完成镜像递归，配对左左与右右、左右与右左",
+          "evidence": [
+            {
+              "line": 525,
+              "text": "- LC101 对称二叉树：在分层提示后写出正确递归代码；镜像配对为左左与右右、左右与右左。双空为真、单空或值不等为假。`if left and right` 及末尾 `return True` 在前面空值判断后可简化；时间 `O(n)`，递归空间 `O(h)`。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "102",
+      "title": "二叉树的层序遍历",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-22",
+          "result": "hinted",
+          "note": "提示后完成队列版层序遍历，理解 level_size、level 与 result",
+          "evidence": [
+            {
+              "line": 456,
+              "text": "### LeetCode 102. 二叉树的层序遍历"
+            },
+            {
+              "line": 458,
+              "text": "- 当前状态：已理解并完成队列版层序遍历。"
+            },
+            {
+              "line": 468,
+              "text": "- 今日状态：二叉树递归遍历逐渐恢复手感；层序遍历一开始不知道如何动手，但在提示下理解了队列、`level_size`、`level`、`result` 的分工。"
+            }
+          ]
+        },
+        {
+          "date": "2026-09-26",
+          "result": "failed",
+          "note": "popleft 放在层循环外，尚未提交修正后的完整代码；9-27 短时回忆不另计完成",
+          "evidence": [
+            {
+              "line": 524,
+              "text": "- LC102 二叉树的层序遍历：复盘 `deque`、`len(queue)` 和固定每层节点数；代码两次尝试中 `popleft()` 仍写在每层循环外，经过指出后表示理解，尚未提交修正后的完整代码。下次宜不看提示独立写一遍验证。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "104",
+      "title": "二叉树的最大深度",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-20",
+          "result": "independent",
+          "note": "空节点返回 0，当前高度为 1 + max(左右高度)",
+          "evidence": [
+            {
+              "line": 394,
+              "text": "### LeetCode 104. 二叉树的最大深度"
+            },
+            {
+              "line": 396,
+              "text": "- 当前状态：已独立写出正确递归代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "108",
+      "title": "将有序数组转换为二叉搜索树",
+      "topic": "BST",
+      "events": [
+        {
+          "date": "2026-10-04",
+          "result": "historical",
+          "note": "递归区间与构树逻辑正确，修正 Python 节点构造语法；整题独立性未注明",
+          "evidence": [
+            {
+              "line": 704,
+              "text": "### LC108 学习"
+            },
+            {
+              "line": 706,
+              "text": "- 用户已说明核心思路：选择数组中间元素作为根节点，左半部分递归构造左子树，右半部分递归构造右子树，直到没有剩余元素。"
+            },
+            {
+              "line": 708,
+              "text": "- 代码检查：递归区间与左右子树构造逻辑正确；Python 语法中将 `TreeNode root = new TreeNode(...)` 修正为 `root = TreeNode(...)`。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "110",
+      "title": "平衡二叉树",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-28",
+          "result": "hinted",
+          "note": "有代码框架提示时完成，用 -1 向上传递不平衡",
+          "evidence": [
+            {
+              "line": 587,
+              "text": "### LeetCode 110. 平衡二叉树"
+            },
+            {
+              "line": 589,
+              "text": "- 当前状态：理解提示后写出正确代码；尚未在没有代码框架提示时独立产出。"
+            }
+          ]
+        },
+        {
+          "date": "2026-10-01",
+          "result": "independent",
+          "note": "首次有明确记录的独立重写完成，仍需下一次间隔验证",
+          "evidence": [
+            {
+              "line": 605,
+              "text": "### LeetCode 110. 平衡二叉树"
+            },
+            {
+              "line": 607,
+              "text": "- 当前状态：已独立写出正确代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "112",
+      "title": "路径总和",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-27",
+          "result": "hinted",
+          "note": "经关键纠错后完成；用 remain 参数传递各分支剩余和",
+          "evidence": [
+            {
+              "line": 574,
+              "text": "### LeetCode 112：路径总和（首次尝试）"
+            },
+            {
+              "line": 576,
+              "text": "- 当前状态：经过纠错后已独立写出正确递归函数。"
+            },
+            {
+              "line": 578,
+              "text": "- 关键修正：不能在非叶子节点直接判断；不能使用 `nonlocal targetSum` 共享修改目标，而应通过 `remain` 参数让每个分支独立计算。"
+            }
+          ]
+        },
+        {
+          "date": "2026-10-02",
+          "result": "historical",
+          "note": "复习正确完成，曾混淆 root 和 node；是否无提示完成未注明",
+          "evidence": [
+            {
+              "line": 638,
+              "text": "1. **LeetCode 112. 路径总和**（复习）"
+            },
+            {
+              "line": 639,
+              "text": "   - 当前状态：已正确完成。"
+            },
+            {
+              "line": 641,
+              "text": "   - 复盘卡点：最初将 `root` 和当前递归节点 `node` 混用，已理解递归中应判断当前的 `node`。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "144",
+      "title": "二叉树的前序遍历",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-22",
+          "result": "historical",
+          "note": "已完成递归前序遍历；9-23 只口述，不另计完成次数",
+          "evidence": [
+            {
+              "line": 425,
+              "text": "### LeetCode 144. 二叉树的前序遍历"
+            },
+            {
+              "line": 427,
+              "text": "- 当前状态：已理解并掌握递归写法。"
+            },
+            {
+              "line": 441,
+              "text": "- 已完成 LC203 复盘、LC144 前序遍历和 LC94 中序遍历。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "145",
+      "title": "二叉树的后序遍历",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-22",
+          "result": "independent",
+          "note": "左右中；9-23 只口述，不另计完成次数",
+          "evidence": [
+            {
+              "line": 444,
+              "text": "### LeetCode 145. 二叉树的后序遍历"
+            },
+            {
+              "line": 446,
+              "text": "- 当前状态：已独立写出正确递归代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "167",
+      "title": "两数之和 II - 输入有序数组",
+      "topic": "双指针",
+      "events": [
+        {
+          "date": "2026-09-18",
+          "result": "historical",
+          "note": "代码逻辑正确；注意返回 1-based 下标，独立性未注明",
+          "evidence": [
+            {
+              "line": 305,
+              "text": "1. LeetCode 167. 两数之和 II - 输入有序数组"
+            },
+            {
+              "line": 310,
+              "text": "   - 当前状态：代码逻辑正确。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "203",
+      "title": "移除链表元素",
+      "topic": "链表",
+      "events": [
+        {
+          "date": "2026-09-19",
+          "result": "independent",
+          "note": "dummy 固定起点，cur 为待检查节点的前驱",
+          "evidence": [
+            {
+              "line": 342,
+              "text": "3. LeetCode 203. 移除链表元素"
+            },
+            {
+              "line": 344,
+              "text": "   - 当前状态：已独立写出正确逻辑。"
+            }
+          ]
+        },
+        {
+          "date": "2026-09-20",
+          "result": "hinted",
+          "note": "修正 cur = cur.next.next 为修改 cur.next；当日总结确认完成复盘",
+          "evidence": [
+            {
+              "line": 387,
+              "text": "### LeetCode 203. 移除链表元素"
+            },
+            {
+              "line": 389,
+              "text": "- 当前状态：已写出整体正确方向，但删除分支需要修正。"
+            },
+            {
+              "line": 390,
+              "text": "- 关键问题：`cur = cur.next.next` 只改变了 `cur` 变量，没有修改链表连接；应写成 `cur.next = cur.next.next`。"
+            },
+            {
+              "line": 403,
+              "text": "- 已完成 LC206、LC203 复盘，以及 LC104。"
+            }
+          ]
+        },
+        {
+          "date": "2026-09-22",
+          "result": "independent",
+          "note": "独立完成，删除节点后不移动 cur",
+          "evidence": [
+            {
+              "line": 417,
+              "text": "### LeetCode 203. 移除链表元素"
+            },
+            {
+              "line": 419,
+              "text": "- 当前状态：已独立写出正确代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "206",
+      "title": "反转链表",
+      "topic": "链表",
+      "events": [
+        {
+          "date": "2026-09-19",
+          "result": "independent",
+          "note": "先保存下一个节点，再反转箭头",
+          "evidence": [
+            {
+              "line": 334,
+              "text": "2. LeetCode 206. 反转链表"
+            },
+            {
+              "line": 336,
+              "text": "   - 当前状态：理解过程后已独立写出正确代码。"
+            }
+          ]
+        },
+        {
+          "date": "2026-09-20",
+          "result": "independent",
+          "note": "再次独立写出正确代码；相隔一天，不提升间隔掌握级别",
+          "evidence": [
+            {
+              "line": 378,
+              "text": "### LeetCode 206. 反转链表"
+            },
+            {
+              "line": 380,
+              "text": "- 当前状态：已独立写出正确代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "217",
+      "title": "存在重复元素",
+      "topic": "哈希",
+      "events": [
+        {
+          "date": "2026-09-13",
+          "result": "historical",
+          "note": "集合判重；完成有记录，是否独立未注明",
+          "evidence": [
+            {
+              "line": 42,
+              "text": "### 今日完成题目"
+            },
+            {
+              "line": 49,
+              "text": "2. LeetCode 217. 存在重复元素"
+            },
+            {
+              "line": 100,
+              "text": "今天主要恢复了哈希表相关基础。`LC 1` 和 `LC 217` 掌握较好，`LC 242` 的思路正确，但 Python 字典语法需要继续熟悉。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "226",
+      "title": "翻转二叉树",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-23",
+          "result": "hinted",
+          "note": "经提示修正终止条件和遗漏的左右交换，再完成递归代码",
+          "evidence": [
+            {
+              "line": 499,
+              "text": "2. LeetCode 226. 翻转二叉树：先尝试辅助函数写法，经提示后独立写出后序递归代码：空节点返回、递归翻转左右子树、交换 `root.left` 和 `root.right`、返回 `root`。代码逻辑正确。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "230",
+      "title": "二叉搜索树中第 K 小的元素",
+      "topic": "BST",
+      "events": [
+        {
+          "date": "2026-10-07",
+          "result": "independent",
+          "note": "独立写出正确中序计数代码，可在找到后提前停止",
+          "evidence": [
+            {
+              "line": 753,
+              "text": "### LeetCode 230：二叉搜索树中第 K 小的元素"
+            },
+            {
+              "line": 755,
+              "text": "- 当前状态：独立写出正确核心代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "235",
+      "title": "二叉搜索树的最近公共祖先",
+      "topic": "BST",
+      "events": [
+        {
+          "date": "2026-10-03",
+          "result": "historical",
+          "note": "修正递归调用缺少 return，整题独立性待验证",
+          "evidence": [
+            {
+              "line": 678,
+              "text": "### LeetCode 235. 二叉搜索树的最近公共祖先"
+            },
+            {
+              "line": 680,
+              "text": "- 当前状态：已理解并修正递归调用缺少 `return` 的问题。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "257",
+      "title": "二叉树的所有路径",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-28",
+          "result": "hinted",
+          "note": "经提示补空节点、左右递归与回溯",
+          "evidence": [
+            {
+              "line": 596,
+              "text": "### LeetCode 257. 二叉树的所有路径"
+            },
+            {
+              "line": 598,
+              "text": "- 当前状态：已理解递归传递路径和叶子节点收集结果；代码经提示修正后完成。"
+            }
+          ]
+        },
+        {
+          "date": "2026-10-01",
+          "result": "independent",
+          "note": "独立写出回溯代码，递归返回前 pop 恢复路径",
+          "evidence": [
+            {
+              "line": 611,
+              "text": "### LeetCode 257. 二叉树的所有路径"
+            },
+            {
+              "line": 613,
+              "text": "- 当前状态：已独立写出正确回溯代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "283",
+      "title": "移动零",
+      "topic": "双指针",
+      "events": [
+        {
+          "date": "2026-09-15",
+          "result": "historical",
+          "note": "slow 指向下一个非零元素的写入位置；独立性待验证",
+          "evidence": [
+            {
+              "line": 119,
+              "text": "### 今日完成题目"
+            },
+            {
+              "line": 126,
+              "text": "2. LeetCode 283. 移动零"
+            },
+            {
+              "line": 148,
+              "text": "- LeetCode 283：否"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "344",
+      "title": "反转字符串",
+      "topic": "双指针",
+      "events": [
+        {
+          "date": "2026-09-15",
+          "result": "historical",
+          "note": "相向双指针与原地交换；日志确认完成，未注明是否无提示独立完成",
+          "evidence": [
+            {
+              "line": 171,
+              "text": "2. LeetCode 344. 反转字符串"
+            },
+            {
+              "line": 179,
+              "text": "今天完成了字符串 / 计数专题：二刷 LC242 并完成 LC344。LC242 的核心卡点是 `dict.get(key, default)` 参数顺序和访问字典前先判断 key 是否存在；LC344 掌握较好，双指针原地交换写法正确。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "404",
+      "title": "左叶子之和",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-10-01",
+          "result": "hinted",
+          "note": "纠正递归调用缺少累加的问题，保留巩固状态",
+          "evidence": [
+            {
+              "line": 619,
+              "text": "### LeetCode 404. 左叶子之和"
+            },
+            {
+              "line": 621,
+              "text": "- 当前状态：经过纠错后掌握递归累加。"
+            },
+            {
+              "line": 623,
+              "text": "- 关键错误：调用 `dfs(node.left)` 时遗漏了 `total_val +=`，导致左子树结果丢失。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "501",
+      "title": "二叉搜索树中的众数",
+      "topic": "BST",
+      "events": [
+        {
+          "date": "2026-10-07",
+          "result": "hinted",
+          "note": "多次修正后完成；注意 prev 保存值和连续计数更新顺序",
+          "evidence": [
+            {
+              "line": 746,
+              "text": "### LeetCode 501：二叉搜索树中的众数"
+            },
+            {
+              "line": 748,
+              "text": "- 当前状态：经过多次修正后掌握递归中序遍历与连续计数。"
+            },
+            {
+              "line": 767,
+              "text": "- 今天完成 LC501、LC230，LC26 作为到期复习题未完成。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "530",
+      "title": "二叉搜索树的最小绝对差",
+      "topic": "BST",
+      "events": [
+        {
+          "date": "2026-10-03",
+          "result": "historical",
+          "note": "中序遍历比较相邻差值，首次完成独立性未注明",
+          "evidence": [
+            {
+              "line": 684,
+              "text": "### LeetCode 530. 二叉搜索树的最小绝对差"
+            },
+            {
+              "line": 686,
+              "text": "- 当前状态：已完成递归中序遍历代码。"
+            }
+          ],
+          "completion_confirmed": true
+        },
+        {
+          "date": "2026-10-04",
+          "result": "independent",
+          "note": "独立完成；相隔一天，不因重复练习标为间隔掌握",
+          "evidence": [
+            {
+              "line": 695,
+              "text": "## 2026-10-04｜LC530 复习"
+            },
+            {
+              "line": 697,
+              "text": "- 当前状态：已独立写出正确的递归中序遍历代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "543",
+      "title": "二叉树的直径",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-09-27",
+          "result": "independent",
+          "note": "返回高度，同时用左右高度之和更新最大直径",
+          "evidence": [
+            {
+              "line": 564,
+              "text": "### LeetCode 543：二叉树的直径"
+            },
+            {
+              "line": 566,
+              "text": "- 当前状态：已独立写出正确代码。"
+            }
+          ]
+        },
+        {
+          "date": "2026-10-03",
+          "result": "independent",
+          "note": "间隔后再次独立完成，使用 nonlocal 更新直径",
+          "evidence": [
+            {
+              "line": 669,
+              "text": "### LeetCode 543. 二叉树的直径"
+            },
+            {
+              "line": 671,
+              "text": "- 当前状态：已独立写出正确代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "617",
+      "title": "合并二叉树",
+      "topic": "二叉树",
+      "events": [
+        {
+          "date": "2026-10-01",
+          "result": "independent",
+          "note": "独立完成：空树返回另一棵，非空则累加并递归合并",
+          "evidence": [
+            {
+              "line": 626,
+              "text": "### LeetCode 617. 合并二叉树"
+            },
+            {
+              "line": 628,
+              "text": "- 当前状态：已独立写出正确递归代码。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "700",
+      "title": "二叉搜索树中的搜索",
+      "topic": "BST",
+      "events": [
+        {
+          "date": "2026-10-02",
+          "result": "historical",
+          "note": "已完成递归搜索；是否独立未注明",
+          "evidence": [
+            {
+              "line": 644,
+              "text": "2. **LeetCode 700. 二叉搜索树中的搜索**"
+            },
+            {
+              "line": 645,
+              "text": "   - 当前状态：已理解并完成递归搜索。"
+            },
+            {
+              "line": 660,
+              "text": "- LC112、LC700、LC98 今天完成后暂不立即二刷，按间隔复习安排。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "701",
+      "title": "二叉搜索树中的插入操作",
+      "topic": "BST",
+      "events": [
+        {
+          "date": "2026-10-03",
+          "result": "historical",
+          "note": "10-04 日志中用户确认昨日完成，故练习日期为 10-03；独立性未注明",
+          "evidence": [
+            {
+              "line": 711,
+              "text": "### LC701 二叉搜索树中的插入操作"
+            },
+            {
+              "line": 713,
+              "text": "- 当前状态：用户确认已于昨日完成。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "977",
+      "title": "有序数组的平方",
+      "topic": "双指针",
+      "events": [
+        {
+          "date": "2026-09-17",
+          "result": "historical",
+          "note": "日志有加练思路和模板，但未明确最终代码是否完成；完成次数待核对",
+          "evidence": [
+            {
+              "line": 286,
+              "text": "3. LeetCode 977. 有序数组的平方（加练）"
+            },
+            {
+              "line": 288,
+              "text": "   - 核心思路：平方后的最大值一定来自数组两端；用 `left`、`right` 比较两端平方值，从结果数组末尾 `pos` 开始填入较大值。"
+            },
+            {
+              "line": 296,
+              "text": "1. 复盘 LeetCode 977. 有序数组的平方"
+            }
+          ],
+          "completion_confirmed": false
+        }
+      ]
+    },
+    {
+      "id": "1047",
+      "title": "删除字符串中的所有相邻重复项",
+      "topic": "栈",
+      "events": [
+        {
+          "date": "2026-09-17",
+          "result": "historical",
+          "note": "用栈处理相邻消除；完成有记录，独立性未注明",
+          "evidence": [
+            {
+              "line": 255,
+              "text": "### 今日完成题目"
+            },
+            {
+              "line": 263,
+              "text": "2. LeetCode 1047. 删除字符串中的所有相邻重复项"
+            },
+            {
+              "line": 279,
+              "text": "今天完成了栈专题的两道基础题。LC20 重点是括号匹配和最后判断栈是否清空；LC1047 重点是用栈顶判断是否发生相邻重复消除。整体对“栈顶”和“空栈判断”的理解明显增强。"
+            }
+          ],
+          "completion_confirmed": true
+        }
+      ]
+    }
+  ]
+}
