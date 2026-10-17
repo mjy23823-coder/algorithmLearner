@@ -66,10 +66,12 @@ def main():
                 expect(page.get_by_label("Python 代码",exact=True)).to_have_value(solution_start := "class Solution:\n    def trap(self, height):\n        # 先说明变量含义，再完成你的实现\n        pass\n")
                 page.screenshot(path=str(ROOT/"artifacts/learning-workbench.png"),full_page=True)
                 assert path.read_bytes()==before
+                expect(page.get_by_role("button",name="开始计时",exact=True)).to_be_visible()
                 page.get_by_label("我的核心思路",exact=True).fill("每列水量由两侧较低的最大高度决定")
+                # 开始写思路就自动计时。
+                expect(page.get_by_role("button",name="暂停计时",exact=True)).to_be_visible()
                 page.get_by_label("一个边界情况",exact=True).fill("只有一根柱子时无法积水")
                 page.get_by_label("Python 代码",exact=True).fill(solution("42"))
-                page.get_by_role("button",name="开始计时",exact=True).click()
                 expect(page.locator("#wb-clock")).not_to_have_text("00:00")
                 page.get_by_text("追加自定义用例（JSON 数组）",exact=True).click()
                 page.get_by_label("自定义测试用例",exact=True).fill('[{"name":"最小凹槽","args":[[3,0,3]],"expected":3}]')

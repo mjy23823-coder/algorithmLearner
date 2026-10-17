@@ -67,6 +67,24 @@ window.AlgoWorkbench = (() => {
       if(info && !disposed) updateClock();
       cache();
     }
+    // 开始写思路或代码时自动计时；10 分钟没有任何操作（输入、点击、滚动、按键）就自动暂停，
+    // 只多计 2 分钟，离开座位的时间不算进用时。
+    const IDLE_MS = 10 * 60 * 1000, IDLE_GRACE_MS = 2 * 60 * 1000;
+    let lastInput = 0;
+    function tick() {
+      if(since !== null && performance.now() - lastInput > IDLE_MS) {
+        elapsed += Math.max(0, (Math.max(since, lastInput + IDLE_GRACE_MS) - since) / 1000);
+        since = null; clearInterval(timer); timer = null; dirty = true; stamp++;
+        updateClock(); cache(); status("10 分钟没有操作，计时已自动暂停；继续输入会接着计时");
+        return;
+      }
+      updateClock(); dirty = true; stamp++; cache();
+    }
+    function startTimer() {
+      if(since !== null || !info) return;
+      lastInput = performance.now(); since = lastInput;
+      updateClock(); timer = setInterval(tick, 1000);
+    }
     function updateEditor() {
       const code=get("code");
       root.querySelector("#wb-lines").textContent=code.value.split("\n").map((_,i)=>String(i+1)).join("\n");
@@ -232,7 +250,19 @@ window.AlgoWorkbench = (() => {
       } catch(error) {if(!disposed) content.innerHTML=`<div class="empty">${esc(error.message)}</div>`;}
     }
 
-    on(root,"input",event=>{if(event.target.matches("[data-wb-field], [name=wb-error-tag]")){if(event.target===get("code")) updateEditor(); edited();}});
+    // 滚动事件不冒泡，用捕获阶段监听页面内各区域，另外监听整页滚动。
+    const active=()=>{lastInput=performance.now();};
+    for(const type of ["pointerdown","keydown","wheel","scroll"]) root.addEventListener(type,active,{capture:true,passive:true,signal:abort.signal});
+    on(window,"scroll",active);
+    on(root,"input",event=>{
+      if(!event.target.matches("[data-wb-field], [name=wb-error-tag]")) return;
+      if(event.target===get("code")) updateEditor();
+      if(event.target.matches('[data-wb-field="idea"], [data-wb-field="boundary"], [data-wb-field="code"]') && !savedResult && !conflict) {
+        lastInput=performance.now();
+        if(since===null) startTimer();
+      }
+      edited();
+    });
     on(root.querySelector("#wb-problem"),"change",async event=>{
       const next=event.target.value;
       if(busy){event.target.value=id;return;}
@@ -245,7 +275,7 @@ window.AlgoWorkbench = (() => {
       const action=control.dataset.wb;
       if(action==="timer") {
         if(since!==null) {pauseTimer();save().catch(e=>message(e.message));}
-        else {since=performance.now();updateClock();timer=setInterval(()=>{updateClock();dirty=true;stamp++;cache();},1000);}
+        else startTimer();
         return;
       }
       if(action==="use-local" || action==="use-remote") {
