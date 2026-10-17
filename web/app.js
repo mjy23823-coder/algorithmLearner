@@ -56,6 +56,7 @@ try { const saved = Number(localStorage.getItem("algo-minutes")); if (saved >= 1
 let logs = null;
 let requestSequence = 0;
 let toastTimeout;
+let toastToken = 0;
 let filters = {text:"", topic:"", status:"", due:"all"};
 
 document.querySelectorAll("[data-icon]").forEach(el => { el.innerHTML = icon(el.dataset.icon); });
@@ -79,17 +80,23 @@ sidebarToggle?.addEventListener("click", () => setSidebarCollapsed(!document.bod
 
 function toast(message, error = false, action = null) {
   const el = $("#toast");
+  const token = ++toastToken;
   clearTimeout(toastTimeout);
-  el.textContent = message;
+  el.replaceChildren(document.createTextNode(message));
   if (action) {
     const link = document.createElement("button");
     link.type = "button"; link.className = "toast-action"; link.textContent = action.label;
-    link.addEventListener("click", () => { el.hidden = true; action.run(); }, {once: true});
+    link.addEventListener("click", () => { toastToken++; el.hidden = true; action.run(); }, {once: true});
     el.append(link);
   }
+  const dismiss = document.createElement("button");
+  dismiss.type = "button"; dismiss.className = "toast-dismiss"; dismiss.textContent = "×";
+  dismiss.setAttribute("aria-label", "关闭提示"); dismiss.title = "关闭提示";
+  dismiss.addEventListener("click", () => { toastToken++; el.hidden = true; }, {once: true});
+  el.append(dismiss);
   el.className = `toast${error ? " error" : ""}${action ? " with-action" : ""}`;
   el.hidden = false;
-  toastTimeout = setTimeout(() => { el.hidden = true; }, action ? 9000 : error ? 6500 : 4000);
+  toastTimeout = setTimeout(() => { if (token === toastToken) el.hidden = true; }, action ? 7000 : error ? 6500 : 4000);
 }
 
 async function api(path, options = {}) {
