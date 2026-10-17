@@ -76,7 +76,7 @@ window.AlgoCoach = (() => {
     function composer(kind) {
       const agent = kind === "agent", action = agent ? "交给智能体" : "发送";
       const hint = agent ? "让智能体做…例如：我的代码在什么输入下会超时？" : ctx.mock ? "向面试官澄清题意…" : "问题意或 Python 写法…";
-      return `<form class="coach-ask" ${agent ? "data-agent-form" : "data-coach-form"}><input name="message" maxlength="1000" value="${esc(typed[kind])}" placeholder="${esc(hint)}" aria-label="${agent ? "交给智能体的任务" : "向教练提问"}" ${busy ? "disabled" : ""}><button class="coach-send" type="submit" aria-label="${action}" title="${action}" ${busy ? "disabled" : ""}>${busy ? '<span class="coach-spin"></span>' : icon("send")}</button></form>`;
+      return `<form class="coach-ask" autocomplete="off" ${agent ? "data-agent-form" : "data-coach-form"}><input name="message" maxlength="1000" value="${esc(typed[kind])}" placeholder="${esc(hint)}" aria-label="${agent ? "交给智能体的任务" : "向教练提问"}" autocomplete="off" autocapitalize="off" spellcheck="false" ${busy ? "disabled" : ""}><button class="coach-send" type="submit" aria-label="${action}" title="${action}" ${busy ? "disabled" : ""}>${busy ? '<span class="coach-spin"></span>' : icon("send")}</button></form>`;
     }
     function chatPane() {
       const items = transcript.map((m, i) => [m, i]).filter(([m]) => m.mode !== "agent");

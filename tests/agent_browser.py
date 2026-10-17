@@ -59,6 +59,7 @@ def flow(kind, pw, screenshots):
             page.on("console", lambda message: errors.append(message.text) if message.type == "error" else None)
             page.goto(f"http://127.0.0.1:{server.server_port}/#workbench")
             coach_panel = page.locator("#wb-coach")
+            expect(coach_panel.locator('input[name="message"]')).to_have_attribute("autocomplete", "off")
             expect(coach_panel.get_by_role("tab", name="智能体")).to_be_visible()
             coach_panel.get_by_role("tab", name="智能体").click()
             expect(coach_panel).to_contain_text("需要先连接 OpenAI 兼容接口或 Claude API")
