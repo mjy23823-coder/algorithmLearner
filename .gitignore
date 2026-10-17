@@ -5,7 +5,7 @@
 
 # 进度备份（按日期轮换，由 tools/coach.py 维护）
 backups/
-learning-state.json.bak
+*.bak
 
 # 工作台草稿随输入自动保存，变化太频繁；运行过的代码版本保存在 solutions/lc<题号>/
 solutions/.drafts/

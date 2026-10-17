@@ -19,6 +19,7 @@
 | 学习画像 | `python tools/coach.py profile`（掌握度、反复错因、习惯、目标与接下来的重点） |
 | 设定学习目标 | `python tools/coach.py profile --target-date 2026-12-01 --minutes 120 --pace normal`（`--target-date none` 取消） |
 | 完成/尝试一道题 | `python tools/coach.py done 42 --result hinted --title 接雨水 --topic 双指针 --note "一句话错因"` |
+| 口述复习后记录 | `python tools/coach.py oral 104 --result independent`（independent 讲清楚了 / hinted 有卡顿 / failed 讲不出） |
 | 限时模拟后记录 | 在 `done` 后加 `--mock --minutes 28 --limit 25 --scores 4,3,4,4,5`（题型,沟通,代码,复杂度,用时） |
 | 总体进度 / 未来 7 天复习量 | `python tools/coach.py status` |
 | 本地管理面板 | `python tools/dashboard.py --open` |
@@ -44,6 +45,9 @@
 待学不足时用 1 个名额安排校准旧题，其余新题名额按学习画像自动推荐，标为“为你推荐”；用户不满意就 `new skip`，
 想固定下来就 `new add`。推荐综合主线位置、专题掌握度、近期错因用到的解题模板、难度匹配、节奏偏好、目标日期和面试频率。
 理由不含解法要点。
+已经独立写对过至少两次的到期题进入“口述复习”（每天 1～3 道，不占正式名额）：请用户合上代码，用 2 分钟讲清题型、
+核心思路、复杂度和一个边界，你按讲解判断后用 `oral` 记录。口述只调整下次复习日期，不改完成次数和掌握状态；
+有卡顿 2 天后、讲不出第二天安排完整重写。
 网页与聊天共用进度，遇到并发保存提示时重新读取后再操作。
 
 ## 因材施教
@@ -66,6 +70,8 @@
 - `learning-log.md`：每次学习的摘要，追加到文末，格式沿用 `## YYYY-MM-DD｜主题`。
 - `algorithm-roadmap.md`：长期路线；只在切换阶段时更新，不作为当天排题依据。
 - `solutions/lc<题号>.py`：用户提交的代码及验证用例，`tools/lc_helpers.py` 提供 ListNode / TreeNode 等工具。
+- `backups/`：每天第一次保存前的进度快照，保留最近 14 天。
+- 本目录是本地 git 仓库，**不配置远程、不上传**；`wrap` 会自动提交当天的进度、日志和代码，`.runtime/`（含 API Key）不入库。
 
 ## 常用指令
 

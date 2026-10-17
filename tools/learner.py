@@ -144,13 +144,14 @@ def topic_stats(state, today, events):
     return sorted(topics, key=lambda t: (order.get(t["name"], 99), t["name"]))
 
 
-def habits(events, today):
+def habits(events, today, extra_days=()):
     start = today - timedelta(days=27)
     recent = [e for e in events if start <= coach.parse_date(e["date"]) <= today]
     graded = [e for e in recent if result_of(e)]
     count = {key: sum(result_of(e) == key for e in graded) for key in SCORES}
     timed = [minutes_of(e) for e in recent if minutes_of(e)]
-    days = {e["date"] for e in events}
+    # 打卡天数也算口述复习的日子；完成率只看写代码的练习。
+    days = {e["date"] for e in events} | set(extra_days)
     streak, cursor = 0, today if today.isoformat() in days else today - timedelta(days=1)
     while cursor.isoformat() in days:
         streak += 1
@@ -161,7 +162,7 @@ def habits(events, today):
             "independent_rate": round(100 * count["independent"] / len(graded)) if graded else None,
             "hint_rate": round(100 * count["hinted"] / len(graded)) if graded else None,
             "avg_minutes": round(sum(timed) / len(timed), 1) if timed else None, "timed": len(timed),
-            "active_days_14": len({e["date"] for e in events if 0 <= (today - coach.parse_date(e["date"])).days < 14}),
+            "active_days_14": len({day for day in days if 0 <= (today - coach.parse_date(day)).days < 14}),
             "streak": streak, "per_week": round(len(recent) / 4, 1),
             "mocks": len(mocks), "mock_average": round(sum(scored) / len(scored), 1) if scored else None,
             "inferred": sum(e.get("result") not in SCORES for e in graded)}
@@ -219,7 +220,7 @@ def build_profile(state, today, error_events=None):
     index = {t["name"]: t for t in topics}
     focus_topics = [index[name] for name in current_families(current) if name in index]
     weak = weaknesses(state, today, error_events)
-    habit = habits(events, today)
+    habit = habits(events, today, [e["date"] for e in coach.oral_events(state)])
     target = goal(state, today, current)
     config = settings(state)
     profile = {"date": today.isoformat(), "settings": config, "pace_label": PACES[config["pace"]], "current_topic": current,

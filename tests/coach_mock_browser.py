@@ -66,6 +66,17 @@ def main():
                 expect(page.locator("#toast")).to_contain_text(f"已换掉 LC{swapped}")
                 assert swapped in coach.load(path)["recommend_skips"]
                 expect(page.locator(".rec-row .task-id").filter(has_text=re.compile(rf"^LC {swapped}$"))).to_have_count(0)
+                # 口述复习：讲清楚了只改下次复习日期，当前结果高亮，可以当天更正。
+                oral = page.locator(".oral-panel")
+                expect(oral.get_by_role("heading", name=re.compile("口述复习"))).to_be_visible()
+                row = oral.locator(".oral-row").first
+                spoken = row.locator(".task-id").inner_text().replace("LC", "").strip()
+                row.get_by_role("button", name="讲清楚了").click()
+                expect(page.locator("#toast")).to_contain_text(f"LC{spoken} 口述复习：讲清楚了")
+                expect(oral.locator(".oral-choice.chosen")).to_have_count(1)
+                oral.get_by_label(f"LC{spoken} 口述结果", exact=True).get_by_role("button", name="有卡顿").click()
+                expect(page.locator("#toast")).to_contain_text("完整重写")
+                assert [e["result"] for e in coach.load(path)["completed"][spoken]["oral"]] == ["hinted"]
                 page.screenshot(path=str(artifacts / "smart-plan.png"), full_page=True)
 
                 # 工作台里的教练对话：离线模式下讲解检查不计提示，要提示会展开分层提示。

@@ -166,6 +166,36 @@ class PersistenceTests(unittest.TestCase):
         self.assertEqual(today.read_bytes(), original)
         self.assertNotIn("learning-state-2026-09-01.json", snapshots)
 
+    def test_wrap_commits_only_learning_data_to_the_local_git_repo(self):
+        import shutil
+        import subprocess
+        if not shutil.which("git"):
+            self.skipTest("没有 git")
+        root = self.path.parent
+
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, capture_output=True, text=True, encoding="utf-8", check=True).stdout
+
+        git("init", "-q", "-b", "main")
+        git("config", "user.name", "test")
+        git("config", "user.email", "test@localhost")
+        (root / "notes.txt").write_text("v1", encoding="utf-8")
+        git("add", "-A")
+        git("commit", "-q", "-m", "初始")
+        (root / "notes.txt").write_text("v2", encoding="utf-8")
+        git("add", "notes.txt")
+        state = coach.load(self.path)
+        record(state)
+        coach.save(self.path, state)
+        result = coach.wrap_session(state, self.path, self.log, TODAY, "今天练了双指针")
+        self.assertEqual(result["git"], "已提交到本地 git")
+        self.assertIn("已提交到本地 git", result["message"])
+        self.assertEqual(git("log", "-1", "--format=%s").strip(), f"学习记录 {TODAY.isoformat()}")
+        self.assertEqual(sorted(git("show", "--name-only", "--format=", "HEAD").split()), ["learning-log.md", "learning-state.json"])
+        # 用户自己暂存的其他改动不被带进学习记录的提交。
+        self.assertIn("M  notes.txt", git("status", "--porcelain"))
+        self.assertEqual(coach.commit_learning_data(root, TODAY), "学习数据没有新变化，无需提交")
+
     def test_wrap_appends_once_and_preserves_historical_bytes(self):
         original = self.log.read_bytes()
         state = coach.load(self.path)

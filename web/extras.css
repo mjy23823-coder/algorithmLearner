@@ -328,3 +328,21 @@ button.chip:hover{background:#f1f6ec;color:var(--green)}
   .toast.with-action{flex-wrap:wrap}
 }
 @media (prefers-reduced-motion: reduce){.mastery-fill{transition:none}.advice-card.busy .advice-orb{animation:none}}
+
+/* ---------- 口述复习 ---------- */
+.badge.oral{background:#eef0f8;color:#5a6390}
+.oral-row{display:flex;gap:14px;align-items:center;padding:18px 0;border-bottom:1px solid #edf0e8}
+.oral-row:last-child{border-bottom:0}
+.oral-row .task-check svg{width:15px;height:15px}
+.oral-actions{display:flex;gap:6px;flex:none}
+.oral-choice{border:1px solid #dfe6d8;background:#fff;border-radius:99px;padding:6px 12px;font-size:11.5px;color:#4b6542;transition:background .15s,border-color .15s}
+.oral-choice:hover:not(:disabled){background:#f3f8ef;border-color:#9cc3a6}
+.oral-choice.hinted{color:#8a6430;border-color:#ecdcbc}
+.oral-choice.hinted:hover:not(:disabled){background:#fff7e8}
+.oral-choice.failed{color:#9b5a48;border-color:#efd5cc}
+.oral-choice.failed:hover:not(:disabled){background:#fdf1ec}
+.oral-choice.chosen{background:var(--green);border-color:var(--green);color:#f1f8ee;opacity:1;cursor:default}
+.oral-choice.hinted.chosen{background:#a77133;border-color:#a77133}
+.oral-choice.failed.chosen{background:#ab594d;border-color:#ab594d}
+@media(max-width:680px){.oral-row{flex-wrap:wrap}.oral-actions{width:100%;justify-content:flex-start;padding-left:38px}}
+@media (prefers-reduced-motion: reduce){.oral-choice{transition:none}}

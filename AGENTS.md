@@ -64,6 +64,9 @@ python tests/agent_browser.py
 
 - 排题逻辑只在 `coach.build_plan`：复习按优先级排序并附理由；`tools/catalog.py` 提供新题目录和专题主线，只作推荐，不代表练过。推荐理由与排题理由不能写解法要点。
 - `tools/learner.py` 是学习画像与个性化推荐：专题掌握度（独立 1、提示后 0.4、未完成 0，半衰期 30 天，平滑；少于 2 次有结果为“起步”）、反复错因、习惯、目标（`state["profile"]`：面试日期、每日分钟数、节奏）。待学不足时空余的新题名额自动按画像推荐（`source: recommended`），校准仍占 1 个名额；`new skip` / “换一题”写入 `recommend_skips`，7 天内不再推荐。只读记录，不改掌握状态。
+- 口述复习：`coach.oral_eligible` 只放行独立写对过至少两次、最近一次写代码为独立完成、且口述后没卡住的题；每天 1～3 道，不占正式名额。`record_oral` 只改 `next_due` / `stage`（讲清楚了进入下一间隔，有卡顿 +2 天、讲不出 +1 天完整重写），不改次数、状态和 history，口述记录在 `oral` 字段；同一天再次记录为更正。
+- 本地 git 仓库不配置远程。`coach.save` 每天第一次写入前把进度存到 `backups/`（保留 14 天）；`wrap_session` 成功后用 `commit_learning_data` 只提交 `learning-state.json`、`learning-log.md`、`solutions/`，失败不影响保存。
+- 工作台开始写思路或代码时自动计时，10 分钟没有操作自动暂停（只多计 2 分钟）。
 - 教练与智能体的提示词带上学习画像（`learner.coach_brief`），模拟面试时不带。“AI 分析我的情况”只发送画像和今日计划，不发送代码，结果存在 `.runtime/profile-advice.json`。
 - 模拟面试以服务端开始时间计时；评分五维为题型识别、沟通表达、代码正确性、复杂度分析、时间控制。求助、看提示一律按提示后完成。
 - `tools/insights.py` 只统计有记录的数据：旧格式记录按状态推断并单独计数，历史补录不计入独立完成率，缺少的数据写进“数据说明”。

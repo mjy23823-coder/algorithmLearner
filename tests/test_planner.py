@@ -1,4 +1,5 @@
 import unittest
+from copy import deepcopy
 from datetime import date, timedelta
 
 from tools import catalog, coach, insights
@@ -28,7 +29,8 @@ class ReviewPriorityTests(unittest.TestCase):
         deferred = plan["deferred"][0]
         self.assertEqual(deferred["id"], "226")
         self.assertTrue(any("轮换" in r for r in deferred["reasons"]), deferred["reasons"])
-        self.assertEqual(plan["backlog"], {"count": 1, "per_day": 1, "clear_days": 1, "by_topic": {"二叉树": 1}})
+        self.assertEqual(plan["backlog"], {"count": 1, "per_day": 1, "oral_per_day": 2, "clear_days": 1, "oral_ready": 0,
+                                           "by_topic": {"二叉树": 1}})
         # 时间充足日多出的复习名额会轮换到积压专题。
         rich = coach.build_plan(state, TODAY, 180, events=[])
         self.assertEqual([t["id"] for t in rich["tasks"] if t["kind"] == "review"], ["11", "226"])
@@ -155,6 +157,81 @@ class AbilityReportTests(unittest.TestCase):
         for heading in ("# 算法能力周报", "## 本周概览", "## 模拟面试", "## 专题进度"):
             self.assertIn(heading, text)
         self.assertIn("LC199 二叉树的右视图", text)
+
+
+class OralReviewTests(unittest.TestCase):
+    def setUp(self):
+        self.state = state_with(current="二叉树")
+        # LC104 已独立写对两次（可口述），LC226 上次需要提示（要完整重写），LC101 只写对过一次。
+        practice(self.state, "104", "二叉树的最大深度", "二叉树", "independent", 20)
+        practice(self.state, "104", "二叉树的最大深度", "二叉树", "independent", 16)
+        practice(self.state, "226", "翻转二叉树", "二叉树", "hinted", 6)
+        practice(self.state, "101", "对称二叉树", "二叉树", "independent", 6)
+        practice(self.state, "100", "相同的树", "二叉树", "independent", 30)
+        practice(self.state, "100", "相同的树", "二叉树", "independent", 26)
+
+    def test_speakable_reviews_get_oral_slots_and_written_ones_keep_the_formal_slot(self):
+        self.assertTrue(coach.oral_eligible(self.state["completed"]["104"]))
+        self.assertFalse(coach.oral_eligible(self.state["completed"]["226"]))
+        self.assertFalse(coach.oral_eligible(self.state["completed"]["101"]))
+        plan = coach.build_plan(self.state, TODAY, 120, events=[])
+        self.assertEqual([t["id"] for t in plan["tasks"] if t["kind"] == "review"], ["226"])
+        self.assertEqual({r["id"] for r in plan["oral"]}, {"104", "100"})
+        self.assertTrue(all(r["kind"] == "oral" and "口述" not in r["title"] for r in plan["oral"]))
+        self.assertEqual([r["id"] for r in plan["deferred"]], ["101"])
+        self.assertEqual((plan["oral_slots"], plan["backlog"]["clear_days"]), (2, 1))
+        self.assertEqual([len(coach.build_plan(self.state, TODAY, m, events=[])["oral"]) for m in (45, 90, 180)], [1, 1, 2])
+
+    def test_oral_results_move_the_due_date_without_touching_counts_or_status(self):
+        before = deepcopy(self.state["completed"]["104"])
+        rec = coach.record_oral(self.state, "104", "independent", TODAY)
+        self.assertEqual((rec["count"], rec["status"], rec["history"]), (before["count"], before["status"], before["history"]))
+        self.assertEqual(rec["stage"], coach.stage_of(before) + 1)
+        self.assertEqual(rec["next_due"], (TODAY + timedelta(days=coach.interval(self.state, rec["stage"]))).isoformat())
+        plan = coach.build_plan(self.state, TODAY, 120, events=[])
+        self.assertEqual([(r["id"], r["result"]) for r in plan["oral_done"]], [("104", "independent")])
+        self.assertEqual([r["id"] for r in plan["oral"]], ["100"])
+        # 同一天更正：恢复口述前的状态后重新计算。
+        rec = coach.record_oral(self.state, "104", "hinted", TODAY)
+        self.assertEqual(rec["next_due"], (TODAY + timedelta(days=2)).isoformat())
+        self.assertEqual(rec.get("stage"), before.get("stage"))
+        self.assertEqual(len(rec["oral"]), 1)
+        self.assertFalse(coach.oral_eligible(rec))
+        later = coach.build_plan(self.state, TODAY + timedelta(days=2), 120, events=[])
+        rewrite = next(r for r in later["reviews"] if r["id"] == "104")
+        self.assertNotIn("104", [r["id"] for r in later["oral"]])
+        self.assertIn("口述复习时有卡顿，完整重写一遍", rewrite["reasons"])
+        coach.record_oral(self.state, "100", "failed", TODAY)
+        self.assertEqual(self.state["completed"]["100"]["next_due"], (TODAY + timedelta(days=1)).isoformat())
+        # 完整重写独立完成后，又可以口述。
+        coach.record_result(self.state, "104", "independent", TODAY + timedelta(days=2))
+        self.assertTrue(coach.oral_eligible(self.state["completed"]["104"]))
+        with self.assertRaises(ValueError):
+            coach.record_oral(self.state, "226", "independent", TODAY)
+        with self.assertRaises(ValueError):
+            coach.record_oral(self.state, "9999", "independent", TODAY)
+        with self.assertRaises(ValueError):
+            coach.record_oral(self.state, "100", "great", TODAY + timedelta(days=1))
+
+    def test_oral_cli_records_and_today_lists_the_section(self):
+        import io
+        import json
+        import tempfile
+        from contextlib import redirect_stdout
+        from pathlib import Path
+        with tempfile.TemporaryDirectory(prefix="oral-cli-") as folder:
+            path = Path(folder) / "learning-state.json"
+            path.write_text(json.dumps(self.state, ensure_ascii=False), encoding="utf-8")
+            path.with_name("learning-log.md").write_text("# 学习日志\n", encoding="utf-8")
+            common = ["--state", str(path), "--date", TODAY.isoformat()]
+            output = io.StringIO()
+            with redirect_stdout(output):
+                coach.main(["today", "--minutes", "120"] + common)
+                coach.main(["oral", "104", "--result", "failed"] + common)
+            text = output.getvalue()
+            self.assertIn("【口述复习】", text)
+            self.assertIn("LC104 口述复习：讲不出", text)
+            self.assertEqual(coach.load(path)["completed"]["104"]["next_due"], (TODAY + timedelta(days=1)).isoformat())
 
 
 class ChatMockCliTests(unittest.TestCase):

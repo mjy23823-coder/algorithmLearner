@@ -54,6 +54,24 @@ class DashboardTests(unittest.TestCase):
         self.assertEqual(self.state.read_bytes(), self.original)
         self.assertEqual(self.log.read_bytes(), self.original_log)
 
+    def test_oral_review_endpoint_moves_the_due_date_and_counts_as_activity(self):
+        _, data = self.request()
+        token, oral = data["token"], data["plan"]["oral"]
+        self.assertTrue(oral)
+        pid = oral[0]["id"]
+        before = json.loads(self.state.read_text(encoding="utf-8"))["completed"][pid]
+        status, result = self.request("/api/oral", {"id": pid, "result": "independent", "revision": data["revision"]},
+                                      {"X-Coach-Token": token})
+        self.assertEqual(status, 200, result)
+        self.assertIn("口述复习：讲清楚了", result["message"])
+        after = json.loads(self.state.read_text(encoding="utf-8"))["completed"][pid]
+        self.assertEqual((after["count"], after["status"], after.get("history")), (before["count"], before["status"], before.get("history")))
+        _, data = self.request()
+        self.assertEqual([r["id"] for r in data["plan"]["oral_done"]], [pid])
+        self.assertEqual(next(d["count"] for d in data["activity"] if d["date"] == "2026-10-16"), 5)
+        status, _ = self.request("/api/oral", {"id": "9999", "result": "independent", "revision": data["revision"]}, {"X-Coach-Token": token})
+        self.assertEqual(status, 400)
+
     def test_record_practice_persists_and_request_retry_is_idempotent(self):
         _, data = self.request()
         payload = {"id": "42", "title": "接雨水", "topic": "双指针", "result": "independent",

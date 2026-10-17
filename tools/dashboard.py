@@ -42,7 +42,7 @@ def dashboard_data(state, log_path, today, minutes):
         topic["total"] += 1
         topic["learned"] += int(row["display_status"] == "learned")
     queue.sort(key=lambda row: (row["next_due"], row["count"], int(row["id"])))
-    activity = Counter(e["date"] for e in coach.practice_events(state))
+    activity = Counter(e["date"] for e in coach.practice_events(state) + coach.oral_events(state))
     days = []
     for offset in range(83, -1, -1):
         d = (today - timedelta(days=offset)).isoformat()
@@ -363,6 +363,11 @@ def make_server(state_path, log_path, port=8765, fixed_date=None):
                 else:
                     raise ValueError("不支持的队列操作")
                 return {"message": "待学队列已更新"}
+            if path == "/api/oral":
+                result = payload.get("result")
+                rec = coach.record_oral(state, payload.get("id", ""), result, today)
+                return {"message": f"LC{coach.problem_id(payload['id'])} 口述复习：{coach.ORAL_LABELS[result]}，下次复习 {rec['next_due']}"
+                                   + ("（完整重写）" if result != "independent" else ""), "next_due": rec["next_due"]}
             if path == "/api/profile":
                 saved = learner.apply_settings(state, {k: payload[k] for k in ("target_date", "daily_minutes", "pace") if k in payload}, today)
                 return {"message": "学习目标已更新，推荐会按新的设定调整", "profile": saved}

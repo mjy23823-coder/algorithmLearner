@@ -20,6 +20,7 @@ import math
 import os
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
@@ -287,6 +288,68 @@ def weak_errors(state, today, events=None):
             if row["count"] >= 2 or (today - parse_date(row["last_seen"])).days <= 7}
 
 
+ORAL_LABELS = {"independent": "讲清楚了", "hinted": "有卡顿", "failed": "讲不出"}
+
+
+def last_oral(rec):
+    """最近一次口述复习（只算最近一次写代码之后的）。"""
+    oral = (rec or {}).get("oral") or []
+    if oral and oral[-1]["date"] >= (rec.get("last_done") or ""):
+        return oral[-1]
+    return None
+
+
+def oral_eligible(rec):
+    """已经独立写对过至少两次、最近一次写代码是独立完成的题，可以用 2 分钟口述代替完整重写。
+    口述卡住后要先完整重写一次，才能再口述。"""
+    if not rec or mastery_status(rec) not in ("learned", "learning") or rec.get("count", 0) < 2:
+        return False
+    if last_result(rec) not in ("independent", None):
+        return False
+    oral = last_oral(rec)
+    return not (oral and oral["result"] != "independent")
+
+
+def oral_slots(minutes):
+    """口述复习不占正式复习名额：保底日和忙碌日 1 道，普通日 2 道，时间充足日 3 道。"""
+    return 1 if minutes <= 90 else 2 if minutes <= 150 else 3
+
+
+def oral_events(state):
+    return [{**entry, "id": pid} for pid, rec in state.get("completed", {}).items() for entry in rec.get("oral") or []]
+
+
+def record_oral(state, pid, result, today):
+    """记录一次口述复习。只调整下次复习日期和间隔节点，不改完成次数和掌握状态（口述不能代替写代码）：
+    讲清楚了进入下一个间隔；有卡顿 2 天后完整重写；讲不出第二天完整重写。同一天再次记录会更正本次结果。"""
+    pid = problem_id(pid)
+    if result not in RESULTS:
+        raise ValueError("口述结果只能是 讲清楚了（independent）、有卡顿（hinted）或 讲不出（failed）")
+    rec = state.get("completed", {}).get(pid)
+    if not rec:
+        raise ValueError(f"LC{pid} 还没有练习记录，不能口述复习")
+    oral = list(rec.get("oral") or [])
+    if oral and oral[-1]["date"] == today.isoformat():
+        before = oral.pop()["before"]
+    else:
+        if not oral_eligible(rec):
+            raise ValueError(f"LC{pid} 还需要完整重写一遍，暂时不适合口述复习")
+        before = {"next_due": rec.get("next_due"), "stage": rec.get("stage")}
+    base = {**rec, **{k: v for k, v in before.items() if v is not None}}
+    for key in ("next_due", "stage"):
+        if before.get(key) is None:
+            base.pop(key, None)
+    if result == "independent":
+        stage = stage_of(base) + 1
+        base.update(stage=stage, next_due=(today + timedelta(days=interval(state, stage))).isoformat())
+    else:
+        base["next_due"] = (today + timedelta(days=2 if result == "hinted" else 1)).isoformat()
+    base["oral"] = oral + [{"date": today.isoformat(), "result": result, "before": before}]
+    state["completed"][pid] = base
+    refresh_next_review(state)
+    return base
+
+
 def family_last_practice(state):
     last = {}
     for rec in state.get("completed", {}).values():
@@ -302,7 +365,11 @@ def review_priority(state, pid, rec, today, current, weak, problem_tags, family_
     score = 2 * math.log2(1 + min(overdue, 60))
     reasons = [f"已逾期 {overdue} 天" if overdue else "今天到期"]
     status = mastery_status(rec)
-    if last_result(rec) == "hinted":
+    oral = last_oral(rec)
+    if oral and oral["result"] != "independent":
+        score += 5
+        reasons.append(f"口述复习时{ORAL_LABELS[oral['result']]}，完整重写一遍")
+    elif last_result(rec) == "hinted":
         score += 5
         reasons.append("上次需要提示，先确认能否独立写出")
     elif status == "learning" and rec.get("count", 0) <= 1:
@@ -364,6 +431,8 @@ def build_plan(state, today, minutes=120, mentioned=None, events=None):
         elif due <= today + timedelta(days=3):
             upcoming.append(row)
     formal.sort(key=lambda r: (-r["score"], r["next_due"], r["count"], int(r["id"])))
+    oral_done = [{**problem(state, pid), "result": rec["oral"][-1]["result"], "next_due": rec.get("next_due")}
+                 for pid, rec in completed.items() if (rec.get("oral") or [{}])[-1].get("date") == today.isoformat()]
     short.sort(key=lambda r: (r["next_due"], int(r["id"])))
     upcoming.sort(key=lambda r: (r["next_due"], int(r["id"])))
     queue_new = []
@@ -420,13 +489,25 @@ def build_plan(state, today, minutes=120, mentioned=None, events=None):
     suggested = [{**problem(state, r["id"]), "kind": "new", "source": "recommended", "recorded": False,
                   "reasons": ["为你推荐"] + r["reasons"], "tags": r["tags"]} for r in recommended[:max(0, shortage)]]
     shortage -= len(suggested)
-    tasks = done + [{**r, "recorded": False} for r in formal[:reviews_left]] + picks + suggested + extra
-    deferred = formal[reviews_left:]
+    # 正式复习先给需要完整重写的题；已经写对过两次的题放进口述复习，不占正式名额。
+    written = [r for r in formal if not oral_eligible(completed[r["id"]])]
+    speakable = [r for r in formal if oral_eligible(completed[r["id"]])]
+    formal_picks = (written + speakable)[:reviews_left]
+    picked = {r["id"] for r in formal_picks}
+    oral_left = max(0, oral_slots(minutes) - len(oral_done))
+    oral = [{**r, "kind": "oral", "reasons": [f"已经独立写对过 {r['count']} 次，合上代码用 2 分钟讲清思路、复杂度和一个边界"] + r["reasons"][:2]}
+            for r in speakable if r["id"] not in picked][:oral_left]
+    tasks = done + [{**r, "recorded": False} for r in formal_picks] + picks + suggested + extra
+    taken = picked | {r["id"] for r in oral}
+    deferred = [r for r in formal if r["id"] not in taken]
     by_topic = {}
     for row in deferred:
         name = catalog.family(row["topic"])
         by_topic[name] = by_topic.get(name, 0) + 1
     per_day = max(1, n_review)
+    # 积压按两条线消化：需要重写的走正式复习名额，可口述的走口述名额。
+    rest_written = sum(not oral_eligible(completed[r["id"]]) for r in deferred)
+    clear_days = max(math.ceil(rest_written / per_day), math.ceil((len(deferred) - rest_written) / oral_slots(minutes)))
     last_mock = state.get("last_mock")
     return {"date": today.isoformat(), "minutes": minutes, "mode": mode, "mode_note": note,
             "current_topic": current, "tasks": tasks, "done_today": done,
@@ -436,7 +517,9 @@ def build_plan(state, today, minutes=120, mentioned=None, events=None):
             "new_shortage": max(0, shortage),
             "candidates": [r for r in recommended if r["id"] not in {s["id"] for s in suggested}][:4],
             "profile": profile,
-            "backlog": {"count": len(deferred), "per_day": per_day, "clear_days": math.ceil(len(deferred) / per_day),
+            "oral": oral, "oral_done": oral_done, "oral_slots": oral_slots(minutes),
+            "backlog": {"count": len(deferred), "per_day": per_day, "oral_per_day": oral_slots(minutes), "clear_days": clear_days,
+                        "oral_ready": len(deferred) - rest_written,
                         "by_topic": dict(sorted(by_topic.items(), key=lambda kv: -kv[1]))},
             "weak_errors": sorted(weak.values(), key=lambda w: (-w["count"], w["id"])),
             "mock_due": not last_mock or (today - parse_date(last_mock)).days >= 7, "last_mock": last_mock,
@@ -509,14 +592,21 @@ def cmd_today(state, args):
             print(f"      理由：{'；'.join(row['reasons'])}")
     if not pending:
         print("  （今天的任务已完成，或待学队列需要补充）")
+    if plan["oral"] or plan["oral_done"]:
+        print(f"\n【口述复习】每道约 2 分钟，不写代码、不占正式名额（今天最多 {plan['oral_slots']} 道）；讲完用 `oral <题号> --result ...` 记录")
+        for row in plan["oral_done"]:
+            print(f"  - {label(row['id'], row)}：已口述，{ORAL_LABELS[row['result']]}")
+        for row in plan["oral"]:
+            print(f"  - {label(row['id'], row)}：{'；'.join(row['reasons'])}")
     print("\n【短时回忆】5～10 分钟，不占正式名额")
     for row in plan["short_recall"]:
         print(f"  - {label(row['id'], row)}：上次未完成，先定位错误")
     backlog = plan["backlog"]
     if backlog["count"]:
         topics = "、".join(f"{name} {n}" for name, n in backlog["by_topic"].items())
-        print(f"\n【到期但顺延】{backlog['count']} 道（{topics}），按每天 {backlog['per_day']} 道约 {backlog['clear_days']} 天消化，"
-              "每天按优先分重新排序；时间充足日会多安排 1 道")
+        print(f"\n【到期但顺延】{backlog['count']} 道（{topics}），其中 {backlog['oral_ready']} 道可以口述；"
+              f"按每天 {backlog['per_day']} 道正式复习 + {backlog['oral_per_day']} 道口述，约 {backlog['clear_days']} 天消化，"
+              "每天按优先分重新排序；时间充足日会多安排")
         for row in plan["deferred"][:5]:
             print(f"  - {label(row['id'], row)}：{'；'.join(row['reasons'])}")
         if backlog["count"] > 5:
@@ -717,6 +807,13 @@ def cmd_new(state, args):
         state["next_new"] = [p for p in queue if p not in args.ids]
     save(args.state, state)
     print("next_new：" + (" ".join("LC" + p for p in state["next_new"]) or "（空）"))
+
+
+def cmd_oral(state, args):
+    rec = record_oral(state, args.id, args.result, args.date)
+    save(args.state, state)
+    print(f"LC{problem_id(args.id)} 口述复习：{ORAL_LABELS[args.result]}，下次复习 {rec['next_due']}"
+          + ("（完整重写）" if args.result != "independent" else ""))
 
 
 def cmd_profile(state, args):
@@ -946,6 +1043,7 @@ def wrap_session(state, state_path, log_path, today, note="", next_action=None):
             return {"saved": False, "message": "这份学习总结已经保存", "text": text}
         new_state = (json.dumps(state, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
         shutil.copyfile(state_path, state_path.with_name(state_path.name + ".bak"))
+        rotate_backup(state_path)
         if existed:
             shutil.copyfile(log_path, log_path.with_name(log_path.name + ".bak"))
         atomic_write(log_path, old + text.encode("utf-8"))
@@ -959,7 +1057,34 @@ def wrap_session(state, state_path, log_path, today, note="", next_action=None):
             raise
         if isinstance(state, State):
             state.source_hash = digest(new_state)
-    return {"saved": True, "message": "学习总结已保存，下次从当前进度继续", "text": text}
+    snapshot = commit_learning_data(state_path.parent, today)
+    return {"saved": True, "message": "学习总结已保存，下次从当前进度继续" + (f"；{snapshot}" if snapshot else ""), "text": text,
+            "git": snapshot}
+
+
+LEARNING_DATA = ("learning-state.json", "learning-log.md", "solutions")
+
+
+def commit_learning_data(root, today):
+    """在本地 git 仓库里提交当天的学习数据（进度、日志、运行过的代码）。只提交这几项，不动其他改动；
+    没有仓库、没有变化或 git 出错时跳过，不影响保存。仓库不配置远程，数据不会上传。"""
+    root = Path(root)
+    if not (root / ".git").exists() or not shutil.which("git"):
+        return None
+    paths = [name for name in LEARNING_DATA if (root / name).exists()]
+
+    def git(*args):
+        return subprocess.run(["git", *args], cwd=str(root), capture_output=True, timeout=30,
+                              creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+    try:
+        if git("add", "--", *paths).returncode:
+            return None
+        if not git("diff", "--cached", "--quiet", "--", *paths).returncode:
+            return "学习数据没有新变化，无需提交"
+        done = git("commit", "-q", "-m", f"学习记录 {today.isoformat()}", "--", *paths)
+        return "已提交到本地 git" if done.returncode == 0 else None
+    except (OSError, subprocess.SubprocessError):
+        return None
 
 
 def cmd_wrap(state, args):
@@ -1039,6 +1164,11 @@ def main(argv=None):
     p.add_argument("action", choices=["add", "remove", "set", "skip"], help="skip：换掉推荐，7 天内不再推荐")
     p.add_argument("ids", nargs="*")
     p.set_defaults(func=cmd_new)
+
+    p = sub.add_parser("oral", parents=[common], help="记录一次口述复习（已写对过两次的题，2 分钟讲清思路）")
+    p.add_argument("id")
+    p.add_argument("--result", required=True, choices=RESULTS, help="independent 讲清楚了 / hinted 有卡顿 / failed 讲不出")
+    p.set_defaults(func=cmd_oral)
 
     p = sub.add_parser("profile", parents=[common], help="学习画像；带参数时更新学习目标")
     p.add_argument("--target-date", help="目标面试日期 YYYY-MM-DD，none 表示不设")
