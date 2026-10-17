@@ -142,3 +142,17 @@
   .wb-hintbar .text-button{margin-left:0}
   .workbench-page .wb-toolbar{gap:10px;padding:12px 14px}
 }
+
+/* 题面、输入和辅助文案使用更清晰的对比 */
+.wb-studio label{color:#4d6257}
+.wb-meta{color:#65746c}
+.wb-contract{color:#65746c}
+.wb-contract span{color:#78877e!important}
+.wb-statement-block ul{color:#5f6e65}
+.wb-example dt{color:#718078}
+.wb-example dd{color:#4f6258}
+.wb-visual-caption{color:#64766d}
+.wb-code-actions>span,.wb-bottom{color:#6f7d75}
+.wb-test-case summary{color:#64746b}
+.wb-test-case dt{color:#718078}
+.wb-hintbar #wb-hint-note{color:#7c7763}

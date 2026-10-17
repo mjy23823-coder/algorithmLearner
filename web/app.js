@@ -32,6 +32,7 @@ const paths = {
   sliders: '<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
   alert: '<path d="M12 4 2.8 20h18.4z"/><path d="M12 10v4M12 17v.01"/>',
   user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
 };
 const icon = (name) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.book}</svg>`;
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -58,6 +59,23 @@ let toastTimeout;
 let filters = {text:"", topic:"", status:"", due:"all"};
 
 document.querySelectorAll("[data-icon]").forEach(el => { el.innerHTML = icon(el.dataset.icon); });
+document.querySelectorAll(".nav-button").forEach(button => {
+  const label = button.querySelector(".nav-label")?.textContent.trim();
+  if (label) { button.title = label; button.setAttribute("aria-label", label); }
+});
+
+const sidebarToggle = $("#sidebar-toggle");
+function setSidebarCollapsed(collapsed) {
+  document.body.classList.toggle("sidebar-collapsed", collapsed);
+  if (sidebarToggle) {
+    sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
+    sidebarToggle.setAttribute("aria-label", collapsed ? "展开侧栏" : "折叠侧栏");
+    sidebarToggle.title = collapsed ? "展开侧栏" : "折叠侧栏";
+  }
+  try { localStorage.setItem("algorithm-sidebar-collapsed", collapsed ? "1" : "0"); } catch {}
+}
+try { setSidebarCollapsed(localStorage.getItem("algorithm-sidebar-collapsed") === "1"); } catch { setSidebarCollapsed(false); }
+sidebarToggle?.addEventListener("click", () => setSidebarCollapsed(!document.body.classList.contains("sidebar-collapsed")));
 
 function toast(message, error = false, action = null) {
   const el = $("#toast");

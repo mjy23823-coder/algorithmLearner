@@ -226,6 +226,15 @@ button.chip:hover{background:#f1f6ec;color:var(--green)}
   .coach-chip,.coach-send,.coach-tabs button{transition:none}
 }
 
+/* 教练卡片辅助文字提高可读性 */
+.coach-status{color:#5f6d65}
+.coach-tabs button{color:#5f6d65}
+.coach-empty,.agent-locked{color:#5f6d65}
+.coach-empty strong{color:#2f4a3a}
+.coach-empty p,.agent-menu p{color:#5f6d65}
+.coach-rule{color:#6e7c74}
+.step-text span,.agent-suggestion-tags{color:#64746b}
+
 /* ---------- 学习画像与个性化推荐 ---------- */
 .badge.recommend{background:#e6f1ef;color:#2f6b67}
 .muted-action{color:#8a9a82}
