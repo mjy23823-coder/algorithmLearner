@@ -15,9 +15,9 @@ from urllib.parse import parse_qs, urlsplit
 from urllib.request import Request, urlopen
 
 try:
-    from . import coach, coach_ai, insights, knowledge, learner, workbench
+    from . import assistant, coach, coach_ai, insights, knowledge, learner, workbench
 except ImportError:
-    import coach, coach_ai, insights, knowledge, learner, workbench
+    import assistant, coach, coach_ai, insights, knowledge, learner, workbench
 
 ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / "web"
@@ -76,44 +76,8 @@ def dashboard_data(state, log_path, today, minutes):
             "weekly": coach.weekly_report(state, today), "knowledge": knowledge.build_knowledge(state, log_path),
             "insights": report_with_markdown(state, today, log_path),
             "next_new": [coach.problem(state, pid) for pid in state.get("next_new", [])],
-            "profile": plan["profile"], "paces": learner.PACES, "advice": read_advice(log_path.parent)}
-
-
-def advice_path(root):
-    return Path(root) / ".runtime" / "profile-advice.json"
-
-
-def read_advice(root):
-    """最近一次“AI 分析我的情况”的结果，保存在本机 .runtime，不进入学习进度。"""
-    try:
-        data = json.loads(advice_path(root).read_text(encoding="utf-8"))
-        return data if isinstance(data, dict) and isinstance(data.get("text"), str) else None
-    except (OSError, ValueError):
-        return None
-
-
-def profile_advice(state, log_path, today):
-    """按学习画像生成阶段建议：连接模型时由模型分析（只发送画像和计划，不发送代码），否则用固定规则。"""
-    root = log_path.parent
-    plan = coach.build_plan(state, today, learner.settings(state)["daily_minutes"], coach.log_mentions(log_path),
-                            knowledge.error_events(state, log_path))
-    profile = plan["profile"]
-    config = coach_ai.load_settings(root)
-    provider, notice = config["provider"], ""
-    text = None
-    if provider != "offline":
-        try:
-            text = coach_ai.ask_model(provider, learner.ADVICE_SYSTEM, learner.advice_prompt(profile, plan), config["model"],
-                                      conn=coach_ai.connection(root, provider=provider) if provider in coach_ai.RELAYS else None)
-        except coach_ai.CoachError as exc:
-            notice = f"{exc}；本次改用离线分析。"
-    if text is None:
-        provider, text = "offline", learner.offline_advice(profile, plan)
-    result = {"text": text.strip(), "provider": provider, "label": coach_ai.PROVIDERS[provider],
-              "model": config["model"] if provider != "offline" else None, "at": coach_ai.now(), "date": today.isoformat()}
-    advice_path(root).parent.mkdir(parents=True, exist_ok=True)
-    coach.atomic_write(advice_path(root), json.dumps(result, ensure_ascii=False, indent=2).encode("utf-8"))
-    return {**result, "notice": notice}
+            "profile": plan["profile"], "paces": learner.PACES, "advice": assistant.read_cache(log_path.parent, "profile-advice"),
+            "weekly_advice": assistant.current_weekly(log_path.parent, today), "plan_chat": assistant.plan_chat(log_path.parent, today)}
 
 
 def report_with_markdown(state, today, log_path):
@@ -222,7 +186,7 @@ def make_server(state_path, log_path, port=8765, fixed_date=None):
                 else:
                     assets = {"/": ("index.html", "text/html"), "/app.js": ("app.js", "application/javascript"),
                           "/coach.js": ("coach.js", "application/javascript"), "/mock.js": ("mock.js", "application/javascript"),
-                          "/profile.js": ("profile.js", "application/javascript"),
+                          "/profile.js": ("profile.js", "application/javascript"), "/ai.js": ("ai.js", "application/javascript"),
                           "/extras.css": ("extras.css", "text/css"),
                               "/graph.js": ("graph.js", "application/javascript"), "/graph.css": ("graph.css", "text/css"),
                               "/workbench.js": ("workbench.js", "application/javascript"), "/workbench.css": ("workbench.css", "text/css"),
@@ -258,7 +222,8 @@ def make_server(state_path, log_path, port=8765, fixed_date=None):
                     return
                 endpoint = urlsplit(self.path).path
                 if endpoint in ("/api/workbench/coach", "/api/workbench/agent", "/api/coach/settings", "/api/coach/test",
-                                "/api/coach/models", "/api/mock/start", "/api/profile/advice"):
+                                "/api/coach/models", "/api/mock/start", "/api/profile/advice", "/api/oral/judge", "/api/weekly/advice",
+                                "/api/plan/ask"):
                     # 只写草稿、对话和本机设置，不改学习进度。
                     if endpoint == "/api/workbench/coach":
                         response = workspace.coach_chat(coach.load(state_path), payload)
@@ -276,7 +241,18 @@ def make_server(state_path, log_path, port=8765, fixed_date=None):
                     elif endpoint == "/api/coach/test":
                         response = self.test_coach(payload)
                     elif endpoint == "/api/profile/advice":
-                        response = profile_advice(coach.load(state_path), log_path, fixed_date or date.today())
+                        response = assistant.profile_advice(state_path.parent, coach.load(state_path), log_path, fixed_date or date.today())
+                    elif endpoint == "/api/oral/judge":
+                        response = assistant.judge_oral(state_path.parent, coach.load(state_path), payload.get("id", ""), payload.get("explanation"),
+                                                        fixed_date or date.today())
+                    elif endpoint == "/api/weekly/advice":
+                        response = assistant.weekly_advice(state_path.parent, coach.load(state_path), log_path, fixed_date or date.today())
+                    elif endpoint == "/api/plan/ask":
+                        state = coach.load(state_path)
+                        minutes = payload.get("minutes", learner.settings(state)["daily_minutes"])
+                        if type(minutes) is not int or not 15 <= minutes <= 600:
+                            raise ValueError("可用时间应为 15～600 分钟")
+                        response = assistant.ask_plan(state_path.parent, state, log_path, fixed_date or date.today(), minutes, payload.get("question"))
                     else:
                         response = workspace.start_mock(coach.load(state_path), payload, fixed_date or date.today())
                     self.send_json(200, response)
@@ -365,7 +341,8 @@ def make_server(state_path, log_path, port=8765, fixed_date=None):
                 return {"message": "待学队列已更新"}
             if path == "/api/oral":
                 result = payload.get("result")
-                rec = coach.record_oral(state, payload.get("id", ""), result, today)
+                detail = {k: payload[k] for k in ("explanation", "marks", "judged_by") if k in payload}
+                rec = coach.record_oral(state, payload.get("id", ""), result, today, detail or None)
                 return {"message": f"LC{coach.problem_id(payload['id'])} 口述复习：{coach.ORAL_LABELS[result]}，下次复习 {rec['next_due']}"
                                    + ("（完整重写）" if result != "independent" else ""), "next_due": rec["next_due"]}
             if path == "/api/profile":

@@ -40,6 +40,9 @@ const labels = {graph:"知识图谱", today:"今日学习", profile:"我的画�
 const statusLabels = {learned:"已掌握", learning:"待间隔验证", needs_review:"需要巩固", needs_calibration:"待校准", new:"待学习"};
 const resultLabels = {independent:"独立完成", hinted:"提示后完成", failed:"暂未完成", unknown:"待校准"};
 const oralLabels = {independent:"讲清楚了", hinted:"有卡顿", failed:"讲不出"};
+// 口述复习里写了一半的讲解和 AI 判断，按题号保留，页面重绘时不丢。
+const oralDrafts = {};
+const WEEKLY_EMPTY = "点“生成点评”，根据本周记录写一段点评和下周安排。数字来自记录，未连接模型时按固定规则生成。";
 let data = null;
 let view = Object.hasOwn(labels, location.hash.slice(1)) ? location.hash.slice(1) : "graph";
 let graphController = null;
@@ -142,9 +145,40 @@ function oralPanel(plan) {
   const title = r => `<div class="task-title"><span class="task-id">LC ${esc(r.id)}</span>${esc(r.title)}</div>`;
   // 已记录的题高亮当前结果，点别的选项即更正（同一天再次记录会覆盖本次结果）。
   const choices = (r, current) => `<div class="oral-actions" role="group" aria-label="LC${esc(r.id)} 口述结果">${Object.entries(oralLabels).map(([key, text]) => `<button class="oral-choice ${key}${key === current ? " chosen" : ""}" data-action="oral" data-id="${esc(r.id)}" data-result="${key}" aria-pressed="${key === current}" ${key === current ? "disabled" : ""}>${text}</button>`).join("")}</div>`;
-  const done = plan.oral_done.map(r => `<div class="oral-row"><span class="task-check done">${icon("check")}</span><div class="task-main">${title(r)}<div class="task-meta"><span class="badge oral">口述复习</span><span>${esc(r.topic)}</span><span>·</span><span>${esc(oralLabels[r.result])}</span><span>· ${esc((r.next_due || "").slice(5))} ${r.result === "independent" ? "再复习" : "完整重写"}</span></div></div>${choices(r, r.result)}</div>`).join("");
-  const todo = plan.oral.map(r => `<div class="oral-row"><span class="task-check">${icon("chat")}</span><div class="task-main">${title(r)}<div class="task-meta"><span class="badge oral">口述复习</span><span>${esc(r.topic)}</span></div><p class="task-reason">${esc(r.reasons.join(" · "))}</p></div>${choices(r)}</div>`).join("");
+  const done = plan.oral_done.map(r => `<div class="oral-item"><div class="oral-row"><span class="task-check done">${icon("check")}</span><div class="task-main">${title(r)}<div class="task-meta"><span class="badge oral">口述复习</span><span>${esc(r.topic)}</span><span>·</span><span>${esc(oralLabels[r.result])}</span><span>· ${esc((r.next_due || "").slice(5))} ${r.result === "independent" ? "再复习" : "完整重写"}</span></div></div>${choices(r, r.result)}</div></div>`).join("");
+  // 写下讲解后让 AI 按四项判断，建议结果由服务端按固定规则换算；保存仍要你点按钮。
+  const judge = r => {
+    const draft = oralDrafts[r.id];
+    if (!draft?.open) return `<button class="text-button oral-open" data-action="oral-toggle" data-id="${esc(r.id)}">${icon("spark")}写下讲解，让 AI 判断</button>`;
+    return `<div class="oral-judge"><textarea data-oral-text="${esc(r.id)}" rows="4" maxlength="2000" aria-label="LC${esc(r.id)} 的口述讲解" placeholder="合上代码，写下你会怎么讲：题型和依据、关键变量的含义与更新、时间和空间复杂度、一个边界。">${esc(draft.text || "")}</textarea><div class="oral-judge-actions"><button class="button primary" data-action="oral-judge" data-id="${esc(r.id)}" ${draft.busy ? "disabled" : ""}>${icon("spark")}${draft.busy ? "判断中…" : "让 AI 判断"}</button><button class="text-button" data-action="oral-toggle" data-id="${esc(r.id)}">收起</button></div>${draft.busy ? AlgoAI.waiting("正在按题型、思路、复杂度、边界四项判断…") : draft.judgment ? AlgoAI.judgment(draft.judgment, esc, icon) : ""}</div>`;
+  };
+  const todo = plan.oral.map(r => `<div class="oral-item"><div class="oral-row"><span class="task-check">${icon("chat")}</span><div class="task-main">${title(r)}<div class="task-meta"><span class="badge oral">口述复习</span><span>${esc(r.topic)}</span></div><p class="task-reason">${esc(r.reasons.join(" · "))}</p></div>${choices(r)}</div>${judge(r)}</div>`).join("");
   return `<section class="panel oral-panel"><div class="panel-header"><div><h2 class="tip-title">${icon("chat")}口述复习 · 每道约 2 分钟</h2><p class="muted">合上代码，说出题型、核心思路、时间与空间复杂度和一个边界。讲清楚了进入下一个复习间隔；卡住了会安排完整重写。不占正式复习名额。</p></div><span class="subtle-pill">今天 ${plan.oral_done.length} / ${plan.oral_slots}</span></div><div class="task-list">${done}${todo}</div></section>`;
+}
+// 问问 AI：只依据今天的计划回答；建议换可用时间时给出按钮，由你点了才重新排。
+function askPanel(plan) {
+  const messages = data.plan_chat || [];
+  const chips = ["时间不够，先做哪道？", "为什么排这几道题？", "复习和新题怎么分配时间？"];
+  const log = messages.map(m => m.role === "user" ? `<div class="ask-msg user"><p>${esc(m.text)}</p></div>`
+    : `<div class="ask-msg coach"><p>${esc(m.text)}</p><small>${esc(m.label || "")}${m.model ? ` · ${esc(m.model)}` : ""}</small>${m.minutes && m.minutes !== plan.minutes ? `<button class="button secondary ask-minutes" data-action="minutes" data-minutes="${m.minutes}">${icon("clock")}按 ${m.minutes} 分钟重新排</button>` : ""}</div>`).join("");
+  return `<section class="panel ask-panel"><div class="panel-header"><h2 class="tip-title">${icon("chat")}问问 AI</h2><span class="subtle-pill">只给建议，不改记录</span></div><div class="panel-body"><div class="ask-log" data-ask-log>${log || '<p class="form-hint">关于今天的计划，想问什么都可以。AI 可以建议顺序或时间，要改由你确认。</p>'}</div><div class="chip-row ask-chips">${chips.map(c => `<button class="chip" data-action="plan-ask" data-question="${esc(c)}">${esc(c)}</button>`).join("")}</div><form id="plan-ask-form" class="ask-form"><input name="question" maxlength="500" placeholder="例如：今天只有 1 小时，怎么安排？" aria-label="向 AI 提问今天的计划"><button class="coach-send" type="submit" aria-label="提问" title="提问">${icon("send")}</button></form></div></section>`;
+}
+async function askPlan(question) {
+  question = (question || "").trim();
+  const panel = $(".ask-panel");
+  if (!question || !panel || panel.dataset.busy) return;
+  panel.dataset.busy = "1";
+  panel.querySelectorAll("button, input").forEach(el => { el.disabled = true; });
+  const log = panel.querySelector("[data-ask-log]");
+  log.querySelector(".form-hint")?.remove();
+  log.insertAdjacentHTML("beforeend", `<div class="ask-msg user"><p>${esc(question)}</p></div><div class="ask-msg coach">${AlgoAI.waiting("思考中…")}</div>`);
+  log.scrollTop = log.scrollHeight;
+  try {
+    const result = await post("/api/plan/ask",{question,minutes:data.plan.minutes},undefined,undefined,100000);
+    data.plan_chat = result.messages;
+    if (result.notice) toast(result.notice,true);
+  } catch (error) { toast(error.message,true); }
+  render();
 }
 function profileCard() {
   const p = data.profile;
@@ -169,7 +203,7 @@ function homePage() {
   const day = new Date(`${data.date}T12:00:00`).toLocaleDateString("zh-CN",{year:"numeric",month:"long",day:"numeric",weekday:"long"});
   let html = pageHeading("每天进步一点点。",`${day} · ${data.goal}`,button("结束并保存","wrap","secondary","flag") + button("记录练习","practice","primary","plus"));
   html += `<div class="stats-grid">${metric("今日完成",data.stats.today_done,"道",pending ? `还有 ${pending} 道计划任务` : data.stats.today_done ? "今天的积累已经留下" : "从一道题开始", "check","green")}${metric("已记录题目",data.stats.recorded,"道","持续积累你的解题经验","layers")}${metric("到期复习",data.stats.due,"道","按到期顺序，逐步巩固","repeat", data.stats.due ? "amber" : "")}${metric("已掌握",data.stats.learned,"道","至少两次完成的掌握标记","spark","green")}</div>`;
-  html += `<div class="content-grid"><div class="stack"><section class="panel"><div class="panel-header"><div><h2>今天的学习清单</h2><p class="muted">${data.stats.today_done && !pending ? "今天的计划已完成。整理收获，让知识留下来。" : "先复习，再前进。每一道题都给自己一次思考的机会。"}</p></div><span class="subtle-pill">${esc(plan.mode)}</span></div><div class="time-control"><span>今天可用时间</span><div class="time-options" role="group" aria-label="今天可用时间">${[...new Set([45,90,120,180,data.profile.settings.daily_minutes])].sort((a,b)=>a-b).map(n=>`<button class="time-option ${plan.minutes === n ? "active" : ""}" data-action="minutes" data-minutes="${n}" aria-pressed="${plan.minutes === n}">${n} 分钟</button>`).join("")}</div></div><div class="task-list">${plan.tasks.length ? plan.tasks.map(taskRow).join("") : '<div class="empty"><strong>给今天留一个小目标</strong>暂时没有待安排的题目，可以在题目档案补充待学队列。</div>'}</div><div class="plan-footer"><span>${data.stats.today_done} 道已完成 · ${pending} 道待练习${plan.deferred.length ? ` · ${plan.deferred.length} 道复习顺延` : ""}</span><button class="text-button" data-action="coach">让教练带我学习 ${icon("arrow")}</button></div></section>${plan.short_recall.length ? `<section class="panel"><div class="panel-header"><h2>先花 5～10 分钟回忆</h2><span class="subtle-pill">不占正式名额</span></div><div class="task-list">${plan.short_recall.map(taskRow).join("")}</div></section>` : ""}${oralPanel(plan)}${planWhy(plan)}${candidatePanel(plan)}${heatmap()}</div><div class="stack right-column">${profileCard()}${mockPanel(plan)}<section class="panel focus-panel"><div class="panel-header"><span class="eyebrow">CURRENT FOCUS</span><button class="icon-button" data-action="settings" aria-label="调整学习方向">${icon("edit")}</button></div><div class="panel-body"><h2>${esc(plan.current_topic || "找到你的学习方向")}</h2><p>${esc(plan.session.next_action || "从到期复习开始，再推进一道新题。")}</p><div class="focus-steps" aria-label="间隔复习：3 天、7 天、21 天"><span>3 天</span><b>→</b><span>7 天</span><b>→</b><span>21 天</span></div>${button("与聊天教练继续","coach","secondary","arrow")}</div></section><section class="panel"><div class="panel-header"><h2 class="tip-title">${icon("spark")}先解释，再动手</h2></div><div class="panel-body"><ol class="coach-steps"><li><b>1</b><span><strong>说清题意</strong> · 这是什么类型的问题？</span></li><li><b>2</b><span><strong>解释变量</strong> · 每个变量代表什么？</span></li><li><b>3</b><span><strong>走一个例子</strong> · 手动验证你的思路。</span></li><li><b>4</b><span><strong>写完再复述</strong> · 一句话总结模板。</span></li></ol></div></section>${forecast()}</div></div>`;
+  html += `<div class="content-grid"><div class="stack"><section class="panel"><div class="panel-header"><div><h2>今天的学习清单</h2><p class="muted">${data.stats.today_done && !pending ? "今天的计划已完成。整理收获，让知识留下来。" : "先复习，再前进。每一道题都给自己一次思考的机会。"}</p></div><span class="subtle-pill">${esc(plan.mode)}</span></div><div class="time-control"><span>今天可用时间</span><div class="time-options" role="group" aria-label="今天可用时间">${[...new Set([45,90,120,180,data.profile.settings.daily_minutes,plan.minutes])].sort((a,b)=>a-b).map(n=>`<button class="time-option ${plan.minutes === n ? "active" : ""}" data-action="minutes" data-minutes="${n}" aria-pressed="${plan.minutes === n}">${n} 分钟</button>`).join("")}</div></div><div class="task-list">${plan.tasks.length ? plan.tasks.map(taskRow).join("") : '<div class="empty"><strong>给今天留一个小目标</strong>暂时没有待安排的题目，可以在题目档案补充待学队列。</div>'}</div><div class="plan-footer"><span>${data.stats.today_done} 道已完成 · ${pending} 道待练习${plan.deferred.length ? ` · ${plan.deferred.length} 道复习顺延` : ""}</span><button class="text-button" data-action="coach">让教练带我学习 ${icon("arrow")}</button></div></section>${plan.short_recall.length ? `<section class="panel"><div class="panel-header"><h2>先花 5～10 分钟回忆</h2><span class="subtle-pill">不占正式名额</span></div><div class="task-list">${plan.short_recall.map(taskRow).join("")}</div></section>` : ""}${oralPanel(plan)}${planWhy(plan)}${candidatePanel(plan)}${heatmap()}</div><div class="stack right-column">${profileCard()}${askPanel(plan)}${mockPanel(plan)}<section class="panel focus-panel"><div class="panel-header"><span class="eyebrow">CURRENT FOCUS</span><button class="icon-button" data-action="settings" aria-label="调整学习方向">${icon("edit")}</button></div><div class="panel-body"><h2>${esc(plan.current_topic || "找到你的学习方向")}</h2><p>${esc(plan.session.next_action || "从到期复习开始，再推进一道新题。")}</p><div class="focus-steps" aria-label="间隔复习：3 天、7 天、21 天"><span>3 天</span><b>→</b><span>7 天</span><b>→</b><span>21 天</span></div>${button("与聊天教练继续","coach","secondary","arrow")}</div></section><section class="panel"><div class="panel-header"><h2 class="tip-title">${icon("spark")}先解释，再动手</h2></div><div class="panel-body"><ol class="coach-steps"><li><b>1</b><span><strong>说清题意</strong> · 这是什么类型的问题？</span></li><li><b>2</b><span><strong>解释变量</strong> · 每个变量代表什么？</span></li><li><b>3</b><span><strong>走一个例子</strong> · 手动验证你的思路。</span></li><li><b>4</b><span><strong>写完再复述</strong> · 一句话总结模板。</span></li></ol></div></section>${forecast()}</div></div>`;
   const notices = [...data.warnings.map(w => w.message)];
   if (plan.new_shortage) notices.push(`新题目录里暂时没有合适的推荐，还可以补充 ${plan.new_shortage} 道新题。`);
   html += `<div class="notices">${notices.map(n=>`<div class="notice">${icon("info")}<span>${esc(n)}</span></div>`).join("")}</div>`;
@@ -208,6 +242,9 @@ function dimensionPanel(report) {
   const table = rows.length ? `<div class="table-scroll"><table class="compact-table"><thead><tr><th>日期 / 题目</th><th>用时 / 限时</th><th>平均分</th></tr></thead><tbody>${rows.map(m => `<tr><td><strong>LC ${esc(m.id)} · ${esc(m.title)}</strong><small>${esc(m.date)}${m.improve ? ` · ${esc(m.improve)}` : ""}</small></td><td>${m.minutes ?? "—"} / ${m.limit_minutes ?? "—"} 分钟${m.overtime ? "<small>超时</small>" : ""}</td><td>${m.average ?? "—"}<small>${m.scores ? ({coach_suggested:"参考教练建议", chat_coach:"聊天教练评分"}[m.scored_by] || "自评") : "未评分"}</small></td></tr>`).join("")}</tbody></table></div>` : "";
   return `<section class="panel"><div class="panel-header"><div><h2>模拟面试五维</h2><p class="muted">题型识别、沟通表达、代码正确性、复杂度分析、时间控制。</p></div><span class="subtle-pill">共 ${report.mock_total} 场</span></div><div class="panel-body">${body}</div>${table}</section>`;
 }
+function weeklyAdvice() {
+  return `<section class="panel advice-panel"><div class="panel-header"><div><h2 class="tip-title">${icon("spark")}AI 周报点评</h2><p class="muted">数字来自记录，模型只写点评和下周安排，不发送代码。</p></div><button class="button secondary" data-action="weekly-advice">${icon("spark")}<span>${data.weekly_advice ? "重新点评" : "生成点评"}</span></button></div><div class="panel-body"><div class="advice-card"><div data-weekly-advice>${AlgoAI.noteBody(data.weekly_advice, esc, WEEKLY_EMPTY)}</div></div></div></section>`;
+}
 function weeklyPage() {
   const report = data.insights, week = report.week, previous = report.previous_week, legacy = data.weekly;
   const days = delta(week.active_days, previous.active_days, " 天");
@@ -221,7 +258,7 @@ function weeklyPage() {
   const notes = `<section class="panel"><div class="panel-header"><h2>这一周，记住了什么</h2><span class="subtle-pill">错因与收获</span></div><div class="panel-body">${legacy.notes.length ? `<ul class="weekly-notes">${legacy.notes.map(note=>`<li><strong>LC ${esc(note.id)} · ${esc(note.title)}</strong><small> · ${esc(note.date)}</small><p>${esc(note.note)}</p></li>`).join("")}</ul>` : '<div class="empty"><strong>下一次练习，留下一句话。</strong>记录核心思路或一个错因，之后会在这里汇成你的复盘。</div>'}</div></section>`;
   const topics = `<section class="panel"><div class="panel-header"><div><h2>专题进度</h2><p class="muted">已掌握 / 已记录 · 全部时间</p></div></div><div class="table-scroll"><table class="compact-table"><thead><tr><th>专题</th><th>已掌握</th><th>需巩固</th><th>待校准</th><th>到期</th></tr></thead><tbody>${report.topics.map(t => `<tr><td><strong>${esc(t.name)}</strong><meter min="0" max="${t.total}" value="${t.learned}" aria-label="${esc(t.name)}：${t.learned} 道已掌握，共 ${t.total} 道"></meter></td><td>${t.learned} / ${t.total}</td><td>${t.needs_review}</td><td>${t.calibration}</td><td>${t.due ? `<span class="overdue">${t.due}</span>` : "0"}</td></tr>`).join("")}</tbody></table></div></section>`;
   const results = `<section class="panel weekly-summary"><h2>本周练习结果</h2><p>独立完成 ${week.independent} 次<br>提示后完成 ${week.hinted} 次<br>暂未完成 ${week.failed} 次${week.inferred ? `<br>其中 ${week.inferred} 次按旧记录状态推断` : ""}<br>只有历史日期的记录 ${week.practices - week.graded} 次</p></section>`;
-  html += `<div class="content-grid"><div class="stack">${focus}${dimensionPanel(report)}${errors}${progress}${notes}</div><div class="stack">${topics}${results}${heatmap()}</div></div>`;
+  html += `<div class="content-grid"><div class="stack">${weeklyAdvice()}${focus}${dimensionPanel(report)}${errors}${progress}${notes}</div><div class="stack">${topics}${results}${heatmap()}</div></div>`;
   html += `<div class="notices">${[...report.gaps, legacy.coverage].map(text => `<div class="notice">${icon("info")}<span>${esc(text)}</span></div>`).join("")}</div>`;
   return html;
 }
@@ -360,9 +397,33 @@ document.addEventListener("click", async event => {
     catch (error) { toast(error.message,true); target.disabled = false; }
   }
   if (action === "oral") {
+    // 有讲解或 AI 评分时一并保存，结果以你点的按钮为准。
+    const id = target.dataset.id, draft = oralDrafts[id], text = (draft?.text || "").trim();
+    const detail = {...(text ? {explanation: text} : {}), ...(draft?.judgment ? {marks: draft.judgment.marks, judged_by: draft.judgment.provider} : {})};
     target.disabled = true;
-    try { const response = await post("/api/oral",{id:target.dataset.id,result:target.dataset.result}); toast(response.message); await load(); }
+    try { const response = await post("/api/oral",{id,result:target.dataset.result,...detail}); delete oralDrafts[id]; toast(response.message); await load(); }
     catch (error) { toast(error.message,true); target.disabled = false; }
+  }
+  if (action === "oral-toggle") {
+    const draft = oralDrafts[target.dataset.id] ||= {text: ""};
+    draft.open = !draft.open; render();
+  }
+  if (action === "oral-judge") {
+    const id = target.dataset.id, draft = oralDrafts[id];
+    if ((draft?.text || "").trim().length < 10) { toast("先写几句你的讲解（至少 10 个字）", true); return; }
+    draft.busy = true; render();
+    try { draft.judgment = await post("/api/oral/judge",{id,explanation:draft.text},undefined,undefined,100000); if (draft.judgment.notice) toast(draft.judgment.notice,true); }
+    catch (error) { toast(error.message,true); }
+    draft.busy = false; render();
+  }
+  if (action === "plan-ask") askPlan(target.dataset.question);
+  if (action === "weekly-advice") {
+    const body = $("[data-weekly-advice]");
+    target.disabled = true; body.innerHTML = AlgoAI.waiting("正在根据本周记录写点评，通常 10～40 秒…");
+    try { data.weekly_advice = await post("/api/weekly/advice",{},undefined,undefined,100000); if (data.weekly_advice.notice) toast(data.weekly_advice.notice,true); }
+    catch (error) { toast(error.message,true); }
+    body.innerHTML = AlgoAI.noteBody(data.weekly_advice, esc, WEEKLY_EMPTY); target.disabled = false;
+    target.querySelector("span").textContent = data.weekly_advice ? "重新点评" : "生成点评";
   }
   if (action === "skip-recommend") {
     target.disabled = true;
@@ -416,6 +477,7 @@ document.addEventListener("submit", async event => {
   if (formId === "practice-form") await submitDialog(form,"/api/practice",{...values,minutes:values.minutes ? Number(values.minutes) : null,mock:form.elements.mock.checked});
   if (formId === "wrap-form") await submitDialog(form,"/api/wrap",values);
   if (formId === "settings-form") await submitDialog(form,"/api/session",values);
+  if (formId === "plan-ask-form") await askPlan(values.question);
   if (formId === "queue-form") {
     const ids = values.ids.split(/[\s,，、]+/).filter(Boolean);
     if (!ids.length || ids.some(id=>!/^[1-9]\d{0,5}$/.test(id))) { $("#queue-error").textContent = "请输入有效题号，用空格或逗号分隔。"; return; }
@@ -425,6 +487,7 @@ document.addEventListener("submit", async event => {
   }
 });
 document.addEventListener("input", event => {
+  if (event.target.dataset?.oralText) (oralDrafts[event.target.dataset.oralText] ||= {open: true}).text = event.target.value;
   if (event.target.id === "search") { filters.text = event.target.value; $("#problem-rows").innerHTML = tableRows(view === "review"); }
 });
 document.addEventListener("change", event => {

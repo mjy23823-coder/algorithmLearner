@@ -287,7 +287,7 @@ class ProfileEndpointTests(EndpointCase):
         FakeOpenAI.script = [(502, {"error": {"message": "upstream down"}})]
         status, fallback = self.call("/api/profile/advice", {}, token)
         self.assertEqual((status, fallback["provider"]), (200, "offline"))
-        self.assertIn("改用离线分析", fallback["notice"])
+        self.assertIn("改用离线版本", fallback["notice"])
 
 
 class CoachPersonalizationTests(unittest.TestCase):

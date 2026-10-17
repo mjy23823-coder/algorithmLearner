@@ -315,11 +315,38 @@ def oral_slots(minutes):
     return 1 if minutes <= 90 else 2 if minutes <= 150 else 3
 
 
+ORAL_ITEMS = ("recognition", "idea", "complexity", "boundary")
+
+
+def oral_detail(detail):
+    """口述记录可以附上讲解原文和 AI 的四项评分（ok / partial / missing），方便以后回看。"""
+    if not detail:
+        return {}
+    clean = {}
+    text = detail.get("explanation")
+    if text is not None:
+        if not isinstance(text, str) or len(text) > 2000:
+            raise ValueError("口述讲解不能超过 2000 字")
+        if text.strip():
+            clean["explanation"] = text.strip()
+    marks = detail.get("marks")
+    if marks is not None:
+        if not isinstance(marks, dict) or set(marks) != set(ORAL_ITEMS) or any(v not in ("ok", "partial", "missing") for v in marks.values()):
+            raise ValueError("口述评分格式不正确")
+        clean["marks"] = dict(marks)
+    judged = detail.get("judged_by")
+    if judged is not None:
+        if not isinstance(judged, str) or len(judged) > 40:
+            raise ValueError("评分来源格式不正确")
+        clean["judged_by"] = judged
+    return clean
+
+
 def oral_events(state):
     return [{**entry, "id": pid} for pid, rec in state.get("completed", {}).items() for entry in rec.get("oral") or []]
 
 
-def record_oral(state, pid, result, today):
+def record_oral(state, pid, result, today, detail=None):
     """记录一次口述复习。只调整下次复习日期和间隔节点，不改完成次数和掌握状态（口述不能代替写代码）：
     讲清楚了进入下一个间隔；有卡顿 2 天后完整重写；讲不出第二天完整重写。同一天再次记录会更正本次结果。"""
     pid = problem_id(pid)
@@ -344,7 +371,9 @@ def record_oral(state, pid, result, today):
         base.update(stage=stage, next_due=(today + timedelta(days=interval(state, stage))).isoformat())
     else:
         base["next_due"] = (today + timedelta(days=2 if result == "hinted" else 1)).isoformat()
-    base["oral"] = oral + [{"date": today.isoformat(), "result": result, "before": before}]
+    entry = {"date": today.isoformat(), "result": result, "before": before}
+    entry.update(oral_detail(detail))
+    base["oral"] = oral + [entry]
     state["completed"][pid] = base
     refresh_next_review(state)
     return base

@@ -16,9 +16,7 @@ window.AlgoProfile = (() => {
   }
 
   function adviceBody(advice, {esc}) {
-    if (!advice) return `<p class="advice-empty">点“让 AI 分析我的情况”，根据你的画像生成一份阶段建议。连接模型时只发送画像和今日计划，不发送代码；未连接时按固定规则生成。</p>`;
-    const when = advice.at ? new Date(advice.at).toLocaleString([], {month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit"}) : advice.date;
-    return `<p class="advice-text">${esc(advice.text)}</p><p class="advice-meta">${esc(advice.label || "离线分析")}${advice.model ? ` · ${esc(advice.model)}` : ""} · ${esc(when)}</p>`;
+    return AlgoAI.noteBody(advice, esc, "点“让 AI 分析我的情况”，根据你的画像生成一份阶段建议。连接模型时只发送画像和今日计划，不发送代码；未连接时按固定规则生成。");
   }
 
   function goalPanel(p, {esc, icon}) {
@@ -104,7 +102,7 @@ window.AlgoProfile = (() => {
       const card = root.querySelector("[data-advice-card]");
       buttons.forEach(b => { b.disabled = true; });
       card.classList.add("busy");
-      root.querySelector("[data-advice-body]").innerHTML = '<p class="advice-empty"><span class="coach-dots"><i></i><i></i><i></i></span>正在根据你的画像分析，通常 10～40 秒…</p>';
+      root.querySelector("[data-advice-body]").innerHTML = AlgoAI.waiting("正在根据你的画像分析，通常 10～40 秒…");
       try {
         const result = await ui.post("/api/profile/advice", {}, undefined, undefined, 100000);
         data.advice = result;
