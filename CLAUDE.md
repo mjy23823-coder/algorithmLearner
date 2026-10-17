@@ -28,6 +28,7 @@
 | 完整复习排期 | `python tools/coach.py queue` |
 | 维护待学新题 | `python tools/coach.py new add 11 239`（`remove` / `set` 同理；`new skip 75` 换掉推荐，7 天内不再推荐） |
 | 用户纠正历史记录 | `python tools/coach.py fix 209 --count 2 --last-done 2026-10-13 --status learning` |
+| 本机定时通知 | `python tools/notify.py status`（`install` / `uninstall`；每晚 19:25 今日计划、周日 20:35 周报，Windows 系统通知，不经过聊天应用） |
 | 会话备注 / 切换专题 | `python tools/coach.py session --next-action "..." --topic 栈与队列` |
 
 `--result` 怎么判：

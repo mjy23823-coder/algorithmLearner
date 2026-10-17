@@ -31,6 +31,26 @@
 
 命令行：`python tools/coach.py profile` 查看画像，`profile --target-date 2026-12-01 --minutes 120 --pace normal` 设定目标，`new skip 75` 换掉推荐。
 
+## 本机定时通知
+
+不经过任何聊天应用或模型，也不联网：Windows 任务计划程序到点运行 `tools/notify.py`，它读本地进度生成内容，用系统通知弹在桌面右下角（来源显示为 Windows PowerShell）。
+
+| 任务 | 时间 | 内容 |
+| --- | --- | --- |
+| 今晚练什么 | 每晚 19:25 | 正式任务、口述复习、短时回忆和画像里的第一条重点；点击打开今日计划（面板没开时会在后台启动） |
+| 周报与学习快照 | 每周日 20:35 | 本周学习天数、练习次数、独立完成率和下周重点；同时把学习数据提交到本地 git |
+
+电脑关机或睡眠错过时间时，开机后补发一次。看不到通知时，检查 Windows 设置里 Windows PowerShell 的通知是否开启、是否开了专注模式。
+
+```powershell
+python tools/notify.py status      # 查看状态和下次时间
+python tools/notify.py daily --dry-run   # 只打印今晚的通知内容
+python tools/notify.py install     # 重新登记（改时间可在“任务计划程序 → 算法学习”里改）
+python tools/notify.py uninstall   # 不想要通知时删除
+```
+
+运行记录在 `.runtime/notify.log`。
+
 ## 本地版本管理与备份
 
 - 项目目录是一个**只在本机**的 git 仓库，没有配置任何远程，不会上传。代码改动和学习数据都有历史，可以用 `git log` 查看、`git diff` 对比、`git checkout <提交> -- <文件>` 找回旧版本。
@@ -195,6 +215,7 @@ python tools/coach.py wrap --note "今天的收获" --next-action "先复习到�
 | `tools/agent.py` | 工作台智能体：工具定义、两种接口格式的工具循环与提示计数 |
 | `tools/learner.py` | 学习画像、个性化新题推荐、给教练的画像摘要与 AI 阶段分析提示词 |
 | `web/profile.js` | “我的画像”页、推荐行与目标设置 |
+| `tools/notify.py` | 本机定时通知：今日计划、周报摘要与 Windows 任务计划程序登记 |
 | `web/mock.js` / `web/coach.js` / `web/extras.css` | 模拟面试、教练对话与新增页面样式 |
 | `learning-state.json` | 可计算的学习状态 |
 | `learning-log.md` | 原有学习历史与新追加总结 |
