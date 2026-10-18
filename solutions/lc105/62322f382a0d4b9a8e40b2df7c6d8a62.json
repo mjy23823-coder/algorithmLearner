@@ -1,0 +1,88 @@
+{
+  "id": "105",
+  "run_id": "62322f382a0d4b9a8e40b2df7c6d8a62",
+  "code": "class Solution:\n    def buildTree(self, preorder, inorder):\n        # 先说明变量含义，再完成你的实现\n        pass11\n",
+  "code_hash": "19928fc5d20f4300b635b5601a4555a37a03a7f3ba141a3c7454bd281ff1dd7f",
+  "session_id": "c116711d85644b458bca47f387762385",
+  "practice_date": "2026-10-18",
+  "extra_cases": [],
+  "created_at": "2026-10-17T18:50:00.945297+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": false,
+        "args": [
+          [
+            3,
+            9,
+            20,
+            15,
+            7
+          ],
+          [
+            9,
+            3,
+            15,
+            20,
+            7
+          ]
+        ],
+        "expected": [
+          3,
+          9,
+          20,
+          null,
+          null,
+          15,
+          7
+        ],
+        "error": "NameError（代码第 4 行）：name 'pass11' is not defined"
+      },
+      {
+        "name": "用例 2",
+        "passed": false,
+        "args": [
+          [
+            -1
+          ],
+          [
+            -1
+          ]
+        ],
+        "expected": [
+          -1
+        ],
+        "error": "NameError（代码第 4 行）：name 'pass11' is not defined"
+      },
+      {
+        "name": "用例 3",
+        "passed": false,
+        "args": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "expected": [
+          1,
+          2
+        ],
+        "error": "NameError（代码第 4 行）：name 'pass11' is not defined"
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 0,
+    "elapsed_ms": 78,
+    "builtin_count": 3,
+    "passed": false
+  },
+  "source_path": "solutions/lc105/62322f382a0d4b9a8e40b2df7c6d8a62.py"
+}

@@ -1,0 +1,88 @@
+{
+  "id": "105",
+  "run_id": "d682b50470b7488bb61cd29999dea990",
+  "code": "class Solution:\n    def buildTree(self, preorder, inorder):\n        # 先说明变量含义，再完成你的实现\n        pass\n",
+  "code_hash": "9812e03ec68dc099eee3231d592117bef7e0528766ff53c5f1c2f1867cd7660a",
+  "session_id": "c116711d85644b458bca47f387762385",
+  "practice_date": "2026-10-18",
+  "extra_cases": [],
+  "created_at": "2026-10-17T18:49:57.529083+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": false,
+        "args": [
+          [
+            3,
+            9,
+            20,
+            15,
+            7
+          ],
+          [
+            9,
+            3,
+            15,
+            20,
+            7
+          ]
+        ],
+        "expected": [
+          3,
+          9,
+          20,
+          null,
+          null,
+          15,
+          7
+        ],
+        "actual": []
+      },
+      {
+        "name": "用例 2",
+        "passed": false,
+        "args": [
+          [
+            -1
+          ],
+          [
+            -1
+          ]
+        ],
+        "expected": [
+          -1
+        ],
+        "actual": []
+      },
+      {
+        "name": "用例 3",
+        "passed": false,
+        "args": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "expected": [
+          1,
+          2
+        ],
+        "actual": []
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 0,
+    "elapsed_ms": 94,
+    "builtin_count": 3,
+    "passed": false
+  },
+  "source_path": "solutions/lc105/d682b50470b7488bb61cd29999dea990.py"
+}

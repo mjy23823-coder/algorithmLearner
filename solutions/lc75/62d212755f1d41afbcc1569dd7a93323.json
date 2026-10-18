@@ -1,0 +1,30 @@
+{
+  "id": "75",
+  "run_id": "62d212755f1d41afbcc1569dd7a93323",
+  "code": "class Solution:\n       def sortColors(self, nums: list[int]) -> None:\n           left = 0\n           i = 0\n           right = len(nums) - 1\n\n           while i <= right:\n               if nums[i] == 0:\n                   nums[left], nums[i] = nums[i], nums[left]\n                   left += 1\n                   i += 1\n\n               elif nums[i] == 1:\n                   i += 1\n✓\n测试用例\n›\n测试结果\n\n\n               else:  # nums[i] == 2\n                   nums[i], nums[right] = nums[right], nums[i]\n                   right -= 1\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "code_hash": "0627dfe72c4638d5f739eca1fb1648b4f85f28c8a3008cfdf88abc7c8f30d90d",
+  "session_id": "74ec8d22c72240009b1e1820fe6b86bf",
+  "practice_date": "2026-10-18",
+  "extra_cases": [],
+  "created_at": "2026-10-17T19:37:51.605449+00:00",
+  "hints_used": 1,
+  "result": {
+    "cases": [],
+    "stdout": "",
+    "error": "SyntaxError（代码第 15 行、第 1 列）：invalid character '✓' (U+2713)",
+    "error_detail": {
+      "kind": "syntax",
+      "name": "SyntaxError",
+      "message": "invalid character '✓' (U+2713)",
+      "line": 15,
+      "column": 1,
+      "text": "✓"
+    },
+    "total": 3,
+    "passed_count": 0,
+    "elapsed_ms": 109,
+    "builtin_count": 3,
+    "passed": false
+  },
+  "source_path": "solutions/lc75/62d212755f1d41afbcc1569dd7a93323.py"
+}

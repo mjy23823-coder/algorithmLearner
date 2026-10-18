@@ -1,0 +1,89 @@
+{
+  "id": "75",
+  "run_id": "83c5922a9ede496b85f859fcb4a42f29",
+  "code": "class Solution:\n       def sortColors(self, nums: list[int]) -> None:\n           left = 0\n           i = 0\n           right = len(nums) - 1\n\n           while i <= right:\n               if nums[i] == 0:\n                   nums[left], nums[i] = nums[i], nums[left]\n                   left += 1\n                   i += 1\n\n               elif nums[i] == 1:\n                   i += 1\n               else:  # nums[i] == 2\n                   nums[i], nums[right] = nums[right], nums[i]\n                   right -= 1\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "code_hash": "119bdb1495f2f7ca7050af1f1063b03b761e65a77139541e379de71f7f4b2bac",
+  "session_id": "74ec8d22c72240009b1e1820fe6b86bf",
+  "practice_date": "2026-10-18",
+  "extra_cases": [],
+  "created_at": "2026-10-17T19:45:56.091830+00:00",
+  "hints_used": 1,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            2,
+            0,
+            2,
+            1,
+            1,
+            0
+          ]
+        ],
+        "expected": [
+          0,
+          0,
+          1,
+          1,
+          2,
+          2
+        ],
+        "actual": [
+          0,
+          0,
+          1,
+          1,
+          2,
+          2
+        ]
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            2,
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          0,
+          1,
+          2
+        ],
+        "actual": [
+          0,
+          1,
+          2
+        ]
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [
+            0
+          ]
+        ],
+        "expected": [
+          0
+        ],
+        "actual": [
+          0
+        ]
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 110,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc75/83c5922a9ede496b85f859fcb4a42f29.py"
+}
