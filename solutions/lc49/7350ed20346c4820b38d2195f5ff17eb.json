@@ -1,0 +1,103 @@
+{
+  "id": "49",
+  "run_id": "7350ed20346c4820b38d2195f5ff17eb",
+  "code": "class Solution:\n    def groupAnagrams(self, strs: list[str]) -> list[list[str]]:\n        ans={}\n        for word in strs:\n            # 这种排序得到的结果是list，需要将其转为dict\n            key = \"\".join(sorted(word))\n            # ans中没出现就先存入key，用空进行占位\n            if key not in ans:\n                ans[key]=[]\n            # 如果排序后出现过就直接将其加入到对应字典里\n            ans[key].append(word)\n        # 将字典的结果转回list\n        return list(ans.values())\n",
+  "code_hash": "2374d9448e3e15e8b687e38b12643b339c0158512fc7c85a79a3cdcddc7d685d",
+  "session_id": "a55c9a7fac054658a51bea5e3162774a",
+  "practice_date": "2026-10-21",
+  "extra_cases": [],
+  "created_at": "2026-10-21T14:16:20.182685+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            "eat",
+            "tea",
+            "tan",
+            "ate",
+            "nat",
+            "bat"
+          ]
+        ],
+        "expected": [
+          [
+            "bat"
+          ],
+          [
+            "nat",
+            "tan"
+          ],
+          [
+            "ate",
+            "eat",
+            "tea"
+          ]
+        ],
+        "actual": [
+          [
+            "eat",
+            "tea",
+            "ate"
+          ],
+          [
+            "tan",
+            "nat"
+          ],
+          [
+            "bat"
+          ]
+        ]
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            ""
+          ]
+        ],
+        "expected": [
+          [
+            ""
+          ]
+        ],
+        "actual": [
+          [
+            ""
+          ]
+        ]
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [
+            "a"
+          ]
+        ],
+        "expected": [
+          [
+            "a"
+          ]
+        ],
+        "actual": [
+          [
+            "a"
+          ]
+        ]
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 125,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc49/7350ed20346c4820b38d2195f5ff17eb.py"
+}

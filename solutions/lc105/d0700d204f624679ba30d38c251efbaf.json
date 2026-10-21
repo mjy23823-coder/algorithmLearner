@@ -1,0 +1,101 @@
+{
+  "id": "105",
+  "run_id": "d0700d204f624679ba30d38c251efbaf",
+  "code": "class Solution:\n    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:\n        # 空节点\n        if not preorder:  \n            return None\n        # 左子树的大小(找出根节点的索引)\n        left_size = inorder.index(preorder[0])  \n        # \n        left = self.buildTree(preorder[1: 1 + left_size], inorder[:left_size])\n        right = self.buildTree(preorder[1 + left_size:], inorder[1 + left_size:])\n        \n        return TreeNode(preorder[0], left, right)",
+  "code_hash": "618a458d4e13bf341e262cfc1fc4bf243ae906498182904e0386cdf6802974cd",
+  "session_id": "c116711d85644b458bca47f387762385",
+  "practice_date": "2026-10-19",
+  "extra_cases": [],
+  "created_at": "2026-10-19T14:26:47.570699+00:00",
+  "hints_used": 1,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            3,
+            9,
+            20,
+            15,
+            7
+          ],
+          [
+            9,
+            3,
+            15,
+            20,
+            7
+          ]
+        ],
+        "expected": [
+          3,
+          9,
+          20,
+          null,
+          null,
+          15,
+          7
+        ],
+        "actual": [
+          3,
+          9,
+          20,
+          null,
+          null,
+          15,
+          7
+        ]
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            -1
+          ],
+          [
+            -1
+          ]
+        ],
+        "expected": [
+          -1
+        ],
+        "actual": [
+          -1
+        ]
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "expected": [
+          1,
+          2
+        ],
+        "actual": [
+          1,
+          2
+        ]
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 110,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc105/d0700d204f624679ba30d38c251efbaf.py"
+}

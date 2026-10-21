@@ -1,0 +1,68 @@
+{
+  "id": "101",
+  "run_id": "86e74c3f5ae845349ae6e201be66351a",
+  "code": "class Solution:\n    def isSymmetric(self, root: TreeNode) -> bool:\n        # 空树\n        if root is None:\n            return True\n\n        def mirror(left,right):\n            # 两边节点都为空\n            if left is None and right is None:\n                return True\n            # 两边有一边为空\n            if left is None and right is not None:\n                return False\n            \n            if left is not None and right is None:\n                return False\n            \n            # 两边都不为空\n            if left is not None and right is not None:\n                if left.val != right.val:\n                    return False\n                # 继续递归子树\n                return mirror(left.left,right.right) and mirror(right.left,left.right)\n            \n            return True\n\n        return mirror(root.left,root.right)",
+  "code_hash": "5a1dc3dc24fb30a43f94b14b0d95c0bc16983e9006c59dcc68b98e00d291a96d",
+  "session_id": "28444dc3e0984ce09bf1f4664f8b352f",
+  "practice_date": "2026-10-18",
+  "extra_cases": [],
+  "created_at": "2026-10-18T13:44:31.026373+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            1,
+            2,
+            2,
+            3,
+            4,
+            4,
+            3
+          ]
+        ],
+        "expected": true,
+        "actual": true
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            1,
+            2,
+            2,
+            null,
+            3,
+            null,
+            3
+          ]
+        ],
+        "expected": false,
+        "actual": false
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [
+            1
+          ]
+        ],
+        "expected": true,
+        "actual": true
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 78,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc101/86e74c3f5ae845349ae6e201be66351a.py"
+}

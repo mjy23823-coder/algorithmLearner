@@ -1,0 +1,99 @@
+{
+  "id": "617",
+  "run_id": "bd5f40248be84e8fb540eaf787f31d4f",
+  "code": "class Solution:\n    def mergeTrees(self, root1, root2):\n        # 先说明变量含义，再完成你的实现\n                \n        def dfs(p,q):\n            if p is None and q is None:\n                return None\n            if p is None and q is not None:\n                return q    \n            if p and q is None:\n                return p\n            if p and q:\n                p.val+=q.val\n                p.left = dfs(p.left,q.left)\n                p.right = dfs(p.right,q.right)\n                return p\n\n\n        return dfs(root1,root2)\n",
+  "code_hash": "d263e1a0c59676d9a4c6e89f16bbd7ddc38f2fa67af161fe174ec0c78b786e07",
+  "session_id": "4be0dfbeb11a4d00acc4bfdab5345b03",
+  "practice_date": "2026-10-21",
+  "extra_cases": [],
+  "created_at": "2026-10-21T13:24:48.221255+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            1,
+            3,
+            2,
+            5
+          ],
+          [
+            2,
+            1,
+            3,
+            null,
+            4,
+            null,
+            7
+          ]
+        ],
+        "expected": [
+          3,
+          4,
+          5,
+          5,
+          4,
+          null,
+          7
+        ],
+        "actual": [
+          3,
+          4,
+          5,
+          5,
+          4,
+          null,
+          7
+        ]
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "expected": [
+          2,
+          2
+        ],
+        "actual": [
+          2,
+          2
+        ]
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [],
+          [
+            1
+          ]
+        ],
+        "expected": [
+          1
+        ],
+        "actual": [
+          1
+        ]
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 140,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc617/bd5f40248be84e8fb540eaf787f31d4f.py"
+}

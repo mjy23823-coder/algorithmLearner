@@ -1,0 +1,66 @@
+{
+  "id": "404",
+  "run_id": "9dbb9bcbda55458a9c334cf3dc4e6f00",
+  "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def sumOfLeftLeaves(self, root: Optional[TreeNode]) -> int:\n        ans=0\n        def dfs(node):\n            nonlocal ans\n            if node is None:\n                return\n            # 先左节点\n            if node.left is not None:\n                # 再叶子节点\n                if node.left.left is None and node.left.right is None:\n                    ans+=node.left.val  \n            # 递归子树\n            dfs(node.left)\n            dfs(node.right)\n\n        dfs(root)\n        return ans\n            ",
+  "code_hash": "88ea734e3b976f94de1fef680a109205ee9cb598e0f58dd6bd249d4737725f5b",
+  "session_id": "ea4989b287474c14892e57afb96e2465",
+  "practice_date": "2026-10-19",
+  "extra_cases": [],
+  "created_at": "2026-10-19T13:02:16.094285+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            3,
+            9,
+            20,
+            null,
+            null,
+            15,
+            7
+          ]
+        ],
+        "expected": 24,
+        "actual": 24
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            1
+          ]
+        ],
+        "expected": 0,
+        "actual": 0
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        ],
+        "expected": 4,
+        "actual": 4
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 93,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc404/9dbb9bcbda55458a9c334cf3dc4e6f00.py"
+}

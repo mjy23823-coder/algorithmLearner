@@ -1,0 +1,82 @@
+{
+  "id": "128",
+  "run_id": "598e1e186ef5496daaa4fd835c601d31",
+  "code": "class Solution:\n    def longestConsecutive(self, nums: list[int]) -> int:\n        if not nums:\n            return 0 \n        # 用一个集合存储所有元素\n        nums_set = set()\n        max_count = 0\n        for num in nums:\n            if num not in nums_set:\n                nums_set.add(num)\n        \n        for num in nums_set:\n            # 如果当前元素的上一个元素不在集合中\n            if num-1 not in nums_set:\n                # 当前元素是起点\n                current = num\n                count = 1\n                # 如果当前元素的下一元素在集合\n                while current+1 in nums_set:\n                    current+=1\n                    count+=1\n                max_count=max(max_count,count)\n\n\n        return max_count\n        \n",
+  "code_hash": "d7851d6361d889ee34bcf17389a5caa732d217578c6b0f88517a5b2539ef383c",
+  "session_id": "2f52d2b5d4864675a5137d421f73fa16",
+  "practice_date": "2026-10-21",
+  "extra_cases": [],
+  "created_at": "2026-10-21T14:47:31.235175+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            100,
+            4,
+            200,
+            1,
+            3,
+            2
+          ]
+        ],
+        "expected": 4,
+        "actual": 4
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            0,
+            3,
+            7,
+            2,
+            5,
+            8,
+            4,
+            6,
+            0,
+            1
+          ]
+        ],
+        "expected": 9,
+        "actual": 9
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          []
+        ],
+        "expected": 0,
+        "actual": 0
+      },
+      {
+        "name": "用例 4",
+        "passed": true,
+        "args": [
+          [
+            1,
+            0,
+            1,
+            2
+          ]
+        ],
+        "expected": 3,
+        "actual": 3
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 4,
+    "passed_count": 4,
+    "elapsed_ms": 125,
+    "builtin_count": 4,
+    "passed": true
+  },
+  "source_path": "solutions/lc128/598e1e186ef5496daaa4fd835c601d31.py"
+}

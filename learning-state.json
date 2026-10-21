@@ -2,7 +2,7 @@
   "schema_version": 1,
   "goal": "准备大厂实习算法面试",
   "language": "python",
-  "current_topic": "双指针与滑动窗口",
+  "current_topic": "高频核心轮换",
   "session_mode_default": "normal",
   "review_intervals_days": [
     3,
@@ -372,13 +372,21 @@
       }
     },
     "94": {
-      "count": 1,
+      "count": 2,
       "title": "二叉树的中序遍历",
       "topic": "二叉树",
-      "last_done": "2026-09-22",
-      "status": "learning",
-      "stage": 0,
-      "next_due": "2026-09-25",
+      "last_done": "2026-10-20",
+      "status": "learned",
+      "stage": 1,
+      "next_due": "2026-10-27",
+      "first_done": "2026-09-22",
+      "count_is_lower_bound": true,
+      "history_import": {
+        "source": "learning-log.md",
+        "audit_id": "learning-log-recovery-2026-10-17",
+        "imported_on": "2026-10-17",
+        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+      },
       "history": [
         {
           "date": "2026-09-22",
@@ -401,16 +409,53 @@
               }
             ]
           }
+        },
+        {
+          "date": "2026-10-20",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "二叉树的中序遍历",
+            "topic": "二叉树",
+            "last_done": "2026-09-22",
+            "status": "learning",
+            "stage": 0,
+            "next_due": "2026-09-25",
+            "first_done": "2026-09-22",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "minutes": 1,
+          "note": "简单题",
+          "error_tags": [],
+          "pattern_ids": [
+            "dfs_order"
+          ],
+          "idea": "",
+          "time_complexity": "",
+          "space_complexity": "",
+          "boundary": "",
+          "takeaway": "简单题",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "6a2fefa15f384619abc8185c0f90de81",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "c8819ca2c2198e20a63bc921c009c06974ddfe16ecae57529f69465b9f060614"
+          },
+          "code_path": "solutions/lc94/6a2fefa15f384619abc8185c0f90de81.py",
+          "elapsed_seconds": 26,
+          "hints_used": 0,
+          "coach_hints": 0
         }
-      ],
-      "first_done": "2026-09-22",
-      "count_is_lower_bound": true,
-      "history_import": {
-        "source": "learning-log.md",
-        "audit_id": "learning-log-recovery-2026-10-17",
-        "imported_on": "2026-10-17",
-        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      }
+      ]
     },
     "98": {
       "title": "验证二叉搜索树",
@@ -520,13 +565,21 @@
       }
     },
     "101": {
-      "count": 1,
+      "count": 2,
       "title": "对称二叉树",
       "topic": "二叉树",
-      "last_done": "2026-09-26",
+      "last_done": "2026-10-18",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-09-29",
+      "next_due": "2026-10-21",
+      "first_done": "2026-09-26",
+      "count_is_lower_bound": true,
+      "history_import": {
+        "source": "learning-log.md",
+        "audit_id": "learning-log-recovery-2026-10-17",
+        "imported_on": "2026-10-17",
+        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+      },
       "history": [
         {
           "date": "2026-09-26",
@@ -545,16 +598,53 @@
               }
             ]
           }
+        },
+        {
+          "date": "2026-10-18",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "对称二叉树",
+            "topic": "二叉树",
+            "last_done": "2026-09-26",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-09-29",
+            "first_done": "2026-09-26",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "minutes": 2,
+          "note": "还是思路不清晰,写过的题感觉都和没写过的一样,还是没有真正明白吗,思路不难但是看到题目又想不起来怎么动手了,",
+          "error_tags": [],
+          "pattern_ids": [
+            "subtree_return"
+          ],
+          "idea": "",
+          "time_complexity": "O（n）",
+          "space_complexity": "O(h)",
+          "boundary": "",
+          "takeaway": "还是思路不清晰,写过的题感觉都和没写过的一样,还是没有真正明白吗,思路不难但是看到题目又想不起来怎么动手了,",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "86e74c3f5ae845349ae6e201be66351a",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "5a1dc3dc24fb30a43f94b14b0d95c0bc16983e9006c59dcc68b98e00d291a96d"
+          },
+          "code_path": "solutions/lc101/86e74c3f5ae845349ae6e201be66351a.py",
+          "elapsed_seconds": 99,
+          "hints_used": 0,
+          "coach_hints": 2
         }
-      ],
-      "first_done": "2026-09-26",
-      "count_is_lower_bound": true,
-      "history_import": {
-        "source": "learning-log.md",
-        "audit_id": "learning-log-recovery-2026-10-17",
-        "imported_on": "2026-10-17",
-        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      }
+      ]
     },
     "102": {
       "count": 1,
@@ -627,13 +717,21 @@
       }
     },
     "104": {
-      "count": 1,
+      "count": 2,
       "title": "二叉树的最大深度",
       "topic": "二叉树",
-      "last_done": "2026-09-20",
-      "status": "learning",
-      "stage": 0,
-      "next_due": "2026-09-23",
+      "last_done": "2026-10-20",
+      "status": "learned",
+      "stage": 1,
+      "next_due": "2026-10-27",
+      "first_done": "2026-09-20",
+      "count_is_lower_bound": true,
+      "history_import": {
+        "source": "learning-log.md",
+        "audit_id": "learning-log-recovery-2026-10-17",
+        "imported_on": "2026-10-17",
+        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+      },
       "history": [
         {
           "date": "2026-09-20",
@@ -656,16 +754,53 @@
               }
             ]
           }
+        },
+        {
+          "date": "2026-10-20",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "二叉树的最大深度",
+            "topic": "二叉树",
+            "last_done": "2026-09-20",
+            "status": "learning",
+            "stage": 0,
+            "next_due": "2026-09-23",
+            "first_done": "2026-09-20",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "minutes": 1,
+          "note": "简单题",
+          "error_tags": [],
+          "pattern_ids": [
+            "subtree_return"
+          ],
+          "idea": "",
+          "time_complexity": "",
+          "space_complexity": "",
+          "boundary": "",
+          "takeaway": "简单题",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "8da091aeaa8f4c54afe832b5e062e5e4",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "e0ca51ba1fe5245a69d175d2ee00664d413122d4caf8a1e60b6895b36eb2ec17"
+          },
+          "code_path": "solutions/lc104/8da091aeaa8f4c54afe832b5e062e5e4.py",
+          "elapsed_seconds": 14,
+          "hints_used": 0,
+          "coach_hints": 0
         }
-      ],
-      "first_done": "2026-09-20",
-      "count_is_lower_bound": true,
-      "history_import": {
-        "source": "learning-log.md",
-        "audit_id": "learning-log-recovery-2026-10-17",
-        "imported_on": "2026-10-17",
-        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      }
+      ]
     },
     "108": {
       "title": "将有序数组转换为二叉搜索树",
@@ -893,13 +1028,21 @@
       }
     },
     "145": {
-      "count": 1,
+      "count": 2,
       "title": "二叉树的后序遍历",
       "topic": "二叉树",
-      "last_done": "2026-09-22",
-      "status": "learning",
-      "stage": 0,
-      "next_due": "2026-09-25",
+      "last_done": "2026-10-21",
+      "status": "learned",
+      "stage": 1,
+      "next_due": "2026-10-28",
+      "first_done": "2026-09-22",
+      "count_is_lower_bound": true,
+      "history_import": {
+        "source": "learning-log.md",
+        "audit_id": "learning-log-recovery-2026-10-17",
+        "imported_on": "2026-10-17",
+        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+      },
       "history": [
         {
           "date": "2026-09-22",
@@ -922,16 +1065,53 @@
               }
             ]
           }
+        },
+        {
+          "date": "2026-10-21",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "二叉树的后序遍历",
+            "topic": "二叉树",
+            "last_done": "2026-09-22",
+            "status": "learning",
+            "stage": 0,
+            "next_due": "2026-09-25",
+            "first_done": "2026-09-22",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "minutes": 1,
+          "note": "简单题目",
+          "error_tags": [],
+          "pattern_ids": [
+            "dfs_order"
+          ],
+          "idea": "",
+          "time_complexity": "O(n)",
+          "space_complexity": "O(n)",
+          "boundary": "",
+          "takeaway": "简单题目",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "5b6fdb64707545ccb923b7ed79bf05ba",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "b9769787bed3d7b026099e00881a3b9da526e0c10b0e22194e8c5a8c7328cc9f"
+          },
+          "code_path": "solutions/lc145/5b6fdb64707545ccb923b7ed79bf05ba.py",
+          "elapsed_seconds": 49,
+          "hints_used": 0,
+          "coach_hints": 0
         }
-      ],
-      "first_done": "2026-09-22",
-      "count_is_lower_bound": true,
-      "history_import": {
-        "source": "learning-log.md",
-        "audit_id": "learning-log-recovery-2026-10-17",
-        "imported_on": "2026-10-17",
-        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      }
+      ]
     },
     "167": {
       "title": "两数之和 II - 输入有序数组",
@@ -1086,7 +1266,7 @@
       "last_done": "2026-09-20",
       "status": "learning",
       "stage": 0,
-      "next_due": "2026-09-22",
+      "next_due": "2026-10-21",
       "first_done": "2026-09-19",
       "history": [
         {
@@ -1147,7 +1327,17 @@
         "audit_id": "learning-log-recovery-2026-10-17",
         "imported_on": "2026-10-17",
         "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      }
+      },
+      "oral": [
+        {
+          "date": "2026-10-19",
+          "result": "hinted",
+          "before": {
+            "next_due": "2026-09-22",
+            "stage": 0
+          }
+        }
+      ]
     },
     "217": {
       "title": "存在重复元素",
@@ -1193,13 +1383,21 @@
       }
     },
     "226": {
-      "count": 1,
+      "count": 2,
       "title": "翻转二叉树",
       "topic": "二叉树",
-      "last_done": "2026-09-23",
+      "last_done": "2026-10-18",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-09-26",
+      "next_due": "2026-10-21",
+      "first_done": "2026-09-23",
+      "count_is_lower_bound": true,
+      "history_import": {
+        "source": "learning-log.md",
+        "audit_id": "learning-log-recovery-2026-10-17",
+        "imported_on": "2026-10-17",
+        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+      },
       "history": [
         {
           "date": "2026-09-23",
@@ -1218,16 +1416,53 @@
               }
             ]
           }
+        },
+        {
+          "date": "2026-10-18",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "翻转二叉树",
+            "topic": "二叉树",
+            "last_done": "2026-09-23",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-09-26",
+            "first_done": "2026-09-23",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "note": "看到题目时，还是没思路怎么去进行求解",
+          "error_tags": [],
+          "pattern_ids": [
+            "dfs_order",
+            "tree_connect"
+          ],
+          "idea": "",
+          "time_complexity": "O（n）",
+          "space_complexity": "O(n)",
+          "boundary": "",
+          "takeaway": "看到题目时，还是没思路怎么去进行求解",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "3b88b34eb0344d47a21b35d014ac18b2",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "d2c1b1abb977b4f2bbc290e65140333352a5abde3394ec4b339bceef33ac1dee"
+          },
+          "code_path": "solutions/lc226/3b88b34eb0344d47a21b35d014ac18b2.py",
+          "elapsed_seconds": 0,
+          "hints_used": 3,
+          "coach_hints": 1
         }
-      ],
-      "first_done": "2026-09-23",
-      "count_is_lower_bound": true,
-      "history_import": {
-        "source": "learning-log.md",
-        "audit_id": "learning-log-recovery-2026-10-17",
-        "imported_on": "2026-10-17",
-        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      }
+      ]
     },
     "230": {
       "count": 1,
@@ -1462,13 +1697,21 @@
       }
     },
     "404": {
-      "count": 1,
+      "count": 2,
       "title": "左叶子之和",
       "topic": "二叉树",
-      "last_done": "2026-10-01",
-      "status": "needs_review",
+      "last_done": "2026-10-19",
+      "status": "learning",
       "stage": 0,
-      "next_due": "2026-10-04",
+      "next_due": "2026-10-22",
+      "first_done": "2026-10-01",
+      "count_is_lower_bound": true,
+      "history_import": {
+        "source": "learning-log.md",
+        "audit_id": "learning-log-recovery-2026-10-17",
+        "imported_on": "2026-10-17",
+        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+      },
       "history": [
         {
           "date": "2026-10-01",
@@ -1495,25 +1738,70 @@
               }
             ]
           }
+        },
+        {
+          "date": "2026-10-19",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "左叶子之和",
+            "topic": "二叉树",
+            "last_done": "2026-10-01",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-04",
+            "first_done": "2026-10-01",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "minutes": 4,
+          "note": "开始没看清楚题目，写成了左节点的所有节点之和，但是报错后发现是求左叶子节点之和，能自己不看提示独立写出",
+          "error_tags": [],
+          "pattern_ids": [
+            "subtree_return"
+          ],
+          "idea": "",
+          "time_complexity": "",
+          "space_complexity": "",
+          "boundary": "",
+          "takeaway": "开始没看清楚题目，写成了左节点的所有节点之和，但是报错后发现是求左叶子节点之和，能自己不看提示独立写出",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "9dbb9bcbda55458a9c334cf3dc4e6f00",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "88ea734e3b976f94de1fef680a109205ee9cb598e0f58dd6bd249d4737725f5b"
+          },
+          "code_path": "solutions/lc404/9dbb9bcbda55458a9c334cf3dc4e6f00.py",
+          "elapsed_seconds": 206,
+          "hints_used": 0,
+          "coach_hints": 0
         }
-      ],
-      "first_done": "2026-10-01",
+      ]
+    },
+    "501": {
+      "count": 2,
+      "title": "二叉搜索树中的众数",
+      "topic": "BST",
+      "last_done": "2026-10-19",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-22",
+      "first_done": "2026-10-07",
       "count_is_lower_bound": true,
       "history_import": {
         "source": "learning-log.md",
         "audit_id": "learning-log-recovery-2026-10-17",
         "imported_on": "2026-10-17",
         "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      }
-    },
-    "501": {
-      "count": 1,
-      "title": "二叉搜索树中的众数",
-      "topic": "BST",
-      "last_done": "2026-10-07",
-      "status": "needs_review",
-      "stage": 0,
-      "next_due": "2026-10-10",
+      },
       "history": [
         {
           "date": "2026-10-07",
@@ -1540,16 +1828,53 @@
               }
             ]
           }
+        },
+        {
+          "date": "2026-10-19",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "二叉搜索树中的众数",
+            "topic": "BST",
+            "last_done": "2026-10-07",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-10",
+            "first_done": "2026-10-07",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "minutes": 2,
+          "note": "主要的思路有了，但是写的时候还是差了一点",
+          "error_tags": [],
+          "pattern_ids": [
+            "inorder_state"
+          ],
+          "idea": "",
+          "time_complexity": "O（n）",
+          "space_complexity": "O（n）",
+          "boundary": "",
+          "takeaway": "主要的思路有了，但是写的时候还是差了一点",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "fd27f800eea74ae3b4e0c03a3929ab84",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "f2d15dce4c8081d59277cc89e118f8660ca8dd18a7627373a0e0e8e820342dfb"
+          },
+          "code_path": "solutions/lc501/fd27f800eea74ae3b4e0c03a3929ab84.py",
+          "elapsed_seconds": 90,
+          "hints_used": 0,
+          "coach_hints": 1
         }
-      ],
-      "first_done": "2026-10-07",
-      "count_is_lower_bound": true,
-      "history_import": {
-        "source": "learning-log.md",
-        "audit_id": "learning-log-recovery-2026-10-17",
-        "imported_on": "2026-10-17",
-        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      }
+      ]
     },
     "530": {
       "title": "二叉搜索树的最小绝对差",
@@ -1690,13 +2015,21 @@
       }
     },
     "617": {
-      "count": 1,
+      "count": 2,
       "title": "合并二叉树",
       "topic": "二叉树",
-      "last_done": "2026-10-01",
-      "status": "learning",
+      "last_done": "2026-10-21",
+      "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-04",
+      "next_due": "2026-10-24",
+      "first_done": "2026-10-01",
+      "count_is_lower_bound": true,
+      "history_import": {
+        "source": "learning-log.md",
+        "audit_id": "learning-log-recovery-2026-10-17",
+        "imported_on": "2026-10-17",
+        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+      },
       "history": [
         {
           "date": "2026-10-01",
@@ -1719,16 +2052,54 @@
               }
             ]
           }
+        },
+        {
+          "date": "2026-10-21",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "合并二叉树",
+            "topic": "二叉树",
+            "last_done": "2026-10-01",
+            "status": "learning",
+            "stage": 0,
+            "next_due": "2026-10-04",
+            "first_done": "2026-10-01",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "minutes": 2,
+          "note": "还是有点没搞明白，空，一个为空，两个非空的情况需要分别考虑，两个的没有想清楚",
+          "error_tags": [],
+          "pattern_ids": [
+            "dfs_order",
+            "tree_connect"
+          ],
+          "idea": "",
+          "time_complexity": "O(min(n,m))",
+          "space_complexity": "O(min(n,m))",
+          "boundary": "",
+          "takeaway": "还是有点没搞明白，空，一个为空，两个非空的情况需要分别考虑，两个的没有想清楚",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "bd5f40248be84e8fb540eaf787f31d4f",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "d263e1a0c59676d9a4c6e89f16bbd7ddc38f2fa67af161fe174ec0c78b786e07"
+          },
+          "code_path": "solutions/lc617/bd5f40248be84e8fb540eaf787f31d4f.py",
+          "elapsed_seconds": 73,
+          "hints_used": 0,
+          "coach_hints": 0
         }
-      ],
-      "first_done": "2026-10-01",
-      "count_is_lower_bound": true,
-      "history_import": {
-        "source": "learning-log.md",
-        "audit_id": "learning-log-recovery-2026-10-17",
-        "imported_on": "2026-10-17",
-        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      }
+      ]
     },
     "700": {
       "title": "二叉搜索树中的搜索",
@@ -1982,6 +2353,323 @@
         }
       ],
       "first_done": "2026-10-17"
+    },
+    "18": {
+      "count": 1,
+      "title": "四数之和",
+      "topic": "双指针",
+      "last_done": "2026-10-18",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-21",
+      "history": [
+        {
+          "date": "2026-10-18",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 3,
+          "note": "大体的框架的思路是没什么问题了,但是具体实现的细节还是存在点错误,例如去重的前后问题和left的一个位置问题",
+          "error_tags": [],
+          "pattern_ids": [
+            "opposing_pointers"
+          ],
+          "idea": "",
+          "time_complexity": "O（n3）",
+          "space_complexity": "0（n）",
+          "boundary": "",
+          "takeaway": "大体的框架的思路是没什么问题了,但是具体实现的细节还是存在点错误,例如去重的前后问题和left的一个位置问题",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "0a339906e7fc4acb93b091f7e915dcc7",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "d1217d4d1e65a575a909c75c626109b348ee8d4c7a7d1f50fa8d4c8efe8adf6a"
+          },
+          "code_path": "solutions/lc18/0a339906e7fc4acb93b091f7e915dcc7.py",
+          "elapsed_seconds": 154,
+          "hints_used": 0,
+          "coach_hints": 1
+        }
+      ],
+      "first_done": "2026-10-18"
+    },
+    "105": {
+      "count": 1,
+      "title": "从前序与中序遍历序列构造二叉树",
+      "topic": "二叉树",
+      "last_done": "2026-10-19",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-22",
+      "history": [
+        {
+          "date": "2026-10-19",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 1440,
+          "mock": true,
+          "error_tags": [],
+          "pattern_ids": [
+            "tree_connect"
+          ],
+          "idea": "",
+          "time_complexity": "",
+          "space_complexity": "",
+          "boundary": "空返回为空，一个就返回一个，全部相同的话就没法构建了",
+          "takeaway": "",
+          "followup": "接在上一次递归的节点下面",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "9dd90be8056f4d21b96eed802c473e92",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "618a458d4e13bf341e262cfc1fc4bf243ae906498182904e0386cdf6802974cd"
+          },
+          "code_path": "solutions/lc105/9dd90be8056f4d21b96eed802c473e92.py",
+          "elapsed_seconds": 86400,
+          "hints_used": 1,
+          "coach_hints": 2,
+          "mock_review": {
+            "limit_minutes": 25,
+            "elapsed_seconds": 86400,
+            "overtime": true,
+            "scores": {
+              "recognition": 2,
+              "communication": 2,
+              "code": 3,
+              "complexity": 2,
+              "time": 3
+            },
+            "score_reasons": {},
+            "improve": "",
+            "help_used": 3,
+            "scored_by": "self",
+            "average": 2.4
+          }
+        }
+      ],
+      "first_done": "2026-10-19"
+    },
+    "199": {
+      "count": 1,
+      "title": "二叉树的右视图",
+      "topic": "二叉树",
+      "last_done": "2026-10-20",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-23",
+      "history": [
+        {
+          "date": "2026-10-20",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 1,
+          "note": "还是自己想不到思路",
+          "error_tags": [],
+          "pattern_ids": [
+            "bfs_level"
+          ],
+          "idea": "",
+          "time_complexity": "",
+          "space_complexity": "",
+          "boundary": "",
+          "takeaway": "还是自己想不到思路",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "7c92f4045b444f07a49247705ca8fbe6",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "6e4ccee3b34eb13944eb492899db387ddc05947e6875af4673bcdea41a01ab7b"
+          },
+          "code_path": "solutions/lc199/7c92f4045b444f07a49247705ca8fbe6.py",
+          "elapsed_seconds": 28,
+          "hints_used": 3,
+          "coach_hints": 0
+        }
+      ],
+      "first_done": "2026-10-20"
+    },
+    "347": {
+      "count": 1,
+      "title": "前 K 个高频元素",
+      "topic": "栈与队列",
+      "last_done": "2026-10-20",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-23",
+      "history": [
+        {
+          "date": "2026-10-20",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 1,
+          "note": "没接触过，根本不会写",
+          "error_tags": [],
+          "pattern_ids": [],
+          "idea": "",
+          "time_complexity": "O(n + m log k)",
+          "space_complexity": "O(m + k)",
+          "boundary": "",
+          "takeaway": "没接触过，根本不会写",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "ab79e9f9cca04ca5a16c6c43bff31507",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "7b41ec92ba1d0e040620709d63bb66e7e769f44260e7536ba68b47d190082657"
+          },
+          "code_path": "solutions/lc347/ab79e9f9cca04ca5a16c6c43bff31507.py",
+          "elapsed_seconds": 47,
+          "hints_used": 0,
+          "coach_hints": 0
+        }
+      ],
+      "first_done": "2026-10-20"
+    },
+    "739": {
+      "count": 1,
+      "title": "每日温度",
+      "topic": "栈与队列",
+      "last_done": "2026-10-21",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-24",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 1,
+          "note": "没学习过单调栈，会模仿着写，之后还需要加强",
+          "error_tags": [],
+          "pattern_ids": [
+            "monotonic"
+          ],
+          "idea": "",
+          "time_complexity": "0(n)",
+          "space_complexity": "0(n)",
+          "boundary": "",
+          "takeaway": "没学习过单调栈，会模仿着写，之后还需要加强",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "d5ae91b54c694ab5a863845627543459",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "014ccea2d8a8e2696e47066c122e9b775ebe250cf0cac29868bcc4ffd3f9f177"
+          },
+          "code_path": "solutions/lc739/d5ae91b54c694ab5a863845627543459.py",
+          "elapsed_seconds": 50,
+          "hints_used": 3,
+          "coach_hints": 0
+        }
+      ],
+      "first_done": "2026-10-21"
+    },
+    "49": {
+      "count": 1,
+      "title": "字母异位词分组",
+      "topic": "哈希",
+      "last_done": "2026-10-21",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-24",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 1,
+          "note": "有点思路，但是不多，需要加强 ，复杂度也分析存在问题（忘记考虑排序的复杂度了）",
+          "error_tags": [],
+          "pattern_ids": [
+            "hash_lookup"
+          ],
+          "idea": "",
+          "time_complexity": "O(nmlogm)",
+          "space_complexity": "O（nm）",
+          "boundary": "",
+          "takeaway": "有点思路，但是不多，需要加强 ，复杂度也分析存在问题（忘记考虑排序的复杂度了）",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "acf73ae57f3e40fb9b455a84e712cd12",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "2374d9448e3e15e8b687e38b12643b339c0158512fc7c85a79a3cdcddc7d685d"
+          },
+          "code_path": "solutions/lc49/acf73ae57f3e40fb9b455a84e712cd12.py",
+          "elapsed_seconds": 55,
+          "hints_used": 0,
+          "coach_hints": 0
+        }
+      ],
+      "first_done": "2026-10-21"
+    },
+    "128": {
+      "count": 1,
+      "title": "最长连续序列",
+      "topic": "哈希",
+      "last_done": "2026-10-21",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-24",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 1,
+          "note": "碰见还是没有思路，没法合理判断其解题的思路，有待加强，",
+          "error_tags": [],
+          "pattern_ids": [
+            "hash_lookup"
+          ],
+          "idea": "",
+          "time_complexity": "O（n）",
+          "space_complexity": "O（n）",
+          "boundary": "",
+          "takeaway": "碰见还是没有思路，没法合理判断其解题的思路，有待加强，",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "598e1e186ef5496daaa4fd835c601d31",
+            "passed": true,
+            "passed_count": 4,
+            "total": 4,
+            "code_hash": "d7851d6361d889ee34bcf17389a5caa732d217578c6b0f88517a5b2539ef383c"
+          },
+          "code_path": "solutions/lc128/598e1e186ef5496daaa4fd835c601d31.py",
+          "elapsed_seconds": 54,
+          "hints_used": 0,
+          "coach_hints": 0
+        }
+      ],
+      "first_done": "2026-10-21"
     }
   },
   "next_new": [],
@@ -1994,20 +2682,12 @@
     "977",
     "167",
     "20",
-    "206",
-    "104",
     "144",
-    "145",
     "203",
-    "94",
-    "226",
     "102",
     "100",
-    "101",
     "110",
     "257",
-    "404",
-    "617",
     "112",
     "700",
     "98",
@@ -2016,7 +2696,6 @@
     "701",
     "108",
     "230",
-    "501",
     "543",
     "26",
     "3",
@@ -2030,21 +2709,38 @@
     "209",
     "42",
     "75",
+    "101",
+    "18",
+    "206",
+    "226",
+    "105",
+    "404",
+    "501",
+    "199",
     "27",
+    "347",
     "538",
+    "128",
+    "49",
+    "617",
+    "739",
+    "104",
+    "94",
+    "145",
     "450",
     "242"
   ],
   "session": {
-    "last_date": "2026-10-17",
+    "last_date": "2026-10-21",
     "last_completed": [
-      "209",
-      "11",
-      "42",
-      "75"
+      "145",
+      "617",
+      "739",
+      "49",
+      "128"
     ],
     "open_questions": [],
-    "next_action": "先安排到期复习，再推进双指针/滑动窗口新题"
+    "next_action": "按高频核心交集轮换：先做 2 道到期复习，再做 2 道高频新题；不再等待单专题清空"
   },
   "_requests": {
     "3d4b5a32-25ad-4552-99bf-3b9a0b6076be": {
@@ -2089,11 +2785,195 @@
     },
     "96cf73d7-b29f-41dc-855a-e627c2d1f6e7": {
       "message": "已换掉 LC1004，7 天内不再推荐"
+    },
+    "f683a401-c37c-43d2-8cda-6643c6873eb1": {
+      "message": "LC226 已记录，下次复习 2026-10-21",
+      "result": "hinted",
+      "next_due": "2026-10-21",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "9aa82400-1084-45e1-ad50-3118a8cdf9fe": {
+      "message": "LC101 已记录，下次复习 2026-10-21",
+      "result": "hinted",
+      "next_due": "2026-10-21",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "de869f80-907d-45b0-b11d-4973e9057148": {
+      "message": "LC18 已记录，下次复习 2026-10-21",
+      "result": "hinted",
+      "next_due": "2026-10-21",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "14babc10-08b2-42e8-ae69-c8dc409d94f7": {
+      "message": "学习目标已更新，推荐会按新的设定调整",
+      "profile": {
+        "target_date": "2026-12-31",
+        "daily_minutes": 120,
+        "pace": "normal"
+      }
+    },
+    "d40f7720-d2e0-4ca8-9f52-143a03163c13": {
+      "message": "学习目标已更新，推荐会按新的设定调整",
+      "profile": {
+        "target_date": "2026-12-31",
+        "daily_minutes": 120,
+        "pace": "normal"
+      }
+    },
+    "926aa63d-38a0-4aac-b3f1-b88cf1e43777": {
+      "message": "LC404 已记录，下次复习 2026-10-22",
+      "result": "independent",
+      "next_due": "2026-10-22",
+      "status": "learning",
+      "mock_review": null
+    },
+    "ae416960-7e3c-43f2-a340-8727fcede90a": {
+      "message": "LC501 已记录，下次复习 2026-10-22",
+      "result": "hinted",
+      "next_due": "2026-10-22",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "ba0278f0-26f1-4cdd-8bc9-2849b865a298": {
+      "message": "LC206 口述复习：讲不出，下次复习 2026-10-20（完整重写）",
+      "next_due": "2026-10-20"
+    },
+    "0a73cf53-80dc-45e2-948d-04073edd2dec": {
+      "message": "LC206 口述复习：有卡顿，下次复习 2026-10-21（完整重写）",
+      "next_due": "2026-10-21"
+    },
+    "5d8e5043-5cfa-4cb3-aa11-3a5a45ad94f3": {
+      "message": "LC206 口述复习：讲不出，下次复习 2026-10-20（完整重写）",
+      "next_due": "2026-10-20"
+    },
+    "f1eaa2ab-9d89-473a-bb2e-59cd7e0d220a": {
+      "message": "LC206 口述复习：讲清楚了，下次复习 2026-10-26",
+      "next_due": "2026-10-26"
+    },
+    "2feedcbd-eb81-4cd5-be9e-aebe23ef09d6": {
+      "message": "LC206 口述复习：讲不出，下次复习 2026-10-20（完整重写）",
+      "next_due": "2026-10-20"
+    },
+    "34bca500-d099-43f8-9d83-d80250fa201a": {
+      "message": "LC206 口述复习：有卡顿，下次复习 2026-10-21（完整重写）",
+      "next_due": "2026-10-21"
+    },
+    "d464f896-53e2-4cbd-bbee-14c49338543c": {
+      "message": "LC206 口述复习：讲不出，下次复习 2026-10-20（完整重写）",
+      "next_due": "2026-10-20"
+    },
+    "58c0605e-8834-46cf-a246-5fca21f22466": {
+      "message": "LC206 口述复习：有卡顿，下次复习 2026-10-21（完整重写）",
+      "next_due": "2026-10-21"
+    },
+    "15da0528-56fc-45b4-9743-978445ed181b": {
+      "message": "LC206 口述复习：讲不出，下次复习 2026-10-20（完整重写）",
+      "next_due": "2026-10-20"
+    },
+    "6410166c-833e-407b-a242-3c6152d1008a": {
+      "message": "LC206 口述复习：有卡顿，下次复习 2026-10-21（完整重写）",
+      "next_due": "2026-10-21"
+    },
+    "24c7c807-c61c-43ed-8104-02e8b843a7a1": {
+      "message": "LC105 已记录，下次复习 2026-10-22",
+      "result": "hinted",
+      "next_due": "2026-10-22",
+      "status": "needs_review",
+      "mock_review": {
+        "limit_minutes": 25,
+        "elapsed_seconds": 86400,
+        "overtime": true,
+        "scores": {
+          "recognition": 2,
+          "communication": 2,
+          "code": 3,
+          "complexity": 2,
+          "time": 3
+        },
+        "score_reasons": {},
+        "improve": "",
+        "help_used": 3,
+        "scored_by": "self",
+        "average": 2.4
+      }
+    },
+    "91ef4941-4361-4068-b5ba-9a90438ed4b5": {
+      "message": "LC94 已记录，下次复习 2026-10-27",
+      "result": "independent",
+      "next_due": "2026-10-27",
+      "status": "learned",
+      "mock_review": null
+    },
+    "4dad9803-b0e4-4624-81fe-7605cad8e6b4": {
+      "message": "LC104 已记录，下次复习 2026-10-27",
+      "result": "independent",
+      "next_due": "2026-10-27",
+      "status": "learned",
+      "mock_review": null
+    },
+    "a3eb196e-93eb-4742-aa55-e0556c41f3c6": {
+      "message": "LC199 已记录，下次复习 2026-10-23",
+      "result": "hinted",
+      "next_due": "2026-10-23",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "f97679d6-7058-439a-ab7b-913dc5ae4b7f": {
+      "message": "LC347 已记录，下次复习 2026-10-23",
+      "result": "hinted",
+      "next_due": "2026-10-23",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "b20bb452-328c-4296-ac8c-f869a4a76cde": {
+      "message": "LC145 已记录，下次复习 2026-10-28",
+      "result": "independent",
+      "next_due": "2026-10-28",
+      "status": "learned",
+      "mock_review": null
+    },
+    "4e03335a-467d-46ed-9679-7221168c9cac": {
+      "message": "LC617 已记录，下次复习 2026-10-24",
+      "result": "hinted",
+      "next_due": "2026-10-24",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "cb445bad-b956-494d-93d1-1f34b28c08a5": {
+      "message": "LC739 已记录，下次复习 2026-10-24",
+      "result": "hinted",
+      "next_due": "2026-10-24",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "6b760530-e99d-48e8-8e03-d71d65af9bc7": {
+      "message": "LC49 已记录，下次复习 2026-10-24",
+      "result": "hinted",
+      "next_due": "2026-10-24",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "c75521f3-ebf2-4acc-b34b-8ec10be3ca1d": {
+      "message": "LC128 已记录，下次复习 2026-10-24",
+      "result": "hinted",
+      "next_due": "2026-10-24",
+      "status": "needs_review",
+      "mock_review": null
     }
   },
   "recommend_skips": {
     "424": "2026-10-18",
     "904": "2026-10-18",
     "1004": "2026-10-18"
-  }
+  },
+  "profile": {
+    "target_date": "2026-12-31",
+    "daily_minutes": 120,
+    "pace": "normal"
+  },
+  "study_strategy": "high_frequency",
+  "last_mock": "2026-10-19"
 }

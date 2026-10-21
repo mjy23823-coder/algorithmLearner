@@ -1,0 +1,104 @@
+{
+  "id": "739",
+  "run_id": "d5ae91b54c694ab5a863845627543459",
+  "code": "class Solution:\n    def dailyTemperatures(self, temperatures):\n        # 先说明变量含义，再完成你的实现\n                # 初始化和数组等长的0数组\n        ans = [0]*len(temperatures)\n        # 初始化栈\n        stack =[]\n\n        for i,temperature in enumerate(temperatures):\n            # 当栈非空且当前数比栈顶元素大\n            while stack and temperature>temperatures[stack[-1]]:\n                # 移除栈顶的元素并记录\n                prev=stack.pop()\n                # 保存答案\n                ans[prev]=i-prev\n            # 栈存入元素的下标\n            stack.append(i)\n\n\n        return ans\n",
+  "code_hash": "014ccea2d8a8e2696e47066c122e9b775ebe250cf0cac29868bcc4ffd3f9f177",
+  "session_id": "fd845dab30d94475a0139c035ba7bf26",
+  "practice_date": "2026-10-21",
+  "extra_cases": [],
+  "created_at": "2026-10-21T13:59:25.675940+00:00",
+  "hints_used": 3,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            73,
+            74,
+            75,
+            71,
+            69,
+            72,
+            76,
+            73
+          ]
+        ],
+        "expected": [
+          1,
+          1,
+          4,
+          2,
+          1,
+          1,
+          0,
+          0
+        ],
+        "actual": [
+          1,
+          1,
+          4,
+          2,
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            30,
+            40,
+            50,
+            60
+          ]
+        ],
+        "expected": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "actual": [
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [
+            30,
+            60,
+            90
+          ]
+        ],
+        "expected": [
+          1,
+          1,
+          0
+        ],
+        "actual": [
+          1,
+          1,
+          0
+        ]
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 157,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc739/d5ae91b54c694ab5a863845627543459.py"
+}

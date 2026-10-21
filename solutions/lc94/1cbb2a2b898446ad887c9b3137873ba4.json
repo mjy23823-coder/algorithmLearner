@@ -1,0 +1,63 @@
+{
+  "id": "94",
+  "run_id": "1cbb2a2b898446ad887c9b3137873ba4",
+  "code": "class Solution:\n    def inorderTraversal(self, root: TreeNode | None) -> list[int]:\n        ans=[]\n        def dfs(node):\n            if node is None:\n                return \n            \n            dfs(node.left)\n            ans.append(node.val)\n            dfs(node.right)\n\n        dfs(root)\n        return ans\n",
+  "code_hash": "0ecf4938a414d933e1f38448c292252fafa0033f9b481e8d705fc6056afe8917",
+  "session_id": "42cc3b76a82d499bb9e226d69ba9bab5",
+  "practice_date": "2026-10-20",
+  "extra_cases": [],
+  "created_at": "2026-10-20T12:15:15.954252+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": false,
+        "args": [
+          [
+            1,
+            null,
+            2,
+            3
+          ]
+        ],
+        "expected": [
+          1,
+          3,
+          2
+        ],
+        "error": "TypeError（代码第 2 行）：unsupported operand type(s) for |: 'type' and 'NoneType'"
+      },
+      {
+        "name": "用例 2",
+        "passed": false,
+        "args": [
+          []
+        ],
+        "expected": [],
+        "error": "TypeError（代码第 2 行）：unsupported operand type(s) for |: 'type' and 'NoneType'"
+      },
+      {
+        "name": "用例 3",
+        "passed": false,
+        "args": [
+          [
+            1
+          ]
+        ],
+        "expected": [
+          1
+        ],
+        "error": "TypeError（代码第 2 行）：unsupported operand type(s) for |: 'type' and 'NoneType'"
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 0,
+    "elapsed_ms": 188,
+    "builtin_count": 3,
+    "passed": false
+  },
+  "source_path": "solutions/lc94/1cbb2a2b898446ad887c9b3137873ba4.py"
+}

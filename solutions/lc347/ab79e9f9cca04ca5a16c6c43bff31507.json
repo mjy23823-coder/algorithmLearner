@@ -1,0 +1,83 @@
+{
+  "id": "347",
+  "run_id": "ab79e9f9cca04ca5a16c6c43bff31507",
+  "code": "import heapq\nclass Solution:\n    def topKFrequent(self, nums: list[int], k: int) -> list[int]:\n        count = {}\n\n        for num in nums:\n            count[num] = count.get(num, 0) + 1\n\n        heap = []\n\n        for num, freq in count.items():\n            heapq.heappush(heap, (freq, num))\n\n            if len(heap) > k:\n                heapq.heappop(heap)\n\n        ans = []\n        for freq, num in heap:\n            ans.append(num)\n\n        return ans",
+  "code_hash": "7b41ec92ba1d0e040620709d63bb66e7e769f44260e7536ba68b47d190082657",
+  "session_id": "466411c06d6344ed8977d7f974853d6b",
+  "practice_date": "2026-10-20",
+  "extra_cases": [],
+  "created_at": "2026-10-20T13:59:37.946828+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            1,
+            1,
+            1,
+            2,
+            2,
+            3
+          ],
+          2
+        ],
+        "expected": [
+          1,
+          2
+        ],
+        "actual": [
+          2,
+          1
+        ]
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            1
+          ],
+          1
+        ],
+        "expected": [
+          1
+        ],
+        "actual": [
+          1
+        ]
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [
+            4,
+            4,
+            5,
+            5,
+            5,
+            6
+          ],
+          1
+        ],
+        "expected": [
+          5
+        ],
+        "actual": [
+          5
+        ]
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 156,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc347/ab79e9f9cca04ca5a16c6c43bff31507.py"
+}

@@ -1,0 +1,96 @@
+{
+  "id": "18",
+  "run_id": "879723302bf74cdb918029b36fdaac3f",
+  "code": "class Solution:\n    def fourSum(self, nums, target):\n        # 先说明变量含义，再完成你的实现\n        pass\n",
+  "code_hash": "f9fe8449db3980068bbbf25d53d932d675927a829e047a2fa682d8dc7c3b23c9",
+  "session_id": "ee1526e49a7f42928af4f4ab9ecbaf65",
+  "practice_date": "2026-10-18",
+  "extra_cases": [],
+  "created_at": "2026-10-18T13:51:02.130106+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": false,
+        "args": [
+          [
+            1,
+            0,
+            -1,
+            0,
+            -2,
+            2
+          ],
+          0
+        ],
+        "expected": [
+          [
+            -2,
+            -1,
+            1,
+            2
+          ],
+          [
+            -2,
+            0,
+            0,
+            2
+          ],
+          [
+            -1,
+            0,
+            0,
+            1
+          ]
+        ],
+        "actual": null
+      },
+      {
+        "name": "用例 2",
+        "passed": false,
+        "args": [
+          [
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          8
+        ],
+        "expected": [
+          [
+            2,
+            2,
+            2,
+            2
+          ]
+        ],
+        "actual": null
+      },
+      {
+        "name": "用例 3",
+        "passed": false,
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          6
+        ],
+        "expected": [],
+        "actual": null
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 0,
+    "elapsed_ms": 94,
+    "builtin_count": 3,
+    "passed": false
+  },
+  "source_path": "solutions/lc18/879723302bf74cdb918029b36fdaac3f.py"
+}
