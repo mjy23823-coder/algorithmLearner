@@ -1,0 +1,108 @@
+{
+  "id": "2",
+  "run_id": "e5b5b9182e8942a8b43bbe8c63f338ee",
+  "code": "class Solution:\n    def addTwoNumbers(self, l1, l2):\n        # 先说明变量含义，再完成你的实现\n        dummy = ListNode(0)\n        cur = dummy\n        # 进位标识\n        carry = 0\n\n        while l1 is not None or l2 is not None or carry != 0 :\n            # l1非空\n            if l1 is not None:\n                num1 = l1.val\n            else :\n                num1 = 0\n            # l2非空\n            if l2 is not None:\n                num2 = l2.val\n            else :\n                num2 = 0\n            # \n            total = num1+num2+carry\n            digit = total%10\n            cur.next = ListNode(digit)\n            cur = cur.next\n            # 进位\n            carry = total//10\n\n            # l1,l2非空\n            if l1 is not None:\n                l1 = l1.next\n            if l2 is not None:\n                l2 = l2.next\n            \n        return dummy.next\n",
+  "code_hash": "dd58fe19173308848e0707a9e0d0b474bac7f57fc30dc604cde0d8b88a2fe123",
+  "session_id": "fa4e76934349487596affa4b8c461dbf",
+  "practice_date": "2026-10-23",
+  "extra_cases": [],
+  "created_at": "2026-10-23T15:43:07.252015+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            2,
+            4,
+            3
+          ],
+          [
+            5,
+            6,
+            4
+          ]
+        ],
+        "expected": [
+          7,
+          0,
+          8
+        ],
+        "actual": [
+          7,
+          0,
+          8
+        ]
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "expected": [
+          0
+        ],
+        "actual": [
+          0
+        ]
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ],
+          [
+            9,
+            9,
+            9,
+            9
+          ]
+        ],
+        "expected": [
+          8,
+          9,
+          9,
+          9,
+          0,
+          0,
+          0,
+          1
+        ],
+        "actual": [
+          8,
+          9,
+          9,
+          9,
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 157,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc2/e5b5b9182e8942a8b43bbe8c63f338ee.py"
+}

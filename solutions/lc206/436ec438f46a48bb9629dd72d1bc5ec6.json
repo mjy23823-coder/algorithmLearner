@@ -1,0 +1,74 @@
+{
+  "id": "206",
+  "run_id": "436ec438f46a48bb9629dd72d1bc5ec6",
+  "code": "class Solution:\n    def reverseList(self, head):\n        # 先说明变量含义，再完成你的实现\n        prev = None\n\n        cur = head\n\n        while cur !=None:\n            temp = cur.next\n            cur.next = prev\n            prev = cur\n            cur = temp\n\n        return prev\n",
+  "code_hash": "59e3d4ae9f779f3344c0b1a2be09f69e8fce7e58fe8b22d3a447f5f6b48565a8",
+  "session_id": "7b0af0d88ff542c8b017f3d173ba7e5b",
+  "practice_date": "2026-10-22",
+  "extra_cases": [],
+  "created_at": "2026-10-22T12:54:36.285566+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        ],
+        "expected": [
+          5,
+          4,
+          3,
+          2,
+          1
+        ],
+        "actual": [
+          5,
+          4,
+          3,
+          2,
+          1
+        ]
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          []
+        ],
+        "expected": [],
+        "actual": []
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [
+            1
+          ]
+        ],
+        "expected": [
+          1
+        ],
+        "actual": [
+          1
+        ]
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 94,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc206/436ec438f46a48bb9629dd72d1bc5ec6.py"
+}

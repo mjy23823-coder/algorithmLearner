@@ -62,11 +62,11 @@
     "209": {
       "title": "长度最小的子数组",
       "topic": "滑动窗口",
-      "last_done": "2026-10-17",
-      "count": 2,
-      "status": "needs_review",
+      "last_done": "2026-10-24",
+      "count": 3,
+      "status": "learning",
       "stage": 0,
-      "next_due": "2026-10-20",
+      "next_due": "2026-10-27",
       "history": [
         {
           "date": "2026-10-17",
@@ -102,6 +102,21 @@
           "elapsed_seconds": 766,
           "hints_used": 0,
           "coach_hints": 3
+        },
+        {
+          "date": "2026-10-24",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "title": "长度最小的子数组",
+            "topic": "滑动窗口",
+            "last_done": "2026-10-17",
+            "count": 2,
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-20"
+          },
+          "note": "普通的滑动窗口题目，因为本题的数据范围都是正数，所以只需要简答移动下窗口就能得出答案"
         }
       ]
     },
@@ -184,13 +199,13 @@
       }
     },
     "11": {
-      "count": 2,
+      "count": 3,
       "title": "盛最多水的容器",
       "topic": "双指针",
-      "last_done": "2026-10-17",
-      "status": "needs_review",
+      "last_done": "2026-10-24",
+      "status": "learning",
       "stage": 0,
-      "next_due": "2026-10-20",
+      "next_due": "2026-10-27",
       "first_done": "2026-10-11",
       "count_is_lower_bound": true,
       "history_import": {
@@ -270,6 +285,29 @@
           "elapsed_seconds": 839,
           "hints_used": 0,
           "coach_hints": 2
+        },
+        {
+          "date": "2026-10-24",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 2,
+            "title": "盛最多水的容器",
+            "topic": "双指针",
+            "last_done": "2026-10-17",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-20",
+            "first_done": "2026-10-11",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "note": "简单的滑动窗口题目，比较两边看谁小然后向高的那边移动，移动过程中记录能装多少水，然后将其进行记录然后更新"
         }
       ]
     },
@@ -1260,14 +1298,31 @@
       }
     },
     "206": {
-      "count": 2,
+      "count": 3,
       "title": "反转链表",
       "topic": "链表",
-      "last_done": "2026-09-20",
-      "status": "learning",
-      "stage": 0,
-      "next_due": "2026-10-21",
+      "last_done": "2026-10-22",
+      "status": "learned",
+      "stage": 1,
+      "next_due": "2026-10-29",
       "first_done": "2026-09-19",
+      "count_is_lower_bound": true,
+      "history_import": {
+        "source": "learning-log.md",
+        "audit_id": "learning-log-recovery-2026-10-17",
+        "imported_on": "2026-10-17",
+        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+      },
+      "oral": [
+        {
+          "date": "2026-10-19",
+          "result": "hinted",
+          "before": {
+            "next_due": "2026-09-22",
+            "stage": 0
+          }
+        }
+      ],
       "history": [
         {
           "date": "2026-09-19",
@@ -1319,23 +1374,61 @@
               }
             ]
           }
-        }
-      ],
-      "count_is_lower_bound": true,
-      "history_import": {
-        "source": "learning-log.md",
-        "audit_id": "learning-log-recovery-2026-10-17",
-        "imported_on": "2026-10-17",
-        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      },
-      "oral": [
+        },
         {
-          "date": "2026-10-19",
-          "result": "hinted",
+          "date": "2026-10-22",
+          "result": "independent",
+          "kind": "review",
           "before": {
-            "next_due": "2026-09-22",
-            "stage": 0
-          }
+            "count": 2,
+            "title": "反转链表",
+            "topic": "链表",
+            "last_done": "2026-09-20",
+            "status": "learning",
+            "stage": 0,
+            "next_due": "2026-10-21",
+            "first_done": "2026-09-19",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            },
+            "oral": [
+              {
+                "date": "2026-10-19",
+                "result": "hinted",
+                "before": {
+                  "next_due": "2026-09-22",
+                  "stage": 0
+                }
+              }
+            ]
+          },
+          "minutes": 1,
+          "note": "最后的返回还是有点小问题，整体的解题思路没问题",
+          "error_tags": [],
+          "pattern_ids": [
+            "rewire"
+          ],
+          "idea": "",
+          "time_complexity": "O(n)",
+          "space_complexity": "O(1)",
+          "boundary": "",
+          "takeaway": "最后的返回还是有点小问题，整体的解题思路没问题",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "436ec438f46a48bb9629dd72d1bc5ec6",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "59e3d4ae9f779f3344c0b1a2be09f69e8fce7e58fe8b22d3a447f5f6b48565a8"
+          },
+          "code_path": "solutions/lc206/436ec438f46a48bb9629dd72d1bc5ec6.py",
+          "elapsed_seconds": 38,
+          "hints_used": 0,
+          "coach_hints": 0
         }
       ]
     },
@@ -1465,13 +1558,21 @@
       ]
     },
     "230": {
-      "count": 1,
+      "count": 2,
       "title": "二叉搜索树中第 K 小的元素",
       "topic": "BST",
-      "last_done": "2026-10-07",
-      "status": "learning",
-      "stage": 0,
-      "next_due": "2026-10-10",
+      "last_done": "2026-10-22",
+      "status": "learned",
+      "stage": 1,
+      "next_due": "2026-10-29",
+      "first_done": "2026-10-07",
+      "count_is_lower_bound": true,
+      "history_import": {
+        "source": "learning-log.md",
+        "audit_id": "learning-log-recovery-2026-10-17",
+        "imported_on": "2026-10-17",
+        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+      },
       "history": [
         {
           "date": "2026-10-07",
@@ -1494,16 +1595,53 @@
               }
             ]
           }
+        },
+        {
+          "date": "2026-10-22",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "二叉搜索树中第 K 小的元素",
+            "topic": "BST",
+            "last_done": "2026-10-07",
+            "status": "learning",
+            "stage": 0,
+            "next_due": "2026-10-10",
+            "first_done": "2026-10-07",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "minutes": 1,
+          "note": "难度不高，利用二叉搜索树的规律就能解答",
+          "error_tags": [],
+          "pattern_ids": [
+            "inorder_state"
+          ],
+          "idea": "",
+          "time_complexity": "O(n)",
+          "space_complexity": "O(h)",
+          "boundary": "",
+          "takeaway": "难度不高，利用二叉搜索树的规律就能解答",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "b3e3970d14d345eea0cdecfd6884fc15",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "32bf64d58cf0e9a461f9a30e6a3138469bebc2cdcdce6d4de1d248dd72111826"
+          },
+          "code_path": "solutions/lc230/b3e3970d14d345eea0cdecfd6884fc15.py",
+          "elapsed_seconds": 32,
+          "hints_used": 0,
+          "coach_hints": 0
         }
-      ],
-      "first_done": "2026-10-07",
-      "count_is_lower_bound": true,
-      "history_import": {
-        "source": "learning-log.md",
-        "audit_id": "learning-log-recovery-2026-10-17",
-        "imported_on": "2026-10-17",
-        "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
-      }
+      ]
     },
     "235": {
       "title": "二叉搜索树的最近公共祖先",
@@ -2269,13 +2407,14 @@
       }
     },
     "42": {
-      "count": 1,
+      "count": 2,
       "title": "接雨水",
       "topic": "双指针",
-      "last_done": "2026-10-17",
-      "status": "needs_review",
+      "last_done": "2026-10-23",
+      "status": "learning",
       "stage": 0,
-      "next_due": "2026-10-20",
+      "next_due": "2026-10-26",
+      "first_done": "2026-10-17",
       "history": [
         {
           "date": "2026-10-17",
@@ -2307,18 +2446,34 @@
           "elapsed_seconds": 318,
           "hints_used": 3,
           "coach_hints": 3
+        },
+        {
+          "date": "2026-10-23",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "接雨水",
+            "topic": "双指针",
+            "last_done": "2026-10-17",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-20",
+            "first_done": "2026-10-17"
+          },
+          "note": "现在知道本题的思路是相向双指针，知道需要知道两边的一个最高挡板，然后对于挡板内的格子存水进行累加，"
         }
-      ],
-      "first_done": "2026-10-17"
+      ]
     },
     "75": {
-      "count": 1,
+      "count": 2,
       "title": "颜色分类",
       "topic": "双指针",
-      "last_done": "2026-10-17",
+      "last_done": "2026-10-23",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-20",
+      "next_due": "2026-10-26",
+      "first_done": "2026-10-17",
       "history": [
         {
           "date": "2026-10-17",
@@ -2350,9 +2505,24 @@
           "elapsed_seconds": 407,
           "hints_used": 0,
           "coach_hints": 5
+        },
+        {
+          "date": "2026-10-23",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "颜色分类",
+            "topic": "双指针",
+            "last_done": "2026-10-17",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-20",
+            "first_done": "2026-10-17"
+          },
+          "note": "这次又了一个更深的体会，相较于上次而言，这次知道了指针的一个移动状况为什么是这样子的"
         }
-      ],
-      "first_done": "2026-10-17"
+      ]
     },
     "18": {
       "count": 1,
@@ -2670,6 +2840,219 @@
         }
       ],
       "first_done": "2026-10-21"
+    },
+    "150": {
+      "count": 1,
+      "title": "逆波兰表达式求值",
+      "topic": "栈与队列",
+      "last_done": "2026-10-22",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-25",
+      "history": [
+        {
+          "date": "2026-10-22",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 1,
+          "note": "思路其实是没什么 问题，但是实现上还是存在点偏差，题目并不难",
+          "error_tags": [],
+          "pattern_ids": [
+            "stack"
+          ],
+          "idea": "",
+          "time_complexity": "O（nL）",
+          "space_complexity": "0（n）",
+          "boundary": "",
+          "takeaway": "思路其实是没什么 问题，但是实现上还是存在点偏差，题目并不难",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "937608a8f9ce4ff3b830a2b38daf1516",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "c7849790bbb255b049b88cff4d58138e1a9d072c03eb9e2a467bc83aebee7145"
+          },
+          "code_path": "solutions/lc150/937608a8f9ce4ff3b830a2b38daf1516.py",
+          "elapsed_seconds": 16,
+          "hints_used": 0,
+          "coach_hints": 0
+        }
+      ],
+      "first_done": "2026-10-22"
+    },
+    "560": {
+      "count": 1,
+      "title": "和为 K 的子数组",
+      "topic": "哈希",
+      "last_done": "2026-10-22",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-25",
+      "history": [
+        {
+          "date": "2026-10-22",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 1,
+          "note": "思路比较奇妙，还是需要继续加强学习",
+          "error_tags": [],
+          "pattern_ids": [
+            "prefix_sum"
+          ],
+          "idea": "",
+          "time_complexity": "O（n）",
+          "space_complexity": "O（n）",
+          "boundary": "",
+          "takeaway": "思路比较奇妙，还是需要继续加强学习",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "1f62eb8ca0984b558c549047d6d3d28b",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "2b5aa7c1b0518e7b41b4666a81ddb1bd3db19fa54488cf48e256b164b9071547"
+          },
+          "code_path": "solutions/lc560/1f62eb8ca0984b558c549047d6d3d28b.py",
+          "elapsed_seconds": 23,
+          "hints_used": 0,
+          "coach_hints": 0
+        }
+      ],
+      "first_done": "2026-10-22"
+    },
+    "21": {
+      "count": 1,
+      "title": "合并两个有序链表",
+      "topic": "链表",
+      "last_done": "2026-10-23",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-26",
+      "history": [
+        {
+          "date": "2026-10-23",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "本题其实并不难，但是自己思考的思路还是有点不太清晰，理清楚思路之后代码的撰写还是比较简单的"
+        }
+      ],
+      "first_done": "2026-10-23"
+    },
+    "234": {
+      "count": 1,
+      "title": "回文链表",
+      "topic": "链表",
+      "last_done": "2026-10-23",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-26",
+      "history": [
+        {
+          "date": "2026-10-23",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "本题的数据范围可以用暴力的方式进行解答，就是将其转为一个数组，然后之后就是对这个数组利用双指针进行对称的判断，比直接链表进行判断简单些。这种就需要一个额外的空间。\n但是这个题目可以有一个优化的方法是利用快慢指针来对本题目进行一个解答，这种方式就不需要一个额外的空间复杂度，这道题目利用这种方式相当于三道题目，首先是利用快慢指针的性质找到链表的中点，然后对后半段的链表进行反转，之后就是对这两个链表进行一个回文的判断，一道题目顶三道题目"
+        }
+      ],
+      "first_done": "2026-10-23"
+    },
+    "2": {
+      "count": 1,
+      "title": "两数相加",
+      "topic": "链表",
+      "last_done": "2026-10-23",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-26",
+      "history": [
+        {
+          "date": "2026-10-23",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "minutes": 1,
+          "note": "本题目还需要多多的练习，思路还是不是特别清晰",
+          "error_tags": [],
+          "pattern_ids": [
+            "rewire"
+          ],
+          "idea": "",
+          "time_complexity": "",
+          "space_complexity": "",
+          "boundary": "",
+          "takeaway": "本题目还需要多多的练习，思路还是不是特别清晰",
+          "validation": {
+            "kind": "local_cases",
+            "run_id": "e5b5b9182e8942a8b43bbe8c63f338ee",
+            "passed": true,
+            "passed_count": 3,
+            "total": 3,
+            "code_hash": "dd58fe19173308848e0707a9e0d0b474bac7f57fc30dc604cde0d8b88a2fe123"
+          },
+          "code_path": "solutions/lc2/e5b5b9182e8942a8b43bbe8c63f338ee.py",
+          "elapsed_seconds": 8,
+          "hints_used": 0,
+          "coach_hints": 0
+        }
+      ],
+      "first_done": "2026-10-23"
+    },
+    "76": {
+      "count": 1,
+      "title": "最小覆盖子串",
+      "topic": "滑动窗口",
+      "last_done": "2026-10-24",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-27",
+      "history": [
+        {
+          "date": "2026-10-24",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "python的语法还是有点不太熟悉，大体的思路上还是明白了，细节部分的撰写还是需要加强一下"
+        }
+      ],
+      "first_done": "2026-10-24"
+    },
+    "19": {
+      "count": 1,
+      "title": "删除链表的倒数第 N 个结点",
+      "topic": "链表",
+      "last_done": "2026-10-24",
+      "status": "learning",
+      "stage": 0,
+      "next_due": "2026-10-27",
+      "history": [
+        {
+          "date": "2026-10-24",
+          "result": "independent",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "本题目的是删除倒数第N个节点，可以考虑逆向思维，将倒数转为正数，然后这道题的难度就变得更简单了，但是本题还可以用快慢指针一次完成"
+        }
+      ],
+      "first_done": "2026-10-24"
     }
   },
   "next_new": [],
@@ -2695,7 +3078,6 @@
     "530",
     "701",
     "108",
-    "230",
     "543",
     "26",
     "3",
@@ -2705,13 +3087,8 @@
     "236",
     "15",
     "16",
-    "11",
-    "209",
-    "42",
-    "75",
     "101",
     "18",
-    "206",
     "226",
     "105",
     "404",
@@ -2724,20 +3101,32 @@
     "49",
     "617",
     "739",
+    "150",
+    "560",
+    "2",
+    "21",
+    "234",
+    "42",
+    "75",
     "104",
+    "11",
+    "19",
+    "209",
+    "76",
     "94",
     "145",
+    "206",
+    "230",
     "450",
     "242"
   ],
   "session": {
-    "last_date": "2026-10-21",
+    "last_date": "2026-10-24",
     "last_completed": [
-      "145",
-      "617",
-      "739",
-      "49",
-      "128"
+      "209",
+      "11",
+      "76",
+      "19"
     ],
     "open_questions": [],
     "next_action": "按高频核心交集轮换：先做 2 道到期复习，再做 2 道高频新题；不再等待单专题清空"
@@ -2962,6 +3351,79 @@
       "next_due": "2026-10-24",
       "status": "needs_review",
       "mock_review": null
+    },
+    "e1adb2e1-c387-4ce1-907a-b684c829f1d9": {
+      "saved": true,
+      "message": "学习总结已保存，下次从当前进度继续；已提交到本地 git",
+      "text": "\n\n## 2026-10-21｜高频核心轮换（学习总结）\n\n<!-- algo-wrap:f1ddaf774c9f5634d6a8 -->\n\n- **LC145 二叉树的后序遍历**：独立完成；累计完成 2 次；下次复习 2026-10-28。\n  - 卡点 / 收获：简单题目\n- **LC617 合并二叉树**：需要提示；累计完成 2 次；下次复习 2026-10-24。\n  - 卡点 / 收获：还是有点没搞明白，空，一个为空，两个非空的情况需要分别考虑，两个的没有想清楚\n- **LC739 每日温度**：需要提示；累计完成 1 次；下次复习 2026-10-24。\n  - 卡点 / 收获：没学习过单调栈，会模仿着写，之后还需要加强\n- **LC49 字母异位词分组**：需要提示；累计完成 1 次；下次复习 2026-10-24。\n  - 卡点 / 收获：有点思路，但是不多，需要加强 ，复杂度也分析存在问题（忘记考虑排序的复杂度了）\n- **LC128 最长连续序列**：需要提示；累计完成 1 次；下次复习 2026-10-24。\n  - 卡点 / 收获：碰见还是没有思路，没法合理判断其解题的思路，有待加强，\n- **今日复盘**：新题的话基本就没有什么思路，参考别的题目进行模仿还能写出来，现在临时是能记下来解题思路，但是这样只是短期记忆，还是需要多刷点题来巩固\n- **下一步**：按高频核心交集轮换：先做 2 道到期复习，再做 2 道高频新题；不再等待单专题清空\n",
+      "git": "已提交到本地 git"
+    },
+    "ec52db3f-5f48-47c1-aa45-6cd39c5be301": {
+      "message": "LC230 已记录，下次复习 2026-10-29",
+      "result": "independent",
+      "next_due": "2026-10-29",
+      "status": "learned",
+      "mock_review": null
+    },
+    "1a1bcfe2-78da-4b1f-9296-176a91841e72": {
+      "message": "LC206 已记录，下次复习 2026-10-29",
+      "result": "independent",
+      "next_due": "2026-10-29",
+      "status": "learned",
+      "mock_review": null
+    },
+    "70858d26-f9e1-45a9-bc7e-e32524560627": {
+      "message": "LC150 已记录，下次复习 2026-10-25",
+      "result": "hinted",
+      "next_due": "2026-10-25",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "e6a956be-4309-4871-86dc-659582c6182c": {
+      "message": "LC560 已记录，下次复习 2026-10-25",
+      "result": "hinted",
+      "next_due": "2026-10-25",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "eab061d8-59b1-4a4a-8438-0b81d28b6a3d": {
+      "message": "LC42 已记录，下次复习 2026-10-26",
+      "next_due": "2026-10-26"
+    },
+    "bff01cac-7cb6-475d-90d0-bb325703d768": {
+      "message": "LC75 已记录，下次复习 2026-10-26",
+      "next_due": "2026-10-26"
+    },
+    "c923e1bb-23e5-487e-a69d-910705dec47e": {
+      "message": "LC21 已记录，下次复习 2026-10-26",
+      "next_due": "2026-10-26"
+    },
+    "13df050c-06e5-4e6d-a05f-48fdad4cbc76": {
+      "message": "LC234 已记录，下次复习 2026-10-26",
+      "next_due": "2026-10-26"
+    },
+    "e4653b76-0cfe-4766-9646-37f9231c86a0": {
+      "message": "LC2 已记录，下次复习 2026-10-26",
+      "result": "hinted",
+      "next_due": "2026-10-26",
+      "status": "needs_review",
+      "mock_review": null
+    },
+    "5bd1e883-31e3-446b-afa5-dbec749d0f51": {
+      "message": "LC209 已记录，下次复习 2026-10-27",
+      "next_due": "2026-10-27"
+    },
+    "64946209-a030-4107-92e2-b2edd3611f1f": {
+      "message": "LC11 已记录，下次复习 2026-10-27",
+      "next_due": "2026-10-27"
+    },
+    "ebb15bbd-d57d-481e-9389-3ed3b634cac6": {
+      "message": "LC76 已记录，下次复习 2026-10-27",
+      "next_due": "2026-10-27"
+    },
+    "889c69d8-7219-450b-b45d-65ce47b70d03": {
+      "message": "LC19 已记录，下次复习 2026-10-27",
+      "next_due": "2026-10-27"
     }
   },
   "recommend_skips": {

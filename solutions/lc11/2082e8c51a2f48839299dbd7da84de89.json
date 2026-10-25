@@ -1,0 +1,69 @@
+{
+  "id": "11",
+  "run_id": "2082e8c51a2f48839299dbd7da84de89",
+  "code": "class Solution:\n    def maxArea(self, height):\n        left = 0\n        right = len(height)-1\n        max_area = 0\n        while left<right:\n            max_area = max(max_area,min(height[left],height[right])*(right-left))\n            if height[left]<height[right]:\n                left+=1\n            else:\n                right-=1\n        return max_area  \n    ",
+  "code_hash": "9a48930d9bc13ad5c18393e5d6ee6be26b526e04c5bdd4172e95de9c303d8c87",
+  "session_id": "38df8d870aea4ee9ac179c4905cec96e",
+  "practice_date": "2026-10-24",
+  "extra_cases": [],
+  "created_at": "2026-10-24T14:06:06.455199+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            1,
+            8,
+            6,
+            2,
+            5,
+            4,
+            8,
+            3,
+            7
+          ]
+        ],
+        "expected": 49,
+        "actual": 49
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            1,
+            1
+          ]
+        ],
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [
+            4,
+            3,
+            2,
+            1,
+            4
+          ]
+        ],
+        "expected": 16,
+        "actual": 16
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 156,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc11/2082e8c51a2f48839299dbd7da84de89.py"
+}

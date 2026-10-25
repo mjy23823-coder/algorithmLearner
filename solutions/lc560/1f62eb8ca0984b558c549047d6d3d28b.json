@@ -1,0 +1,65 @@
+{
+  "id": "560",
+  "run_id": "1f62eb8ca0984b558c549047d6d3d28b",
+  "code": "class Solution:\n    def subarraySum(self, nums, k):\n        # 先说明变量含义，再完成你的实现\n        prev = {0:1}\n        ans = 0\n        total = 0\n\n        for num in nums:\n            total += num\n            need = total-k\n            ans += prev.get(need,0)\n        \n            prev[total] = prev.get(total,0)+1\n\n        return ans\n",
+  "code_hash": "2b5aa7c1b0518e7b41b4666a81ddb1bd3db19fa54488cf48e256b164b9071547",
+  "session_id": "2742415d0c09417299dce670c23018c0",
+  "practice_date": "2026-10-22",
+  "extra_cases": [],
+  "created_at": "2026-10-22T15:08:02.278052+00:00",
+  "hints_used": 0,
+  "result": {
+    "cases": [
+      {
+        "name": "用例 1",
+        "passed": true,
+        "args": [
+          [
+            1,
+            1,
+            1
+          ],
+          2
+        ],
+        "expected": 2,
+        "actual": 2
+      },
+      {
+        "name": "用例 2",
+        "passed": true,
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          3
+        ],
+        "expected": 2,
+        "actual": 2
+      },
+      {
+        "name": "用例 3",
+        "passed": true,
+        "args": [
+          [
+            1,
+            -1,
+            0
+          ],
+          0
+        ],
+        "expected": 3,
+        "actual": 3
+      }
+    ],
+    "stdout": "",
+    "error": null,
+    "total": 3,
+    "passed_count": 3,
+    "elapsed_ms": 172,
+    "builtin_count": 3,
+    "passed": true
+  },
+  "source_path": "solutions/lc560/1f62eb8ca0984b558c549047d6d3d28b.py"
+}
