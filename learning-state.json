@@ -603,13 +603,13 @@
       }
     },
     "101": {
-      "count": 2,
+      "count": 3,
       "title": "对称二叉树",
       "topic": "二叉树",
-      "last_done": "2026-10-18",
+      "last_done": "2026-10-25",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-21",
+      "next_due": "2026-10-28",
       "first_done": "2026-09-26",
       "count_is_lower_bound": true,
       "history_import": {
@@ -681,6 +681,29 @@
           "elapsed_seconds": 99,
           "hints_used": 0,
           "coach_hints": 2
+        },
+        {
+          "date": "2026-10-25",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 2,
+            "title": "对称二叉树",
+            "topic": "二叉树",
+            "last_done": "2026-10-18",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-21",
+            "first_done": "2026-09-26",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "note": "思路不难，但是还是存在一点小小的细节问题"
         }
       ]
     },
@@ -1476,13 +1499,13 @@
       }
     },
     "226": {
-      "count": 2,
+      "count": 3,
       "title": "翻转二叉树",
       "topic": "二叉树",
-      "last_done": "2026-10-18",
-      "status": "needs_review",
+      "last_done": "2026-10-26",
+      "status": "learning",
       "stage": 0,
-      "next_due": "2026-10-21",
+      "next_due": "2026-10-29",
       "first_done": "2026-09-23",
       "count_is_lower_bound": true,
       "history_import": {
@@ -1554,6 +1577,29 @@
           "elapsed_seconds": 0,
           "hints_used": 3,
           "coach_hints": 1
+        },
+        {
+          "date": "2026-10-26",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 2,
+            "title": "翻转二叉树",
+            "topic": "二叉树",
+            "last_done": "2026-10-18",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-21",
+            "first_done": "2026-09-23",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "note": "难度不高，利用递归可以替换左右子树"
         }
       ]
     },
@@ -1925,13 +1971,13 @@
       ]
     },
     "501": {
-      "count": 2,
+      "count": 3,
       "title": "二叉搜索树中的众数",
       "topic": "BST",
-      "last_done": "2026-10-19",
+      "last_done": "2026-10-27",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-22",
+      "next_due": "2026-10-30",
       "first_done": "2026-10-07",
       "count_is_lower_bound": true,
       "history_import": {
@@ -2011,6 +2057,29 @@
           "elapsed_seconds": 90,
           "hints_used": 0,
           "coach_hints": 1
+        },
+        {
+          "date": "2026-10-27",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 2,
+            "title": "二叉搜索树中的众数",
+            "topic": "BST",
+            "last_done": "2026-10-19",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-22",
+            "first_done": "2026-10-07",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "note": "还是思路不够清晰"
         }
       ]
     },
@@ -2525,13 +2594,14 @@
       ]
     },
     "18": {
-      "count": 1,
+      "count": 2,
       "title": "四数之和",
       "topic": "双指针",
-      "last_done": "2026-10-18",
+      "last_done": "2026-10-25",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-21",
+      "next_due": "2026-10-28",
+      "first_done": "2026-10-18",
       "history": [
         {
           "date": "2026-10-18",
@@ -2563,18 +2633,34 @@
           "elapsed_seconds": 154,
           "hints_used": 0,
           "coach_hints": 1
+        },
+        {
+          "date": "2026-10-25",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "四数之和",
+            "topic": "双指针",
+            "last_done": "2026-10-18",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-21",
+            "first_done": "2026-10-18"
+          },
+          "note": "去重这块还是需要加强一下，整体的思路已经没有问题了"
         }
-      ],
-      "first_done": "2026-10-18"
+      ]
     },
     "105": {
-      "count": 1,
+      "count": 2,
       "title": "从前序与中序遍历序列构造二叉树",
       "topic": "二叉树",
-      "last_done": "2026-10-19",
+      "last_done": "2026-10-26",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-22",
+      "next_due": "2026-10-29",
+      "first_done": "2026-10-19",
       "history": [
         {
           "date": "2026-10-19",
@@ -2624,18 +2710,34 @@
             "scored_by": "self",
             "average": 2.4
           }
+        },
+        {
+          "date": "2026-10-26",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "从前序与中序遍历序列构造二叉树",
+            "topic": "二叉树",
+            "last_done": "2026-10-19",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-22",
+            "first_done": "2026-10-19"
+          },
+          "note": "思路很简单，但是转为代码的实现上还是需要练习"
         }
-      ],
-      "first_done": "2026-10-19"
+      ]
     },
     "199": {
-      "count": 1,
+      "count": 2,
       "title": "二叉树的右视图",
       "topic": "二叉树",
-      "last_done": "2026-10-20",
+      "last_done": "2026-10-27",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-23",
+      "next_due": "2026-10-30",
+      "first_done": "2026-10-20",
       "history": [
         {
           "date": "2026-10-20",
@@ -2667,9 +2769,24 @@
           "elapsed_seconds": 28,
           "hints_used": 3,
           "coach_hints": 0
+        },
+        {
+          "date": "2026-10-27",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "二叉树的右视图",
+            "topic": "二叉树",
+            "last_done": "2026-10-20",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-23",
+            "first_done": "2026-10-20"
+          },
+          "note": "还是忘记原理了"
         }
-      ],
-      "first_done": "2026-10-20"
+      ]
     },
     "347": {
       "count": 1,
@@ -2756,13 +2873,14 @@
       "first_done": "2026-10-21"
     },
     "49": {
-      "count": 1,
+      "count": 2,
       "title": "字母异位词分组",
       "topic": "哈希",
-      "last_done": "2026-10-21",
+      "last_done": "2026-10-28",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-24",
+      "next_due": "2026-10-31",
+      "first_done": "2026-10-21",
       "history": [
         {
           "date": "2026-10-21",
@@ -2794,9 +2912,24 @@
           "elapsed_seconds": 55,
           "hints_used": 0,
           "coach_hints": 0
+        },
+        {
+          "date": "2026-10-28",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "字母异位词分组",
+            "topic": "哈希",
+            "last_done": "2026-10-21",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-24",
+            "first_done": "2026-10-21"
+          },
+          "note": "python的语法不太熟悉，思路上可能也是之前做过没确实搞明白"
         }
-      ],
-      "first_done": "2026-10-21"
+      ]
     },
     "128": {
       "count": 1,
@@ -3053,6 +3186,195 @@
         }
       ],
       "first_done": "2026-10-24"
+    },
+    "155": {
+      "count": 1,
+      "title": "最小栈",
+      "topic": "栈与队列",
+      "last_done": "2026-10-25",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-28",
+      "history": [
+        {
+          "date": "2026-10-25",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "开始这个题目就没怎么看懂想表达的是什么意思，实际上本题的目的就是利用两个list去模拟两个栈，总体的思路并不难，多熟悉下应该就是简单的题目"
+        }
+      ],
+      "first_done": "2026-10-25"
+    },
+    "904": {
+      "count": 1,
+      "title": "水果成篮",
+      "topic": "滑动窗口",
+      "last_done": "2026-10-26",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-29",
+      "history": [
+        {
+          "date": "2026-10-26",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "简单的滑动窗口题目，但是需要将键进行移除，不然还是会占据在字典里面"
+        }
+      ],
+      "first_done": "2026-10-26"
+    },
+    "1004": {
+      "count": 1,
+      "title": "最大连续1的个数 III",
+      "topic": "滑动窗口",
+      "last_done": "2026-10-26",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-29",
+      "history": [
+        {
+          "date": "2026-10-26",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "思路上是没什么问题，代码上感觉有点绕晕了"
+        }
+      ],
+      "first_done": "2026-10-26"
+    },
+    "704": {
+      "count": 1,
+      "title": "二分查找",
+      "topic": "二分查找",
+      "last_done": "2026-10-27",
+      "status": "learning",
+      "stage": 0,
+      "next_due": "2026-10-30",
+      "history": [
+        {
+          "date": "2026-10-27",
+          "result": "independent",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "左闭右闭的情况下，循环中也要用等于"
+        }
+      ],
+      "first_done": "2026-10-27"
+    },
+    "70": {
+      "count": 1,
+      "title": "爬楼梯",
+      "topic": "动态规划",
+      "last_done": "2026-10-27",
+      "status": "learning",
+      "stage": 0,
+      "next_due": "2026-10-30",
+      "history": [
+        {
+          "date": "2026-10-27",
+          "result": "independent",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "基础入门动态规划题目，当作入门基础题"
+        }
+      ],
+      "first_done": "2026-10-27"
+    },
+    "121": {
+      "count": 1,
+      "title": "买卖股票的最佳时机",
+      "topic": "动态规划",
+      "last_done": "2026-10-28",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-31",
+      "history": [
+        {
+          "date": "2026-10-28",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "难度不算高，适合练手，可以用多种解法来进行，也可以用最简单的思路来进行求解"
+        }
+      ],
+      "first_done": "2026-10-28"
+    },
+    "142": {
+      "count": 1,
+      "title": "环形链表 II",
+      "topic": "链表",
+      "last_done": "2026-10-28",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-10-31",
+      "history": [
+        {
+          "date": "2026-10-28",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "很巧妙，推导出公式之后这道题的思路就很清晰，有点像数学题的味道了"
+        }
+      ],
+      "first_done": "2026-10-28"
+    },
+    "198": {
+      "count": 1,
+      "title": "打家劫舍",
+      "topic": "动态规划",
+      "last_done": "2026-10-29",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-01",
+      "history": [
+        {
+          "date": "2026-10-29",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "动态规划的题目还是比较奇妙，需要知道一个状态转移方程这道题的难度一般就不大了"
+        }
+      ],
+      "first_done": "2026-10-29"
+    },
+    "300": {
+      "count": 1,
+      "title": "最长递增子序列",
+      "topic": "动态规划",
+      "last_done": "2026-10-29",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-01",
+      "history": [
+        {
+          "date": "2026-10-29",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "想不出来思路啊，碰一题就不会一提"
+        }
+      ],
+      "first_done": "2026-10-29"
     }
   },
   "next_new": [],
@@ -3087,18 +3409,11 @@
     "236",
     "15",
     "16",
-    "101",
-    "18",
-    "226",
-    "105",
     "404",
-    "501",
-    "199",
     "27",
     "347",
     "538",
     "128",
-    "49",
     "617",
     "739",
     "150",
@@ -3114,19 +3429,33 @@
     "209",
     "76",
     "94",
+    "101",
     "145",
+    "155",
+    "18",
+    "1004",
+    "105",
     "206",
+    "226",
     "230",
+    "904",
+    "199",
     "450",
+    "501",
+    "70",
+    "704",
+    "121",
+    "142",
+    "49",
+    "198",
+    "300",
     "242"
   ],
   "session": {
-    "last_date": "2026-10-24",
+    "last_date": "2026-10-29",
     "last_completed": [
-      "209",
-      "11",
-      "76",
-      "19"
+      "198",
+      "300"
     ],
     "open_questions": [],
     "next_action": "按高频核心交集轮换：先做 2 道到期复习，再做 2 道高频新题；不再等待单专题清空"
@@ -3424,12 +3753,86 @@
     "889c69d8-7219-450b-b45d-65ce47b70d03": {
       "message": "LC19 已记录，下次复习 2026-10-27",
       "next_due": "2026-10-27"
+    },
+    "3d0e3efa-b9fe-4dac-8943-b70bd57e2b91": {
+      "message": "LC18 已记录，下次复习 2026-10-28",
+      "next_due": "2026-10-28"
+    },
+    "5ef36e3d-75ac-4f95-a849-4e7d892e1add": {
+      "message": "LC101 已记录，下次复习 2026-10-28",
+      "next_due": "2026-10-28"
+    },
+    "8038f644-e9a4-4a23-9363-0dd55829b268": {
+      "message": "LC155 已记录，下次复习 2026-10-28",
+      "next_due": "2026-10-28"
+    },
+    "2c016eab-d141-4684-b2c5-515a10bd8493": {
+      "message": "LC904 已记录，下次复习 2026-10-29",
+      "next_due": "2026-10-29"
+    },
+    "e63f15c0-20c0-4082-a7fa-563dcf8dcd69": {
+      "message": "LC226 已记录，下次复习 2026-10-29",
+      "next_due": "2026-10-29"
+    },
+    "5c425a27-2319-480a-9c04-3463c13bce4d": {
+      "message": "LC105 已记录，下次复习 2026-10-29",
+      "next_due": "2026-10-29"
+    },
+    "a5910967-4d61-4783-99f1-11b28bcdf531": {
+      "message": "LC1004 已记录，下次复习 2026-10-29",
+      "next_due": "2026-10-29"
+    },
+    "7c267ca7-9b5c-4e63-96fe-c01faef0c8c3": {
+      "message": "待学队列已更新"
+    },
+    "f5300240-443e-4187-835f-085db658d0a2": {
+      "message": "待学队列已更新"
+    },
+    "a3100be0-fe31-414c-b787-3ce5e9f3aa2a": {
+      "message": "已换掉 LC5，7 天内不再推荐"
+    },
+    "180f222b-3ea2-41b9-a35b-c1745b3371a0": {
+      "message": "待学队列已更新"
+    },
+    "27cc07a5-2975-4515-8b0e-e80f3ae8675a": {
+      "message": "LC501 已记录，下次复习 2026-10-30",
+      "next_due": "2026-10-30"
+    },
+    "2e3e32d1-f877-4d7a-b323-a1eeab66249c": {
+      "message": "LC199 已记录，下次复习 2026-10-30",
+      "next_due": "2026-10-30"
+    },
+    "a2fd4a5e-2131-4040-a0c6-debccb1cefe7": {
+      "message": "LC704 已记录，下次复习 2026-10-30",
+      "next_due": "2026-10-30"
+    },
+    "48f43545-cbc6-4ad8-957a-22f38a964be0": {
+      "message": "LC70 已记录，下次复习 2026-10-30",
+      "next_due": "2026-10-30"
+    },
+    "64e426fd-729f-43ad-877d-07660025719d": {
+      "message": "LC121 已记录，下次复习 2026-10-31",
+      "next_due": "2026-10-31"
+    },
+    "55d905d6-35b3-4a3c-8d96-861c06563ca0": {
+      "message": "LC142 已记录，下次复习 2026-10-31",
+      "next_due": "2026-10-31"
+    },
+    "18e854bb-d409-4271-919a-9754244ee96d": {
+      "message": "LC49 已记录，下次复习 2026-10-31",
+      "next_due": "2026-10-31"
+    },
+    "93b88684-b883-470f-a86b-cb94b919cc75": {
+      "message": "LC198 已记录，下次复习 2026-11-01",
+      "next_due": "2026-11-01"
+    },
+    "3a1e1ce0-0eb3-4401-85ae-ea482f4b359a": {
+      "message": "LC300 已记录，下次复习 2026-11-01",
+      "next_due": "2026-11-01"
     }
   },
   "recommend_skips": {
-    "424": "2026-10-18",
-    "904": "2026-10-18",
-    "1004": "2026-10-18"
+    "5": "2026-10-26"
   },
   "profile": {
     "target_date": "2026-12-31",
