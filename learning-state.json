@@ -2222,13 +2222,13 @@
       }
     },
     "617": {
-      "count": 2,
+      "count": 3,
       "title": "合并二叉树",
       "topic": "二叉树",
-      "last_done": "2026-10-21",
-      "status": "needs_review",
+      "last_done": "2026-11-03",
+      "status": "learning",
       "stage": 0,
-      "next_due": "2026-10-24",
+      "next_due": "2026-11-06",
       "first_done": "2026-10-01",
       "count_is_lower_bound": true,
       "history_import": {
@@ -2305,6 +2305,29 @@
           "elapsed_seconds": 73,
           "hints_used": 0,
           "coach_hints": 0
+        },
+        {
+          "date": "2026-11-03",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 2,
+            "title": "合并二叉树",
+            "topic": "二叉树",
+            "last_done": "2026-10-21",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-24",
+            "first_done": "2026-10-01",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "note": "简单题目，考虑两边同时为空（也可以归到一个里面），一个空一个非空，两边都非空三种情况"
         }
       ]
     },
@@ -2535,13 +2558,13 @@
       ]
     },
     "75": {
-      "count": 2,
+      "count": 3,
       "title": "颜色分类",
       "topic": "双指针",
-      "last_done": "2026-10-23",
+      "last_done": "2026-11-02",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-26",
+      "next_due": "2026-11-05",
       "first_done": "2026-10-17",
       "history": [
         {
@@ -2590,6 +2613,22 @@
             "first_done": "2026-10-17"
           },
           "note": "这次又了一个更深的体会，相较于上次而言，这次知道了指针的一个移动状况为什么是这样子的"
+        },
+        {
+          "date": "2026-11-02",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 2,
+            "title": "颜色分类",
+            "topic": "双指针",
+            "last_done": "2026-10-23",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-26",
+            "first_done": "2026-10-17"
+          },
+          "note": "还是差了一点火候，脑子一下子没有转过来弯"
         }
       ]
     },
@@ -2789,13 +2828,14 @@
       ]
     },
     "347": {
-      "count": 1,
+      "count": 2,
       "title": "前 K 个高频元素",
       "topic": "栈与队列",
-      "last_done": "2026-10-20",
+      "last_done": "2026-11-03",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-23",
+      "next_due": "2026-11-06",
+      "first_done": "2026-10-20",
       "history": [
         {
           "date": "2026-10-20",
@@ -2825,18 +2865,34 @@
           "elapsed_seconds": 47,
           "hints_used": 0,
           "coach_hints": 0
+        },
+        {
+          "date": "2026-11-03",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "前 K 个高频元素",
+            "topic": "栈与队列",
+            "last_done": "2026-10-20",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-23",
+            "first_done": "2026-10-20"
+          },
+          "note": "知道要用什么方法解，但是怎么写还是需要加强进行练习"
         }
-      ],
-      "first_done": "2026-10-20"
+      ]
     },
     "739": {
-      "count": 1,
+      "count": 2,
       "title": "每日温度",
       "topic": "栈与队列",
-      "last_done": "2026-10-21",
+      "last_done": "2026-11-01",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-24",
+      "next_due": "2026-11-04",
+      "first_done": "2026-10-21",
       "history": [
         {
           "date": "2026-10-21",
@@ -2868,9 +2924,24 @@
           "elapsed_seconds": 50,
           "hints_used": 3,
           "coach_hints": 0
+        },
+        {
+          "date": "2026-11-01",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "每日温度",
+            "topic": "栈与队列",
+            "last_done": "2026-10-21",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-24",
+            "first_done": "2026-10-21"
+          },
+          "note": "再次碰到基本都没什么印象，忘记用什么思路进行求解了，本题目用单调栈进行解决，如果当前数比前一个大则将前一个数出栈，记录前一个数相差的一个索引，如果没满足添加则添加下一个数进来看是否满足条件，如果一直没有满足的话，他的答案数组也一直时0，不会发生变化"
         }
-      ],
-      "first_done": "2026-10-21"
+      ]
     },
     "49": {
       "count": 2,
@@ -2932,13 +3003,14 @@
       ]
     },
     "128": {
-      "count": 1,
+      "count": 2,
       "title": "最长连续序列",
       "topic": "哈希",
-      "last_done": "2026-10-21",
+      "last_done": "2026-11-04",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-24",
+      "next_due": "2026-11-07",
+      "first_done": "2026-10-21",
       "history": [
         {
           "date": "2026-10-21",
@@ -2970,18 +3042,34 @@
           "elapsed_seconds": 54,
           "hints_used": 0,
           "coach_hints": 0
+        },
+        {
+          "date": "2026-11-04",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "最长连续序列",
+            "topic": "哈希",
+            "last_done": "2026-10-21",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-24",
+            "first_done": "2026-10-21"
+          },
+          "note": "思路基本上没什么问题，具体的实现逻辑上还是需要加强"
         }
-      ],
-      "first_done": "2026-10-21"
+      ]
     },
     "150": {
-      "count": 1,
+      "count": 2,
       "title": "逆波兰表达式求值",
       "topic": "栈与队列",
-      "last_done": "2026-10-22",
-      "status": "needs_review",
+      "last_done": "2026-11-05",
+      "status": "learning",
       "stage": 0,
-      "next_due": "2026-10-25",
+      "next_due": "2026-11-08",
+      "first_done": "2026-10-22",
       "history": [
         {
           "date": "2026-10-22",
@@ -3013,18 +3101,34 @@
           "elapsed_seconds": 16,
           "hints_used": 0,
           "coach_hints": 0
+        },
+        {
+          "date": "2026-11-05",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "逆波兰表达式求值",
+            "topic": "栈与队列",
+            "last_done": "2026-10-22",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-25",
+            "first_done": "2026-10-22"
+          },
+          "note": "这道题目比较简单，只需要一个数字栈，当遇到表达式的时候就弹出两个数进行计算，但是这个数字有个先后的顺序需要进行考虑"
         }
-      ],
-      "first_done": "2026-10-22"
+      ]
     },
     "560": {
-      "count": 1,
+      "count": 2,
       "title": "和为 K 的子数组",
       "topic": "哈希",
-      "last_done": "2026-10-22",
+      "last_done": "2026-11-05",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-25",
+      "next_due": "2026-11-08",
+      "first_done": "2026-10-22",
       "history": [
         {
           "date": "2026-10-22",
@@ -3056,9 +3160,24 @@
           "elapsed_seconds": 23,
           "hints_used": 0,
           "coach_hints": 0
+        },
+        {
+          "date": "2026-11-05",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "和为 K 的子数组",
+            "topic": "哈希",
+            "last_done": "2026-10-22",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-25",
+            "first_done": "2026-10-22"
+          },
+          "note": "感觉还是理解的有问题啊"
         }
-      ],
-      "first_done": "2026-10-22"
+      ]
     },
     "21": {
       "count": 1,
@@ -3103,13 +3222,14 @@
       "first_done": "2026-10-23"
     },
     "2": {
-      "count": 1,
+      "count": 2,
       "title": "两数相加",
       "topic": "链表",
-      "last_done": "2026-10-23",
+      "last_done": "2026-11-04",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-26",
+      "next_due": "2026-11-07",
+      "first_done": "2026-10-23",
       "history": [
         {
           "date": "2026-10-23",
@@ -3141,18 +3261,34 @@
           "elapsed_seconds": 8,
           "hints_used": 0,
           "coach_hints": 0
+        },
+        {
+          "date": "2026-11-04",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "两数相加",
+            "topic": "链表",
+            "last_done": "2026-10-23",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-26",
+            "first_done": "2026-10-23"
+          },
+          "note": "思路其实比较容易理解，还是动手能力差了些="
         }
-      ],
-      "first_done": "2026-10-23"
+      ]
     },
     "76": {
-      "count": 1,
+      "count": 2,
       "title": "最小覆盖子串",
       "topic": "滑动窗口",
-      "last_done": "2026-10-24",
+      "last_done": "2026-11-02",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-27",
+      "next_due": "2026-11-05",
+      "first_done": "2026-10-24",
       "history": [
         {
           "date": "2026-10-24",
@@ -3162,9 +3298,24 @@
             "count": 0
           },
           "note": "python的语法还是有点不太熟悉，大体的思路上还是明白了，细节部分的撰写还是需要加强一下"
+        },
+        {
+          "date": "2026-11-02",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "最小覆盖子串",
+            "topic": "滑动窗口",
+            "last_done": "2026-10-24",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-27",
+            "first_done": "2026-10-24"
+          },
+          "note": "大体思路上我知道该怎么进行处理了，但是再实际的代码撰写中还是存在点问题"
         }
-      ],
-      "first_done": "2026-10-24"
+      ]
     },
     "19": {
       "count": 1,
@@ -3375,6 +3526,153 @@
         }
       ],
       "first_done": "2026-10-29"
+    },
+    "322": {
+      "count": 1,
+      "title": "零钱兑换",
+      "topic": "动态规划",
+      "last_done": "2026-11-01",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-04",
+      "history": [
+        {
+          "date": "2026-11-01",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "dp定义还是无法独立判断，状态方程引入写不出来"
+        }
+      ],
+      "first_done": "2026-11-01"
+    },
+    "746": {
+      "count": 1,
+      "title": "使用最小花费爬楼梯",
+      "topic": "动态规划",
+      "last_done": "2026-11-02",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-05",
+      "history": [
+        {
+          "date": "2026-11-02",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "一维DP，需要知道dp【i】代表的是什么的一个含义这道题就比较简单，同时线性的dp其实只依赖前两个的一个状态，所以空间复杂度可以压缩到O（1），时间复杂度为O（n）"
+        }
+      ],
+      "first_done": "2026-11-02"
+    },
+    "62": {
+      "count": 1,
+      "title": "不同路径",
+      "topic": "动态规划",
+      "last_done": "2026-11-02",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-05",
+      "history": [
+        {
+          "date": "2026-11-02",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "这道题目在之前的一维线性的基础上添加了一点难度，但是思路上还是比较好理解的"
+        }
+      ],
+      "first_done": "2026-11-02"
+    },
+    "33": {
+      "count": 1,
+      "title": "搜索旋转排序数组",
+      "topic": "二分查找",
+      "last_done": "2026-11-03",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-06",
+      "history": [
+        {
+          "date": "2026-11-03",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "思路太奇妙了，需要多多练习"
+        }
+      ],
+      "first_done": "2026-11-03"
+    },
+    "5": {
+      "count": 1,
+      "title": "最长回文子串",
+      "topic": "字符串",
+      "last_done": "2026-11-03",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-06",
+      "history": [
+        {
+          "date": "2026-11-03",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "思路太高级了，需要多多练习下"
+        }
+      ],
+      "first_done": "2026-11-03"
+    },
+    "53": {
+      "count": 1,
+      "title": "最大子数组和",
+      "topic": "贪心",
+      "last_done": "2026-11-04",
+      "status": "learning",
+      "stage": 0,
+      "next_due": "2026-11-07",
+      "history": [
+        {
+          "date": "2026-11-04",
+          "result": "independent",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "和我想的解法一样可以用DP或者前缀和的方式来解决此题目，做过这种题目的很容易想到如果相加的和小于0的话说明加上了一个比较大的数，同时这个要的是一个连续的数组和，所以只能从之后重新作为新的起点就顺利成章的知道了一个DP的思路了，如果当前和小于0，总和就重新从0开始"
+        }
+      ],
+      "first_done": "2026-11-04"
+    },
+    "125": {
+      "count": 1,
+      "title": "验证回文串",
+      "topic": "双指针",
+      "last_done": "2026-11-04",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-07",
+      "history": [
+        {
+          "date": "2026-11-04",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "思路不难，就是python的有些函数需要了解下，例如判断字符是否是数字或字母 isalnum，lower（）将字符转为小写，得到处理后的字符串判断回文就比较简单了，利用一个双指针两头同时走，如果有一对对不上就不是回文"
+        }
+      ],
+      "first_done": "2026-11-04"
     }
   },
   "next_new": [],
@@ -3411,23 +3709,14 @@
     "16",
     "404",
     "27",
-    "347",
     "538",
-    "128",
-    "617",
-    "739",
-    "150",
-    "560",
-    "2",
     "21",
     "234",
     "42",
-    "75",
     "104",
     "11",
     "19",
     "209",
-    "76",
     "94",
     "101",
     "145",
@@ -3449,16 +3738,32 @@
     "49",
     "198",
     "300",
+    "322",
+    "739",
+    "62",
+    "746",
+    "75",
+    "76",
+    "33",
+    "347",
+    "5",
+    "617",
+    "125",
+    "128",
+    "2",
+    "53",
+    "150",
+    "560",
     "242"
   ],
   "session": {
-    "last_date": "2026-10-29",
+    "last_date": "2026-11-05",
     "last_completed": [
-      "198",
-      "300"
+      "560",
+      "150"
     ],
     "open_questions": [],
-    "next_action": "按高频核心交集轮换：先做 2 道到期复习，再做 2 道高频新题；不再等待单专题清空"
+    "next_action": "2026-11-03 DP 按用户要求循序渐进：先用 5～10 分钟短时回忆 LC62 不同路径和 LC64 最小路径和，仅检查状态含义、上方/左方来源与第一行第一列边界，不作为次日正式重写任务，不计完成次数。先以二维数组讲清，不要求空间压缩。若能自己解释并手推，再选 LC63 不同路径 II 作为唯一 DP 新题，只增加障碍格这一项变化；若仍卡在状态或初始化，就留在小网格手推和分层提示，当天不追加 DP 新题。保留其他专题到期复习，已完成题计入题量，不为补名额加难；暂缓新背包、子序列和复杂二维 DP。LC64 当前仅有聊天本地验证，不据此自动补录完成。"
   },
   "_requests": {
     "3d4b5a32-25ad-4552-99bf-3b9a0b6076be": {
@@ -3829,10 +4134,75 @@
     "3a1e1ce0-0eb3-4401-85ae-ea482f4b359a": {
       "message": "LC300 已记录，下次复习 2026-11-01",
       "next_due": "2026-11-01"
+    },
+    "96439978-fe17-4835-8613-9bf64b8be045": {
+      "message": "LC739 已记录，下次复习 2026-11-04",
+      "next_due": "2026-11-04"
+    },
+    "32b88ed8-9010-4dec-b9e8-e1b1074a6aa2": {
+      "message": "LC322 已记录，下次复习 2026-11-04",
+      "next_due": "2026-11-04"
+    },
+    "ff74590b-a46b-40c4-a67f-fca16b497c9b": {
+      "message": "LC75 已记录，下次复习 2026-11-05",
+      "next_due": "2026-11-05"
+    },
+    "390a0fbf-5975-46d4-9b1d-cda03cbaefaa": {
+      "message": "LC76 已记录，下次复习 2026-11-05",
+      "next_due": "2026-11-05"
+    },
+    "28a41b51-bfa4-4b91-b3b2-c9e253e4706c": {
+      "message": "LC746 已记录，下次复习 2026-11-05",
+      "next_due": "2026-11-05"
+    },
+    "746c855a-8061-4eee-ae91-4ae70b46c921": {
+      "message": "LC62 已记录，下次复习 2026-11-05",
+      "next_due": "2026-11-05"
+    },
+    "1137a4ad-f186-43d9-980c-7de3b68c4f7b": {
+      "message": "LC617 已记录，下次复习 2026-11-06",
+      "next_due": "2026-11-06"
+    },
+    "d8e3dc42-4f1c-4e19-b167-685803152b34": {
+      "message": "LC347 已记录，下次复习 2026-11-06",
+      "next_due": "2026-11-06"
+    },
+    "7eb9dadb-6484-40f1-afcf-ebe418fc86c6": {
+      "message": "LC33 已记录，下次复习 2026-11-06",
+      "next_due": "2026-11-06"
+    },
+    "a8ae9d53-bd40-44fe-80b2-5cad282ac41a": {
+      "message": "LC5 已记录，下次复习 2026-11-06",
+      "next_due": "2026-11-06"
+    },
+    "d75bd0bd-c77c-4f80-b329-4e4db1a56452": {
+      "message": "LC128 已记录，下次复习 2026-11-07",
+      "next_due": "2026-11-07"
+    },
+    "0cf1bde4-2847-4459-8c29-30660cf9bcf3": {
+      "message": "LC2 已记录，下次复习 2026-11-07",
+      "next_due": "2026-11-07"
+    },
+    "54ef3b31-efb3-4692-9282-270de64da8dc": {
+      "message": "LC53 已记录，下次复习 2026-11-07",
+      "next_due": "2026-11-07"
+    },
+    "99dffed7-5fa1-4b7f-90fa-aad722887fa3": {
+      "message": "LC125 已记录，下次复习 2026-11-07",
+      "next_due": "2026-11-07"
+    },
+    "8e211282-b1b4-4bec-ac6e-78adff9565c0": {
+      "message": "LC560 已记录，下次复习 2026-11-08",
+      "next_due": "2026-11-08"
+    },
+    "88459775-d4c7-45e5-9c85-86e16b614cec": {
+      "message": "LC150 已记录，下次复习 2026-11-08",
+      "next_due": "2026-11-08"
     }
   },
   "recommend_skips": {
-    "5": "2026-10-26"
+    "1143": "2026-11-02",
+    "416": "2026-11-02"
   },
   "profile": {
     "target_date": "2026-12-31",
