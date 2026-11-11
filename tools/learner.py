@@ -13,9 +13,9 @@ import math
 from datetime import date, timedelta
 
 try:
-    from . import catalog, coach, knowledge
+    from . import catalog, knowledge, records
 except ImportError:
-    import catalog, coach, knowledge
+    import catalog, knowledge, records
 
 PACES = {"steady": "稳扎稳打", "normal": "正常推进", "push": "冲刺加速"}
 DEFAULT_SETTINGS = {"target_date": None, "daily_minutes": 120, "pace": "normal"}
@@ -78,12 +78,12 @@ def apply_settings(state, payload, today):
 def active_skips(state, today):
     """“换一题”后 7 天内不再推荐。"""
     skips = state.get("recommend_skips") if isinstance(state.get("recommend_skips"), dict) else {}
-    return {pid: day for pid, day in skips.items() if 0 <= (today - coach.parse_date(day)).days < SKIP_DAYS}
+    return {pid: day for pid, day in skips.items() if 0 <= (today - records.parse_date(day)).days < SKIP_DAYS}
 
 
 def skip_recommendation(state, pid, today):
     skips = active_skips(state, today)
-    skips[coach.problem_id(pid)] = today.isoformat()
+    skips[records.problem_id(pid)] = today.isoformat()
     state["recommend_skips"] = skips
     return skips
 
@@ -120,10 +120,10 @@ def topic_stats(state, today, events):
                                      "graded": 0, "independent": 0, "hinted": 0, "failed": 0, "weight": 0.0, "points": 0.0,
                                      "last_practiced": None})
         row["problems"] += 1
-        status = coach.mastery_status(rec)
+        status = records.mastery_status(rec)
         row["learned"] += status == "learned"
         row["calibration"] += status == "needs_calibration"
-        row["due"] += coach.review_state(state, rec, today) in ("due", "overdue")
+        row["due"] += records.review_state(state, rec, today) in ("due", "overdue")
     for e in events:
         row = rows.get(catalog.family(e["topic"]))
         if not row:
@@ -132,7 +132,7 @@ def topic_stats(state, today, events):
         result = result_of(e)
         if not result:
             continue
-        age = max(0, (today - coach.parse_date(e["date"])).days)
+        age = max(0, (today - records.parse_date(e["date"])).days)
         weight = 0.5 ** (age / HALF_LIFE_DAYS)
         row["graded"] += 1
         row[result] += 1
@@ -144,7 +144,7 @@ def topic_stats(state, today, events):
         # 平滑：相当于先验一次 0.5 分的练习，记录少时掌握度靠近 50%。
         mastery = 0 if row["graded"] == 0 else round(100 * (row["points"] + 1) / (row["weight"] + 2))
         level = level_of(row["graded"], mastery)
-        idle = (today - coach.parse_date(row["last_practiced"])).days if row["last_practiced"] else None
+        idle = (today - records.parse_date(row["last_practiced"])).days if row["last_practiced"] else None
         topics.append({**{k: v for k, v in row.items() if k not in ("weight", "points")}, "mastery": mastery, "level": level,
                        "level_note": dict(LEVELS)[level], "idle_days": idle})
     return sorted(topics, key=lambda t: (order.get(t["name"], 99), t["name"]))
@@ -152,7 +152,7 @@ def topic_stats(state, today, events):
 
 def habits(events, today, extra_days=()):
     start = today - timedelta(days=27)
-    recent = [e for e in events if start <= coach.parse_date(e["date"]) <= today]
+    recent = [e for e in events if start <= records.parse_date(e["date"]) <= today]
     graded = [e for e in recent if result_of(e)]
     count = {key: sum(result_of(e) == key for e in graded) for key in SCORES}
     timed = [minutes_of(e) for e in recent if minutes_of(e)]
@@ -168,7 +168,7 @@ def habits(events, today, extra_days=()):
             "independent_rate": round(100 * count["independent"] / len(graded)) if graded else None,
             "hint_rate": round(100 * count["hinted"] / len(graded)) if graded else None,
             "avg_minutes": round(sum(timed) / len(timed), 1) if timed else None, "timed": len(timed),
-            "active_days_14": len({day for day in days if 0 <= (today - coach.parse_date(day)).days < 14}),
+            "active_days_14": len({day for day in days if 0 <= (today - records.parse_date(day)).days < 14}),
             "streak": streak, "per_week": round(len(recent) / 4, 1),
             "mocks": len(mocks), "mock_average": round(sum(scored) / len(scored), 1) if scored else None,
             "inferred": sum(e.get("result") not in SCORES for e in graded)}
@@ -194,7 +194,7 @@ def goal(state, today, current):
     config = settings(state)
     position = catalog.line_position(current)
     remaining = [name for name in catalog.MAIN_LINE[position + 1:] if name not in current_families(current)]
-    target = coach.parse_date(config["target_date"]) if config["target_date"] else None
+    target = records.parse_date(config["target_date"]) if config["target_date"] else None
     days_left = (target - today).days if target else None
     return {"text": state.get("goal") or "大厂实习算法面试", "target_date": config["target_date"], "days_left": days_left,
             "weeks_left": math.ceil(days_left / 7) if days_left is not None else None,
@@ -206,7 +206,7 @@ def goal(state, today, current):
 def weaknesses(state, today, error_events):
     titles = {e["id"]: e for e in knowledge.ERRORS}
     rows = []
-    for row in sorted(coach.weak_errors(state, today, error_events).values(), key=lambda w: (-w["count"], w["id"])):
+    for row in sorted(records.weak_errors(state, today, error_events).values(), key=lambda w: (-w["count"], w["id"])):
         info = titles.get(row["id"], {})
         rows.append({**row, "description": info.get("description", ""), "question": info.get("question", ""),
                      "patterns": sorted(weak_patterns_for(row["problem_ids"]))})
@@ -225,13 +225,13 @@ def patterns_of(pid):
 def build_profile(state, today, error_events=None):
     """学习画像：专题掌握度、反复错因、习惯、目标与可执行的重点。"""
     error_events = knowledge.error_events(state) if error_events is None else error_events
-    events = coach.practice_events(state)
+    events = records.practice_events(state)
     current = state.get("current_topic", "")
     topics = topic_stats(state, today, events)
     index = {t["name"]: t for t in topics}
     focus_topics = [index[name] for name in current_families(current) if name in index]
     weak = weaknesses(state, today, error_events)
-    habit = habits(events, today, [e["date"] for e in coach.oral_events(state)])
+    habit = habits(events, today, [e["date"] for e in records.oral_events(state)])
     target = goal(state, today, current)
     config = settings(state)
     profile = {"date": today.isoformat(), "settings": config, "pace_label": PACES[config["pace"]], "current_topic": current,
@@ -404,13 +404,13 @@ def recommend_new(state, profile, excluded, limit=4, has_exercise=None):
 def coach_brief(state, today, pid, error_events=None):
     """教练提示词里的学习者画像：本题专题的掌握度、可能在本题出现的常见错因、提示依赖和节奏偏好。"""
     profile = build_profile(state, today, error_events)
-    row = coach.problem(state, pid)
+    row = records.problem(state, pid)
     name = catalog.family(row["topic"])
     topic = next((t for t in profile["topics"] if t["name"] == name), None)
     own = patterns_of(pid)
     relevant = []
     for w in profile["weaknesses"]:
-        families = {catalog.family(coach.problem(state, other)["topic"]) for other in w["problem_ids"]}
+        families = {catalog.family(records.problem(state, other)["topic"]) for other in w["problem_ids"]}
         if own & set(w["patterns"]) or name in families:
             relevant.append({"id": w["id"], "title": w["title"], "count": w["count"], "question": w["question"]})
     return {"topic": name, "mastery": topic["mastery"] if topic else None, "level": topic["level"] if topic else "起步",

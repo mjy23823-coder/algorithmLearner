@@ -8,7 +8,7 @@ from datetime import date, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
-from tools import coach
+from tools import coach, records, store
 
 
 TODAY = date(2026, 10, 16)
@@ -163,7 +163,7 @@ class PersistenceTests(unittest.TestCase):
     def test_fresh_lock_still_blocks_writes(self):
         lock = self.path.with_name(self.path.name + ".lock")
         lock.write_text("", encoding="utf-8")
-        with patch.object(coach.time, "sleep"), self.assertRaises(ValueError):
+        with patch.object(store.time, "sleep"), self.assertRaises(ValueError):
             with coach.file_lock(self.path):
                 pass
         self.assertTrue(lock.exists())
@@ -236,14 +236,14 @@ class PersistenceTests(unittest.TestCase):
         record(state)
         coach.save(self.path, state)
         original_state, original_log = self.path.read_bytes(), self.log.read_bytes()
-        original_write = coach.atomic_write
+        original_write = records.atomic_write
 
         def failing_write(path, content):
             if path == self.path:
                 raise OSError("simulated full disk")
             original_write(path, content)
 
-        with patch.object(coach, "atomic_write", side_effect=failing_write):
+        with patch.object(records, "atomic_write", side_effect=failing_write):
             with self.assertRaises(OSError):
                 coach.wrap_session(state, self.path, self.log, TODAY, "今日总结")
         self.assertEqual(self.path.read_bytes(), original_state)
