@@ -62,6 +62,18 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+# 正常持锁只有毫秒级，超过该时长的锁视为异常退出遗留。
+# 按文件时间判断而不探测 PID：Windows 上 os.kill(pid, 0) 会结束目标进程。
+STALE_LOCK_SECONDS = 30
+
+
+def lock_is_stale(lock):
+    try:
+        return time.time() - lock.stat().st_mtime > STALE_LOCK_SECONDS
+    except FileNotFoundError:
+        return False
+
+
 @contextmanager
 def file_lock(path):
     lock = path.with_name(path.name + ".lock")
@@ -71,6 +83,12 @@ def file_lock(path):
             fd = os.open(str(lock), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
             break
         except FileExistsError:
+            if lock_is_stale(lock):
+                try:
+                    lock.unlink()
+                except FileNotFoundError:
+                    pass
+                continue
             if time.monotonic() >= deadline:
                 raise ValueError("记录正在被其他程序更新，请稍后重试；若程序异常退出，请检查 .lock 文件")
             time.sleep(0.05)

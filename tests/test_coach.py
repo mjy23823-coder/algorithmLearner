@@ -1,5 +1,7 @@
 import json
+import os
 import tempfile
+import time
 import unittest
 from copy import deepcopy
 from datetime import date, timedelta
@@ -146,6 +148,25 @@ class PersistenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             coach.save(self.path, stale)
         self.assertNotIn("239", coach.load(self.path)["completed"])
+
+    def test_stale_lock_left_by_crash_is_cleared(self):
+        lock = self.path.with_name(self.path.name + ".lock")
+        lock.write_text("", encoding="utf-8")
+        old = time.time() - coach.STALE_LOCK_SECONDS - 5
+        os.utime(lock, (old, old))
+        state = coach.load(self.path)
+        record(state)
+        coach.save(self.path, state)
+        self.assertFalse(lock.exists())
+        self.assertIn("42", coach.load(self.path)["completed"])
+
+    def test_fresh_lock_still_blocks_writes(self):
+        lock = self.path.with_name(self.path.name + ".lock")
+        lock.write_text("", encoding="utf-8")
+        with patch.object(coach.time, "sleep"), self.assertRaises(ValueError):
+            with coach.file_lock(self.path):
+                pass
+        self.assertTrue(lock.exists())
 
     def test_daily_backups_keep_the_start_of_each_day_for_14_days(self):
         original = self.path.read_bytes()

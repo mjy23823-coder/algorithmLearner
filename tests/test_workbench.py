@@ -64,7 +64,8 @@ class RunnerTests(unittest.TestCase):
         self.assertFalse(result["passed"])
         self.assertEqual(result["error_detail"]["kind"],"syntax")
         self.assertEqual(result["error_detail"]["line"],3)
-        self.assertIn("invalid syntax",result["error"].lower())
+        # 报错措辞随 Python 版本变化（3.10+ 多为 "expected ':'"），只校验错误类型
+        self.assertIn("syntaxerror",result["error"].lower())
 
     def test_user_code_cannot_use_file_import_or_reflection_helpers(self):
         with tempfile.TemporaryDirectory() as folder:
