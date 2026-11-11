@@ -37,6 +37,8 @@ python tools/coach.py wrap --note "今日卡点" --next-action "下次重点"
 
 面板启动：`python tools/dashboard.py --open`。运行时只需要 Python 标准库。
 
+进度逻辑按层拆分，只能向下依赖：`store.py`（读写、文件锁、备份、本地 git 提交）→ `records.py`（复习间隔、掌握状态、记录练习/口述、历史补录、每日总结）→ `learner.py` / `planner.py`（排题 `build_plan`）→ `insights.py`。`coach.py` 只放命令行并重新导出上述函数，其他模块仍可用 `coach.xxx`；底层模块不得反向导入 `coach`。
+
 测试使用临时副本，不能对真实学习记录执行模拟 `done` 或 `wrap`。
 
 ```text

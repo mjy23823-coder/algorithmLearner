@@ -72,6 +72,7 @@
 - `learning-log.md`：每次学习的摘要，追加到文末，格式沿用 `## YYYY-MM-DD｜主题`。
 - `algorithm-roadmap.md`：长期路线；只在切换阶段时更新，不作为当天排题依据。
 - `solutions/lc<题号>.py`：用户提交的代码及验证用例，`tools/lc_helpers.py` 提供 ListNode / TreeNode 等工具。
+- `tools/coach.py` 是命令行入口；实现分在 `store.py`（存储）、`records.py`（记录与复习状态）、`planner.py`（排题），只能向下依赖。
 - `backups/`：每天第一次保存前的进度快照，保留最近 14 天。
 - 本目录是本地 git 仓库，**不配置远程、不上传**；`wrap` 会自动提交当天的进度、日志和代码，`.runtime/`（含 API Key）不入库。
 

@@ -9,9 +9,9 @@
 from datetime import timedelta
 
 try:
-    from . import catalog, coach, knowledge
+    from . import catalog, knowledge, planner, records
 except ImportError:
-    import catalog, coach, knowledge
+    import catalog, knowledge, planner, records
 
 DIMENSIONS = {"recognition": "题型识别", "communication": "沟通表达", "code": "代码正确性",
               "complexity": "复杂度分析", "time": "时间控制"}
@@ -24,18 +24,18 @@ def minutes_of(entry):
 
 
 def result_of(event):
-    return event["result"] if event.get("result") in coach.RESULTS else event.get("inferred_result")
+    return event["result"] if event.get("result") in records.RESULTS else event.get("inferred_result")
 
 
 def window(events, start, end):
-    rows = [e for e in events if start <= coach.parse_date(e["date"]) <= end]
+    rows = [e for e in events if start <= records.parse_date(e["date"]) <= end]
     graded = [e for e in rows if result_of(e)]
-    count = {key: sum(result_of(e) == key for e in graded) for key in coach.RESULTS}
+    count = {key: sum(result_of(e) == key for e in graded) for key in records.RESULTS}
     timed = [minutes_of(e) for e in rows if minutes_of(e)]
     return {"start": start.isoformat(), "end": end.isoformat(), "practices": len(rows), "graded": len(graded),
             "problems": len({e["id"] for e in rows}), "active_days": len({e["date"] for e in rows}), **count,
             "independent_rate": round(count["independent"] * 100 / len(graded)) if graded else None,
-            "inferred": sum(e.get("result") not in coach.RESULTS for e in graded),
+            "inferred": sum(e.get("result") not in records.RESULTS for e in graded),
             "timed": len(timed), "avg_minutes": round(sum(timed) / len(timed), 1) if timed else None,
             "mocks": sum(bool(e.get("mock")) for e in rows)}
 
@@ -71,7 +71,7 @@ def progress_evidence(state, limit=8):
             if later.get("result") != "independent":
                 continue
             earlier = next((e for e in reversed(history[:i]) if e.get("result") in ("hinted", "failed")), None)
-            if earlier and (coach.parse_date(later["date"]) - coach.parse_date(earlier["date"])).days >= 2:
+            if earlier and (records.parse_date(later["date"]) - records.parse_date(earlier["date"])).days >= 2:
                 found.append({"id": pid, "title": rec["title"], "topic": rec["topic"],
                               "from": {"date": earlier["date"], "result": earlier["result"], "note": earlier.get("note", "")},
                               "to": {"date": later["date"], "note": later.get("note", "")}})
@@ -80,7 +80,7 @@ def progress_evidence(state, limit=8):
 
 
 def error_trends(state, today, events):
-    weak = coach.weak_errors(state, today, events)
+    weak = records.weak_errors(state, today, events)
     questions = {e["id"]: e["question"] for e in knowledge.ERRORS}
     completed = state.get("completed", {})
     rows = []
@@ -103,25 +103,25 @@ def topic_summary(state, today):
     for pid, rec in state.get("completed", {}).items():
         name = catalog.family(rec.get("topic"))
         row = topics.setdefault(name, {"name": name, "total": 0, "learned": 0, "needs_review": 0, "calibration": 0, "due": 0})
-        status = coach.mastery_status(rec)
+        status = records.mastery_status(rec)
         row["total"] += 1
         row["learned"] += status == "learned"
         row["needs_review"] += status == "needs_review"
         row["calibration"] += status == "needs_calibration"
-        row["due"] += coach.review_state(state, rec, today) in ("due", "overdue")
+        row["due"] += records.review_state(state, rec, today) in ("due", "overdue")
     order = {name: i for i, name in enumerate(catalog.MAIN_LINE)}
     return sorted(topics.values(), key=lambda t: (order.get(t["name"], 99), t["name"]))
 
 
 def ability_report(state, today, log_path=None):
-    events = coach.practice_events(state)
+    events = records.practice_events(state)
     week = window(events, today - timedelta(days=6), today)
     previous = window(events, today - timedelta(days=13), today - timedelta(days=7))
     month = window(events, today - timedelta(days=27), today)
     mocks = mock_rows(events)
     error_events = knowledge.error_events(state, log_path)
-    plan = coach.build_plan(state, today, 120, coach.log_mentions(log_path) if log_path else None, error_events)
-    workbench = [e for e in events if e.get("validation") and today - timedelta(days=27) <= coach.parse_date(e["date"])]
+    plan = planner.build_plan(state, today, 120, records.log_mentions(log_path) if log_path else None, error_events)
+    workbench = [e for e in events if e.get("validation") and today - timedelta(days=27) <= records.parse_date(e["date"])]
     explained = [e for e in workbench if all((e.get(k) or "").strip() for k in ("idea", "boundary", "time_complexity", "takeaway"))]
     errors = error_trends(state, today, error_events)
     report = {"date": today.isoformat(), "week": week, "previous_week": previous, "month": month,
@@ -209,7 +209,7 @@ def to_markdown(report):
     if report["progress"]:
         lines += ["## 有记录支持的进步", ""]
         for p in report["progress"]:
-            lines.append(f"- LC{p['id']} {p['title']}：{p['from']['date']} {coach.RESULTS[p['from']['result']]} → {p['to']['date']} 独立完成")
+            lines.append(f"- LC{p['id']} {p['title']}：{p['from']['date']} {records.RESULTS[p['from']['result']]} → {p['to']['date']} 独立完成")
         lines.append("")
     lines += ["## 专题进度", "", "| 专题 | 已记录 | 已掌握 | 需巩固 | 待校准 | 到期复习 |", "| --- | --- | --- | --- | --- | --- |"]
     lines += [f"| {t['name']} | {t['total']} | {t['learned']} | {t['needs_review']} | {t['calibration']} | {t['due']} |" for t in report["topics"]]
