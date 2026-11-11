@@ -75,6 +75,8 @@ class ProfileTests(unittest.TestCase):
         self.assertIsNone(habit["avg_minutes"])
         self.assertEqual(profile["strengths"], ["双指针"])
         self.assertIn("栈与队列", profile["needs_work"])
+        untouched = topics["回溯"]
+        self.assertEqual((untouched["problems"], untouched["graded"], untouched["mastery"], untouched["level"]), (0, 0, 0, "未接触"))
         self.assertTrue(profile["summary"][0].startswith("当前专题「双指针与滑动窗口」掌握度"))
 
     def test_weaknesses_focus_and_coach_brief(self):
@@ -175,7 +177,7 @@ class PlanIntegrationTests(unittest.TestCase):
                                      "last_done": "2026-10-13", "status": "needs_calibration"}
         plan = coach.build_plan(state, TODAY, 120, events=[])
         self.assertEqual([(t["kind"], t.get("source")) for t in plan["tasks"]],
-                         [("review", None), ("new", "recommended"), ("calibration", None)])
+                         [("review", None), ("new", "recommended"), ("new", "recommended")])
         state["next_new"] = ["42", "75", "125"]
         plan = coach.build_plan(state, TODAY, 120, events=[])
         self.assertFalse([t for t in plan["tasks"] if t.get("source") == "recommended"])

@@ -35,3 +35,77 @@ input::placeholder,textarea::placeholder{color:#87938d}
   body.sidebar-collapsed .nav-button svg{width:18px;height:18px}
 }
 @media(max-width:680px){.sidebar-toggle{display:none}.sidebar-head{align-items:center}}
+
+/* 全局卡片可读性：正文使用深灰，辅助信息使用中灰，浅色仅用于状态底色 */
+:root{--muted:#5e6b78;--line:#c7d1da}
+body{background:#eef1f5;color:#26343d}
+.sidebar{background:#f8fafc;border-color:#c7d1da}
+.topbar{border-color:#c7d1da;background:#ffffffd9}
+.panel,.stat-card,.log-entry{background:#fff;border-color:#b9c5d0;box-shadow:0 2px 8px #2738490d}
+.panel-header h2,.stat-value,.task-title,.page-heading h1{color:#1f2d38}
+.panel-header .muted,.stat-label,.task-meta,.task-action,.topic-label,.heatmap-head p,.forecast-item strong,.forecast-item small{color:#526575}
+.stat-foot,.empty,.form-hint,.topic-subtitle,.logs-count{color:#667785}
+.task-row,.candidate-row,.oral-row{border-color:#d6dee6}
+.task-title .task-id{color:#526575}
+.plan-footer,.time-control{background:#f3f6f9;border-color:#d0d9e1;color:#526575}
+.subtle-pill,.queue-chip{border-color:#b9c7d2;background:#f3f6f9;color:#526575}
+.filters input,.filters select,input:not([type="radio"]):not([type="checkbox"]),textarea,select{border-color:#b9c7d2;background:#fff;color:#26343d}
+.filters input::placeholder,input::placeholder,textarea::placeholder{color:#718291}
+.focus-panel{background:#e7eef3;border-color:#b9c7d2}
+.focus-panel h2{color:#24485a}.focus-panel p{color:#526575}
+.notice{background:#f3f6f9;border-color:#c7d1da;color:#526575}
+th{background:#e8edf2;color:#526575;border-color:#c7d1da}td{color:#526575;border-color:#d6dee6}td strong{color:#263f4d}td small{color:#718291}
+.log-entry summary{color:#263f4d}.log-entry[open] summary{background:#e8edf2;border-color:#c7d1da}.log-body{color:#526575}
+.weekly-summary>p,.weekly-notes li{color:#526575}.weekly-notes strong{color:#294e5c}.weekly-notes small{color:#718291}
+
+/* 图谱之外的页面采用同一套轻量入场和反馈，不改变卡片结构或学习数据。 */
+#main:not(.graph-page) > .page-heading,
+#main:not(.graph-page) > .stats-grid,
+#main:not(.graph-page) > .content-grid,
+#main:not(.graph-page) > .panel,
+#main:not(.graph-page) > .wb-toolbar,
+#main:not(.graph-page) > #wb-content {
+  animation: workspace-enter .42s cubic-bezier(.2,.76,.25,1) both;
+}
+#main:not(.graph-page) > .stats-grid { animation-delay: .06s; }
+#main:not(.graph-page) > .content-grid,
+#main:not(.graph-page) > #wb-content { animation-delay: .1s; }
+@keyframes workspace-enter {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* 数据卡片有轻微的光影响应，内容本身不漂浮，便于持续阅读和编辑。 */
+#main:not(.graph-page) .stat-card,
+#main:not(.graph-page) .panel {
+  transition: border-color .22s ease, box-shadow .22s ease;
+}
+#main:not(.graph-page) .stat-card:hover,
+#main:not(.graph-page) .panel:hover {
+  border-color: #96b8b3;
+  box-shadow: 0 7px 22px #355b6919;
+}
+#main[data-page="today"] .task-row,
+#main[data-page="profile"] .mastery-row {
+  transition: background-color .22s ease, box-shadow .22s ease;
+}
+#main[data-page="today"] .task-row:hover,
+#main[data-page="profile"] .mastery-row:hover,
+#main[data-page="profile"] .mastery-row:focus-visible {
+  background: #f1f7f7;
+  box-shadow: inset 3px 0 #6da89b;
+}
+#main:not(.graph-page) .button:not(:disabled) { transition: background-color .2s ease, box-shadow .2s ease; }
+#main:not(.graph-page) .button:not(:disabled):hover { box-shadow: 0 4px 12px #375c5c20; }
+@media (prefers-reduced-motion: reduce) {
+  #main:not(.graph-page) > .page-heading,
+  #main:not(.graph-page) > .stats-grid,
+  #main:not(.graph-page) > .content-grid,
+  #main:not(.graph-page) > .panel,
+  #main:not(.graph-page) > .wb-toolbar,
+  #main:not(.graph-page) > #wb-content { animation: none; }
+  #main:not(.graph-page) .stat-card,
+  #main:not(.graph-page) .panel,
+  #main:not(.graph-page) .task-row,
+  #main:not(.graph-page) .mastery-row,
+  #main:not(.graph-page) .button { transition: none; }
+}

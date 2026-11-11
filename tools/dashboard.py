@@ -142,17 +142,36 @@ def make_server(state_path, log_path, port=8765, fixed_date=None):
             return True
 
         def send_bytes(self, status, body, content_type):
-            self.send_response(status)
-            self.send_header("Content-Type", content_type)
-            self.send_header("Content-Length", str(len(body)))
-            self.send_header("Cache-Control", "no-store")
-            self.send_header("X-Content-Type-Options", "nosniff")
-            self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
-            self.end_headers()
-            self.wfile.write(body)
+            try:
+                self.send_response(status)
+                self.send_header("Content-Type", content_type)
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Cache-Control", "no-store")
+                self.send_header("X-Content-Type-Options", "nosniff")
+                self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
+                self.end_headers()
+                self.wfile.write(body)
+                return True
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                # 浏览器切页/取消请求后不再有接收方；保存结果已由上层处理，无需重发 500。
+                self.close_connection = True
+                return False
 
         def send_json(self, status, data):
-            self.send_bytes(status, json.dumps(data, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8")
+            return self.send_bytes(status, json.dumps(data, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8")
+
+        def start_sse(self):
+            self.send_response(200)
+            self.send_header("Content-Type", "text/event-stream; charset=utf-8")
+            self.send_header("Cache-Control", "no-cache, no-store")
+            self.send_header("Connection", "keep-alive")
+            self.send_header("X-Accel-Buffering", "no")
+            self.end_headers()
+
+        def sse(self, event, data):
+            body = json.dumps(data, ensure_ascii=False)
+            self.wfile.write(f"event: {event}\ndata: {body}\n\n".encode("utf-8"))
+            self.wfile.flush()
 
         def do_GET(self):
             if not self.local_request():
@@ -190,6 +209,9 @@ def make_server(state_path, log_path, port=8765, fixed_date=None):
                 elif url.path == "/api/workbench/run":
                     params = parse_qs(url.query)
                     self.send_json(200, workspace.read_run(params.get("id", [""])[0], params.get("run_id", [""])[0]))
+                elif url.path == "/api/workbench/debug":
+                    params = parse_qs(url.query)
+                    self.send_json(200, workspace.debug_status(params.get("debug_id", [""])[0]))
                 else:
                     assets = {"/": ("index.html", "text/html"), "/app.js": ("app.js", "application/javascript"),
                           "/coach.js": ("coach.js", "application/javascript"), "/mock.js": ("mock.js", "application/javascript"),
@@ -228,6 +250,18 @@ def make_server(state_path, log_path, port=8765, fixed_date=None):
                     threading.Thread(target=self.server.shutdown, daemon=True).start()
                     return
                 endpoint = urlsplit(self.path).path
+                if endpoint == "/api/workbench/coach/stream":
+                    self.start_sse()
+                    try:
+                        response = workspace.coach_chat(coach.load(state_path), payload,
+                                                        on_delta=lambda chunk: self.sse("delta", {"text": chunk}))
+                        self.sse("done", response)
+                    except (ValueError, KeyError, TypeError, coach_ai.CoachError, OSError) as exc:
+                        try:
+                            self.sse("error", {"error": str(exc)})
+                        except OSError:
+                            pass
+                    return
                 if endpoint in ("/api/workbench/coach", "/api/workbench/agent", "/api/coach/settings", "/api/coach/test",
                                 "/api/coach/models", "/api/mock/start", "/api/profile/advice", "/api/oral/judge", "/api/weekly/advice",
                                 "/api/plan/ask"):
@@ -264,16 +298,25 @@ def make_server(state_path, log_path, port=8765, fixed_date=None):
                         response = workspace.start_mock(coach.load(state_path), payload, fixed_date or date.today())
                     self.send_json(200, response)
                     return
-                if endpoint in ("/api/workbench/draft", "/api/workbench/hint", "/api/workbench/run", "/api/workbench/start"):
+                if endpoint in ("/api/workbench/draft", "/api/workbench/hint", "/api/workbench/run", "/api/workbench/start", "/api/workbench/debug/start", "/api/workbench/debug/command"):
                     if endpoint.endswith("/draft"):
                         response = {"draft": workspace.save_draft(payload)}
                     elif endpoint.endswith("/hint"):
                         response = workspace.reveal(payload)
+                    elif endpoint == "/api/workbench/debug/start":
+                        response = workspace.start_debug(payload)
+                    elif endpoint == "/api/workbench/debug/command":
+                        response = workspace.debug_command(field_text(payload, "debug_id", maximum=80), field_text(payload, "command", maximum=20))
                     elif endpoint.endswith("/start"):
                         response = {"draft": workspace.start_round(payload)}
                     else:
                         response = workspace.run(payload, fixed_date or date.today())
-                    self.send_json(200, response)
+                    delivered = self.send_json(200, response)
+                    if endpoint == "/api/workbench/debug/start" and not delivered:
+                        try:
+                            workspace.debug_command(response["debug_id"], "stop")
+                        except ValueError:
+                            pass
                     return
                 with mutation_lock:
                     state = coach.load(state_path)
@@ -375,7 +418,12 @@ def make_server(state_path, log_path, port=8765, fixed_date=None):
                 return result
             raise ValueError("不支持的操作")
 
-    server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+    class DashboardServer(ThreadingHTTPServer):
+        def server_close(self):
+            workspace.close_debug()
+            super().server_close()
+
+    server = DashboardServer(("127.0.0.1", port), Handler)
     server.daemon_threads = True
     return server
 

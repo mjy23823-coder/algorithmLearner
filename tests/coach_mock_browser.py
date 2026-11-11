@@ -80,7 +80,7 @@ def main():
                 page.screenshot(path=str(artifacts / "smart-plan.png"), full_page=True)
 
                 # 工作台里的教练对话：离线模式下讲解检查不计提示，要提示会展开分层提示。
-                page.locator(".task-row").filter(has_text="接雨水").get_by_role("button", name="去练习").click()
+                page.locator(".task-row").filter(has_text="接雨水").get_by_role("button", name="编辑器练习").click()
                 coach_panel = page.locator("#wb-coach")
                 expect(coach_panel.get_by_role("heading", name="教练", exact=True)).to_be_visible()
                 expect(coach_panel.get_by_role("tab", name="对话")).to_have_attribute("aria-selected", "true")

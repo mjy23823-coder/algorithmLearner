@@ -102,6 +102,10 @@ def main():
                     print("ERROR:",page.locator("#wb-error").inner_text())
                     raise
                 expect(page.locator(".wb-test-summary")).to_contain_text("5 / 5")
+                expect(page.locator(".wb-case-tab")).to_have_count(5)
+                expect(page.locator(".wb-case-panel.active")).to_have_count(1)
+                page.locator(".wb-case-tab").nth(1).click()
+                expect(page.locator(".wb-case-panel.active")).to_contain_text("通过")
                 assert path.read_bytes()==before
                 page.locator("#wb-content").get_by_label("一句话复盘",exact=True).fill("先计算当前列水量，再移动状态")
                 page.get_by_label("边界与指针方向",exact=True).check()
@@ -137,7 +141,7 @@ def main():
                 page.get_by_role("button",name="练习工作台",exact=True).click()
                 expect(page.get_by_label("Python 代码",exact=True)).to_be_visible()
                 page.get_by_label("我的核心思路",exact=True).fill("草稿刷新后应保留")
-                page.get_by_role("button",name="保存草稿",exact=True).click()
+                expect(page.get_by_role("button",name="保存草稿",exact=True)).to_have_count(0)
                 expect(page.locator("#wb-save-status")).to_contain_text("草稿已保存")
                 page.reload()
                 expect(page.get_by_label("我的核心思路",exact=True)).to_have_value("草稿刷新后应保留")

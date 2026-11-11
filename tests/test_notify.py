@@ -22,8 +22,9 @@ class MessageTests(unittest.TestCase):
         title, lines, attribution = notify.daily_message(plan)
         self.assertEqual(title, "今晚练什么 · 普通日 120 分钟")
         self.assertIn("复习 LC226 翻转二叉树", lines[0])
+        self.assertIn("复习 LC104 二叉树的最大深度", lines[0])
         self.assertIn("新题 LC42", lines[0])
-        self.assertIn("口述复习 LC104", lines[1])
+        self.assertTrue(any(text.startswith("推荐 LC") for text in lines[0].split("；")))
         self.assertTrue(attribution.startswith("重点："))
 
     def test_finished_day_and_weekly_summary(self):

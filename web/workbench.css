@@ -29,6 +29,9 @@
 .wb-card-head{display:flex;align-items:flex-start;gap:13px;padding:20px 22px 14px}
 .wb-step{flex:none;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--soft);color:var(--green);font-weight:650;font-size:13px;box-shadow:inset 0 0 0 1px #d5e5d1}
 .wb-card-title{flex:1;min-width:0}
+.wb-header-actions{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.wb-lc-link{flex:none;color:#1976a8;font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap}
+.wb-lc-link:hover{text-decoration:underline}
 .wb-card-title .eyebrow{font-size:10px;letter-spacing:1.2px;margin-bottom:2px}
 .wb-card-title h2{font-size:16px;line-height:1.5}
 .wb-card-tags{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding-top:4px}
@@ -167,7 +170,119 @@
 .wb-completions button{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;border:0;border-radius:6px;background:transparent;padding:6px 8px;color:#40564a;text-align:left;font:12px Consolas,"Microsoft YaHei",monospace}
 .wb-completions button[aria-selected="true"],.wb-completions button:hover{background:#eaf3e8;color:#285d47}.wb-completions small{font:10px "Microsoft YaHei",sans-serif;color:#87968d}
 .wb-error-detail{margin:0 0 13px;padding:14px 16px;border:1px solid #efcfbd;border-radius:9px;background:#fff8f3;color:#714f3f}
+
+/* 第 2 步：测试结果使用动态 Case 标签，不改变运行逻辑。 */
+.wb-case-workbench{margin:12px 0;border:1px solid #d5dee6;border-radius:10px;background:#fff;overflow:hidden}
+.wb-case-tabs{display:flex;align-items:center;gap:6px;padding:10px 12px;border-bottom:1px solid #e1e7ec;background:#f8fafb;overflow-x:auto}
+.wb-case-tab{display:inline-flex;align-items:center;gap:6px;flex:none;border:0;border-radius:8px;padding:8px 13px;background:transparent;color:#607384;font-size:12px;cursor:pointer}
+.wb-case-tab:hover{background:#edf2f5}.wb-case-tab.active{background:#e5f2eb;color:#08734d;font-weight:650}
+.wb-case-status{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:4px;color:#fff;font-size:11px;font-weight:700}.wb-case-status.ok{background:#0aa45b}.wb-case-status.fail{background:#c8584d}
+.wb-case-panels{padding:14px 16px}.wb-case-panel{display:none}.wb-case-panel.active{display:block}.wb-case-panel h4{margin:0 0 12px;color:#334957;font-size:13px;font-weight:600}.wb-case-panel h4 .pass,.wb-case-panel h4 .fail{float:right;font-size:11px;font-weight:500}.wb-case-panel .pass{color:#16805d}.wb-case-panel .fail{color:#b54c42}.wb-case-panel dl{display:grid;grid-template-columns:1fr;gap:6px;margin:0}.wb-case-panel dt{margin-top:6px;color:#718078;font-size:11px}.wb-case-panel dd{margin:0;padding:9px 11px;border-radius:7px;background:#f3f6f8}.wb-case-panel pre{margin:0;color:#304653;font:12px/1.7 Consolas,"Microsoft YaHei",monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* 第 1 步：稳定主工作区。只处理尺寸和滚动，不引入新的交互层。 */
+@media (min-width: 1101px) {
+  .workbench-page { min-height: calc(100vh - 74px); }
+  .wb-studio { grid-template-columns: minmax(360px, .88fr) minmax(560px, 1.12fr); gap: 20px; align-items: start; }
+  .wb-problem { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; overflow-x: hidden; }
+  .wb-code-panel { min-width: 0; overflow: hidden; }
+  .wb-studio .wb-code-editor { height: clamp(320px, 40vh, 480px); min-height: 320px; }
+  .wb-studio .wb-results { max-height: 360px; overflow-y: auto; overflow-x: hidden; scrollbar-gutter: stable; }
+  .wb-studio .wb-code-pane { min-height: 0; }
+}
+@media (max-width: 1100px) {
+  .wb-problem { position: static; max-height: none; overflow: visible; }
+  .wb-studio .wb-code-editor { height: 380px; min-height: 300px; }
+  .wb-studio .wb-results { max-height: 420px; overflow-y: auto; }
+}
+
+/* 第 7 步：教练区域内部滚动，避免把复盘区无限推到页面底部。 */
+@media (min-width: 1101px) {
+  .wb-coach-col .coach-panel{height:620px;max-height:620px;min-height:0;overflow:hidden}
+  .wb-coach-col .coach-body{min-height:0;overflow:hidden}
+  .wb-coach-col .coach-pane{min-height:0;overflow:hidden}
+  .wb-coach-col .coach-log{min-height:0;max-height:320px;overflow-y:auto}
+}
+@media (max-width: 1100px) {
+  .wb-coach-col .coach-log{max-height:360px;overflow-y:auto}
+}
+
+/* 第 3 步：编辑器只负责编辑和运行，保存由自动保存负责。 */
+.wb-studio .wb-code-panel{min-width:0}
+.wb-studio .wb-code-panel>.wb-card-head{position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid #e1e7ec}
+.wb-studio .wb-code-editor{min-width:0;overflow:hidden;background:#f8fafc}
+.wb-studio .wb-code-pane{min-width:0;min-height:0;overflow:hidden}
+.wb-studio .wb-code-pane textarea[data-wb-field="code"]{tab-size:4;overscroll-behavior:contain}
+.wb-studio .wb-code-actions{min-height:54px;border-top:1px solid #d9e2e8;gap:12px;padding-top:11px;padding-bottom:11px}
+.wb-studio .wb-code-actions>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wb-studio .wb-code-actions .button{min-width:132px}
+
+/* 第 4 步：题面区保持标题可见，正文独立滚动。 */
+@media (min-width: 1101px) {
+  .wb-problem>.wb-card-head{position:sticky;top:0;z-index:4;background:#fff;border-bottom:1px solid #e4eaee;box-shadow:0 3px 10px #2637460b}
+  .wb-problem>.panel-body{padding-top:14px}
+  .wb-problem .wb-statement{margin-bottom:13px;padding:15px 16px 13px}
+  .wb-problem .wb-statement-lead p{font-size:13.5px;line-height:1.8}
+  .wb-problem .wb-statement-grid{gap:11px;margin-top:12px}
+  .wb-problem .wb-statement-block{padding-top:11px}
+  .wb-problem .wb-examples{gap:7px}
+  .wb-problem .wb-example{padding:8px 9px}
+  .wb-problem .wb-contract{margin-bottom:10px}
+  .wb-problem .wb-cases{margin-bottom:12px}
+}
+
+/* 第 5 步：运行结果区的层级和空状态。 */
+.wb-results-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0 10px;border-bottom:1px solid #e1e7ec;color:#344957}.wb-results-head strong{font-size:13px}.wb-results-head span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#81919c;font-size:11px}.wb-results>.empty{margin:12px 0;padding:28px 16px;border:1px dashed #cbd7df;border-radius:9px;background:#f8fafb;color:#81919c;text-align:center;font-size:12px;line-height:1.8}.wb-test-summary{border:1px solid #c7dfd1;box-shadow:0 2px 8px #1d68400d}.wb-test-summary.fail{border-color:#e7c5b8}.wb-runtime-error{margin:12px 0}.wb-case-workbench{box-shadow:0 2px 8px #2738490b}.wb-extra{margin-top:16px;padding:0;border:1px solid #d5dee6;border-radius:9px;background:#f8fafb;overflow:hidden}.wb-extra summary{padding:11px 13px;color:#526575;font-size:12px;font-weight:600;cursor:pointer;list-style:none}.wb-extra summary::-webkit-details-marker{display:none}.wb-extra summary::after{content:"展开";float:right;color:#8a9aa5;font-size:11px;font-weight:400}.wb-extra[open] summary::after{content:"收起"}.wb-extra>.form-hint{margin:0;padding:0 13px 9px;color:#81919c;font-size:11px}.wb-extra>textarea{display:block;width:calc(100% - 26px);margin:0 13px 13px;min-height:92px;background:#fff;font:12px/1.7 Consolas,"Microsoft YaHei",monospace}
 .wb-error-head{display:flex;align-items:center;gap:10px;justify-content:space-between}.wb-error-head strong{font-size:13px;color:#9b553f}.wb-error-head span{font-size:10px;color:#a7745b}.wb-error-message{margin-top:7px;font:12px/1.7 Consolas,"Microsoft YaHei",monospace;color:#8c5a45}
 .wb-error-source{display:grid;grid-template-columns:34px minmax(0,1fr);margin:10px 0;padding:8px 0;border:1px solid #f0dcd0;border-radius:7px;background:#fff;overflow:auto;font:12px/1.8 Consolas,"Microsoft YaHei",monospace;white-space:pre}
 .wb-error-source .wb-error-line{padding:0 8px;color:#b48670;text-align:right;border-right:1px solid #f0dcd0}.wb-error-source code{padding-left:10px;color:#664b40}.wb-error-caret{grid-column:2;color:#bd6345;padding-left:10px;font-weight:700}
 .wb-error-hint{font-size:11px;line-height:1.8;color:#7d6254}.wb-error-hint b{color:#9b553f}.wb-error-jump{margin-top:9px;min-height:30px;padding:6px 10px;font-size:11px;color:#8d5a43;border-color:#e7c2ae;background:#fff}
+
+/* 编辑时提供清晰的焦点反馈；保持编辑器和测试区的位置稳定。 */
+.workbench-page .wb-code-panel:focus-within { border-color: #6ea99d; box-shadow: 0 0 0 3px #65a99926; }
+.workbench-page .wb-code-editor:focus-within { background: #f4faf9; }
+.workbench-page .wb-case-tab:focus-visible { outline: 2px solid #478a76; outline-offset: -2px; }
+@media (prefers-reduced-motion: reduce) {
+  .workbench-page .wb-code-panel, .workbench-page .wb-code-editor { transition: none; }
+}
+
+/* 首组用例的逐步调试只展示运行快照，不修改编辑器或完成记录。 */
+.wb-debug{margin:0 16px 14px;border:1px solid #ccd9dc;border-radius:9px;background:#f8fbfb;overflow:hidden}
+.wb-debug summary{padding:11px 13px;color:#365b62;font-size:12px;font-weight:600;cursor:pointer}
+.wb-debug[open] summary{border-bottom:1px solid #dce5e7}
+.wb-debug-body{padding:12px 14px 14px}
+.wb-debug-body .form-hint{margin:0 0 10px}
+.wb-debug-body label{font-size:11px;margin:0 0 11px}
+.wb-debug-body input{max-width:290px}
+.wb-debug-actions{display:flex;flex-wrap:wrap;gap:7px}
+.wb-debug-actions .button{min-height:32px;padding:5px 11px;font-size:11px}
+#wb-debug-state{margin:10px 0 0;color:#486474;font-size:11px;line-height:1.6}
+#wb-debug-locals{margin:9px 0 0;max-height:190px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.6 Consolas,monospace;color:#314a54}
+#wb-debug-locals:empty{display:none}
+
+/* 调试快照：当前行与编辑器的 23px 行高/17px 上内边距对齐，滚动时同步。 */
+.wb-code-editor #wb-lines .wb-gutter-line{display:block;height:23px;line-height:23px}
+.wb-code-editor #wb-lines .wb-gutter-line.is-current{background:#d5ebdf;color:#17684e;font-weight:700;border-radius:3px}
+.wb-code-pane #wb-execution-line{position:absolute;left:0;right:0;height:23px;background:#cce8d387;border-left:3px solid #2d8b64;pointer-events:none;z-index:0}
+.wb-code-pane #wb-highlight{z-index:1}
+.wb-code-pane textarea[data-wb-field="code"]{z-index:2}
+.wb-debug-snapshot{display:grid;gap:5px;margin-top:10px}
+.wb-debug-snapshot>span{font-size:10px;font-weight:600;color:#476375}
+.wb-debug-snapshot pre{margin:0;max-height:180px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.6 Consolas,monospace;color:#314a54;background:#fff;border:1px solid #e1e9e8;border-radius:6px;padding:8px 10px}
+.wb-debug-snapshot #wb-debug-locals:empty{display:none}
+/* 行号作为可点击、可键盘操作的断点开关；标记与暂停行分别呈现。 */
+.wb-code-editor #wb-lines .wb-gutter-line{position:relative;cursor:pointer;border-radius:3px}
+.wb-code-editor #wb-lines .wb-gutter-line:hover,.wb-code-editor #wb-lines .wb-gutter-line:focus-visible{background:#e8f0ea;color:#426c59}
+.wb-code-editor #wb-lines .wb-gutter-line:focus-visible{outline:2px solid #478a76;outline-offset:-2px}
+.wb-code-editor #wb-lines .wb-gutter-line.has-breakpoint::before{content:"";position:absolute;left:3px;top:8px;width:8px;height:8px;border-radius:50%;background:#bd594f}
+.wb-code-editor #wb-lines .wb-gutter-line.has-breakpoint{color:#a94a42;font-weight:700}
+.wb-code-editor #wb-lines .wb-gutter-line.has-breakpoint.is-current{background:#d5ebdf}
+/* 调试状态与异常位置：绿色暂停/完成、蓝色运行中、橙色超时、红色错误。 */
+#wb-debug-state{display:flex;align-items:center;gap:7px}
+#wb-debug-state::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:#a2b0ad}
+#wb-debug-state[data-state="starting"]::before,#wb-debug-state[data-state="running"]::before{background:#3884a8}
+#wb-debug-state[data-state="paused"]::before,#wb-debug-state[data-state="completed"]::before{background:#2f9567}
+#wb-debug-state[data-state="stopped"]::before{background:#8498a1}
+#wb-debug-state[data-state="timeout"]::before{background:#c68734}
+#wb-debug-state[data-state="error"]::before{background:#bc5347}
+.wb-code-editor #wb-lines .wb-gutter-line.is-error{background:#fbe4dd;color:#a23930;font-weight:700}
+.wb-code-pane #wb-execution-line.is-error{background:#f8d9cf8c;border-left-color:#bc5347}

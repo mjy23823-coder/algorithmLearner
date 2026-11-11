@@ -217,7 +217,7 @@ window.AlgoGraph = (() => {
     let visible = [], edges = [], connections = [], nodeElements = new Map(), gesture = null;
     let width = stage.clientWidth, height = stage.clientHeight;
     let camera = state.camera ? {...state.camera} : {x: width / 2, y: height / 2, k: 1};
-    let frame = null, saveTimer = null, disposed = false, lastTap = null;
+    let frame = null, saveTimer = null, revealTimer = null, disposed = false, lastTap = null;
     let motionFrame = null, lastTick = null, motionTime = motionClock, cameraTarget = null, panVelocity = null;
     let hoveredId = null, focusedId = null, inViewport = true;
     let dialogOpen = Boolean(document.querySelector("dialog[open]"));
@@ -265,9 +265,10 @@ window.AlgoGraph = (() => {
       for (const node of visible) {
         const body = bodies.get(node.id), anchor = point(node.id);
         const groupPhase = phaseOf(node.parent || node.id);
-        const amplitude = node.kind === "root" ? 1.5 : node.kind === "topic" ? 4 : 6;
-        const waveX = Math.sin(motionTime * .65 + body.phase) * amplitude + Math.sin(motionTime * .35 + groupPhase) * 2;
-        const waveY = Math.cos(motionTime * .54 + body.phase) * amplitude * .8;
+        // 低频、错相的椭圆轨迹：同组节点有轻微共振，但不会整组一起平移。
+        const amplitude = node.kind === "root" ? 1.5 : node.kind === "topic" ? 5.5 : 7.5;
+        const waveX = Math.sin(motionTime * .72 + body.phase) * amplitude + Math.sin(motionTime * .29 + groupPhase) * 2;
+        const waveY = Math.cos(motionTime * .57 + body.phase) * amplitude * .78 + Math.cos(motionTime * .33 + groupPhase) * 1.5;
         const spring = node.kind === "root" ? .055 : .024;
         forces.set(node.id, {x: (anchor.x + waveX - body.x) * spring, y: (anchor.y + waveY - body.y) * spring});
       }
@@ -423,14 +424,16 @@ window.AlgoGraph = (() => {
       return nodes;
     }
 
-    function nodeMarkup(node) {
+    function nodeMarkup(node, order = 0) {
       const bounds = box(node), label = caption(node), categoryClass = node.category ? `category-${node.category}` : "";
       let content;
       if (node.kind === "problem") content = `<text class="graph-node-number ${node.row.id.length > 4 ? "small" : ""}" text-anchor="middle" dominant-baseline="central">${esc(node.row.id)}</text>`;
       else if (node.kind === "more") content = `<text class="graph-node-more" text-anchor="middle" dominant-baseline="central">+${node.count}</text>`;
       else content = `<g class="graph-node-icon" transform="translate(-11 -11)">${icon(node.kind === "root" ? "network" : node.relation === "patterns" ? "book" : node.relation === "errors" ? "info" : "layers").replace("<svg ", '<svg width="22" height="22" ')}</g>`;
       const description = node.kind === "problem" ? `LC${node.row.id} ${node.title}，${statuses[node.category]}` : node.kind === "more" ? `展开${node.topic}的 ${node.count} 道题` : node.title;
-      return `<g class="graph-node node-${node.kind} relation-${node.relation || "topics"} ${categoryClass}" data-node="${esc(node.id)}" role="button" tabindex="0" aria-label="${esc(description)}" aria-pressed="false"><title>${esc(description)}</title><circle class="graph-node-aura" r="${node.radius + 12}"/><circle class="graph-node-halo" r="${node.radius + 6}"/><circle class="graph-node-circle" r="${node.radius}"/>${content}<rect class="graph-label-bg" x="${-bounds.width / 2}" y="${node.radius + 10}" width="${bounds.width}" height="23" rx="4"/><text class="graph-label" text-anchor="middle" y="${node.radius + 26}">${esc(label)}</text></g>`;
+      const revealDelay = node.kind === "root" ? 0 : node.kind === "topic" ? 180 + order * 90 : 520 + order * 42;
+      const revealClass = `reveal-step-${Math.min(24, Math.floor(revealDelay / 100))}`;
+      return `<g class="graph-node node-${node.kind} relation-${node.relation || "topics"} ${categoryClass} ${revealClass}" data-node="${esc(node.id)}" role="button" tabindex="0" aria-label="${esc(description)}" aria-pressed="false"><title>${esc(description)}</title><ellipse class="graph-node-aura" rx="${node.radius + 14}" ry="${node.radius + 11}"/><ellipse class="graph-node-aura graph-node-aura-secondary" rx="${node.radius + 10}" ry="${node.radius + 15}"/><circle class="graph-node-halo" r="${node.radius + 6}"/><circle class="graph-node-circle" r="${node.radius}"/>${content}<rect class="graph-label-bg" x="${-bounds.width / 2}" y="${node.radius + 10}" width="${bounds.width}" height="23" rx="4"/><text class="graph-label" text-anchor="middle" y="${node.radius + 26}">${esc(label)}</text></g>`;
     }
 
     function drawGeometry() {
@@ -553,9 +556,12 @@ window.AlgoGraph = (() => {
       hoveredId = focusedId = null;
       if (!visible.some(node => node.id === state.selected)) state.selected = ROOT;
       if (state.query.trim() && visible.filter(n => n.kind === "problem").length === 1) state.selected = visible.find(n => n.kind === "problem").id;
-      nodesGroup.innerHTML = visible.map(nodeMarkup).join("");
+      workspace.dataset.reveal = "true";
+      clearTimeout(revealTimer);
+      revealTimer = setTimeout(() => { if (!disposed) workspace.dataset.reveal = "false"; }, 3400);
+      nodesGroup.innerHTML = visible.map((node, index) => nodeMarkup(node, index)).join("");
       nodeElements = new Map([...nodesGroup.children].map(el => [el.getAttribute("data-node"), el]));
-      edgesGroup.innerHTML = connections.map(link => {const node=graph.lookup.get(link.to);return `<g class="graph-link relation-${link.relation} ${node?.category ? `category-${node.category}` : ""}" data-from="${esc(link.from)}" data-to="${esc(link.to)}"><path class="graph-edge ${link.more ? "edge-more" : ""}"/><path class="graph-flow"/><circle class="graph-particle graph-particle-glow" r="5"/><circle class="graph-particle graph-particle-dot" r="2.1"/></g>`;}).join("");
+      edgesGroup.innerHTML = connections.map((link, index) => {const node=graph.lookup.get(link.to);const revealDelay = link.from === ROOT ? 120 + index * 75 : 500 + index * 38;const revealClass = `reveal-step-${Math.min(24, Math.floor(revealDelay / 100))}`;return `<g class="graph-link relation-${link.relation} ${node?.category ? `category-${node.category}` : ""} ${revealClass}" data-from="${esc(link.from)}" data-to="${esc(link.to)}"><path class="graph-edge ${link.more ? "edge-more" : ""}"/><path class="graph-flow"/><circle class="graph-particle graph-particle-glow" r="5"/><circle class="graph-particle graph-particle-dot" r="2.1"/></g>`;}).join("");
       edges = [...edgesGroup.children].map(group => ({group, element: group.querySelector(".graph-edge"),
         flow: group.querySelector(".graph-flow"), dot: group.querySelector(".graph-particle-dot"), glow: group.querySelector(".graph-particle-glow"),
         from: group.getAttribute("data-from"), to: group.getAttribute("data-to"), phase: phaseOf(group.getAttribute("data-to"))}));

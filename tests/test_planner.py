@@ -26,12 +26,10 @@ class ReviewPriorityTests(unittest.TestCase):
         self.assertEqual(review["id"], "11")
         self.assertIn("上次需要提示，先确认能否独立写出", review["reasons"])
         self.assertTrue(any("衔接" in r for r in review["reasons"]))
-        deferred = plan["deferred"][0]
-        self.assertEqual(deferred["id"], "226")
-        self.assertTrue(any("轮换" in r for r in deferred["reasons"]), deferred["reasons"])
-        self.assertEqual(plan["backlog"], {"count": 1, "per_day": 1, "oral_per_day": 2, "clear_days": 1, "oral_ready": 0,
-                                           "by_topic": {"二叉树": 1}})
-        # 时间充足日多出的复习名额会轮换到积压专题。
+        self.assertEqual([t["id"] for t in plan["tasks"] if t["kind"] == "review"], ["11", "226"])
+        self.assertEqual(plan["deferred"], [])
+        self.assertEqual(plan["backlog"]["count"], 0)
+        # 时间充足日仍保持 2 道旧题 + 2 道新题的主结构。
         rich = coach.build_plan(state, TODAY, 180, events=[])
         self.assertEqual([t["id"] for t in rich["tasks"] if t["kind"] == "review"], ["11", "226"])
 
@@ -62,7 +60,8 @@ class SlotAccountingTests(unittest.TestCase):
         state["completed"]["209"] = {"title": "长度最小的子数组", "topic": "滑动窗口", "count": 1,
                                      "last_done": "2026-10-13", "status": "needs_calibration"}
         plan = coach.build_plan(state, TODAY, 120, events=[])
-        self.assertEqual([(t["kind"], t["id"]) for t in plan["tasks"]], [("review", "26"), ("new", "42"), ("calibration", "209")])
+        self.assertEqual([(t["kind"], t["id"]) for t in plan["tasks"][:2]], [("review", "26"), ("new", "42")])
+        self.assertEqual(len([t for t in plan["tasks"] if t["kind"] == "new"]), 2)
         self.assertTrue(all(t["reasons"] for t in plan["tasks"]))
         self.assertEqual(plan["new_shortage"], 0)
         coach.record_result(state, "209", "independent", TODAY)
@@ -79,7 +78,7 @@ class SlotAccountingTests(unittest.TestCase):
                                      "last_done": "2026-10-13", "status": "needs_calibration"}
         coach.record_result(state, "209", "hinted", TODAY)
         plan = coach.build_plan(state, TODAY, 120, events=[])
-        self.assertEqual([t["id"] for t in plan["tasks"] if not t["recorded"]], ["42", "75"])
+        self.assertEqual([t["id"] for t in plan["tasks"] if not t["recorded"]], ["26", "42", "75"])
 
 
 class CandidateTests(unittest.TestCase):
@@ -175,11 +174,11 @@ class OralReviewTests(unittest.TestCase):
         self.assertFalse(coach.oral_eligible(self.state["completed"]["226"]))
         self.assertFalse(coach.oral_eligible(self.state["completed"]["101"]))
         plan = coach.build_plan(self.state, TODAY, 120, events=[])
-        self.assertEqual([t["id"] for t in plan["tasks"] if t["kind"] == "review"], ["226"])
+        self.assertEqual([t["id"] for t in plan["tasks"] if t["kind"] == "review"], ["226", "101"])
         self.assertEqual({r["id"] for r in plan["oral"]}, {"104", "100"})
         self.assertTrue(all(r["kind"] == "oral" and "口述" not in r["title"] for r in plan["oral"]))
-        self.assertEqual([r["id"] for r in plan["deferred"]], ["101"])
-        self.assertEqual((plan["oral_slots"], plan["backlog"]["clear_days"]), (2, 1))
+        self.assertEqual(plan["deferred"], [])
+        self.assertEqual((plan["oral_slots"], plan["backlog"]["clear_days"]), (2, 0))
         self.assertEqual([len(coach.build_plan(self.state, TODAY, m, events=[])["oral"]) for m in (45, 90, 180)], [1, 1, 2])
 
     def test_oral_results_move_the_due_date_without_touching_counts_or_status(self):

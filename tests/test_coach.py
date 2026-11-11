@@ -101,9 +101,9 @@ class ReviewTests(unittest.TestCase):
         state["completed"]["209"] = {"title": "长度最小的子数组", "topic": "滑动窗口", "count": 1, "status": "needs_calibration", "last_done": "2026-10-13"}
         state["next_new"] = ["209", "11", "42", "239"]
         plan = coach.build_plan(state, TODAY, 120, {"11"})
-        self.assertEqual([p["id"] for p in plan["tasks"]], ["26", "42", "239"])
+        self.assertEqual([p["id"] for p in plan["tasks"]], ["26", "3", "42", "239"])
         self.assertEqual({p["id"] for p in plan["calibration"]}, {"209", "11"})
-        self.assertEqual([p["id"] for p in plan["deferred"]], ["3"])
+        self.assertEqual(plan["deferred"], [])
 
     def test_empty_review_queue_on_short_day_still_offers_one_task(self):
         plan = coach.build_plan(empty_state(), TODAY, 30)

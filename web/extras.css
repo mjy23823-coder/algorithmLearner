@@ -234,6 +234,14 @@ button.chip:hover{background:#f1f6ec;color:var(--green)}
 .coach-empty p,.agent-menu p{color:#5f6d65}
 .coach-rule{color:#6e7c74}
 .step-text span,.agent-suggestion-tags{color:#64746b}
+.wb-coach-col .coach-panel{background:#fff;border-color:#cbd6df}
+.wb-coach-col .coach-head{background:#f5f8fa;border-bottom:1px solid #d8e0e6}
+.wb-coach-col .coach-status{color:#526572}
+.wb-coach-col .coach-tabs{background:#e9eef2}
+.wb-coach-col .coach-tabs button{color:#526572}
+.wb-coach-col .coach-empty,.wb-coach-col .agent-locked{color:#526572}
+.wb-coach-col .coach-empty strong{color:#263f4d}
+.wb-coach-col .coach-rule{color:#647581}
 
 /* ---------- 学习画像与个性化推荐 ---------- */
 .badge.recommend{background:#e6f1ef;color:#2f6b67}
@@ -395,4 +403,34 @@ button.chip:hover{background:#f1f6ec;color:var(--green)}
 .ask-form input:not([type="radio"]):not([type="checkbox"]){flex:1;min-width:0;margin:0;border:0;background:transparent;padding:7px 0;font-size:12px}
 .ask-form input:focus{outline:none}
 @media(max-width:680px){.oral-open,.oral-judge{margin-left:0}.mark-list{grid-template-columns:1fr}}
+
+/* 工作台教练区与主工作区保持同一套中性层级 */
+.wb-coach-col .coach-panel{background:#fff;border-color:#b9c5d0;box-shadow:0 2px 8px #27384912}
+.wb-coach-col .coach-head{background:#e8edf2;border-bottom:1px solid #c4cfd9}
+.wb-coach-col .coach-tabs{background:#dfe6ec}
+.wb-coach-col .coach-tabs button{color:#4f6070}
+.wb-coach-col .coach-tabs button[aria-selected="true"]{background:#fff;color:#08734d}
+.wb-coach-col .coach-bubble{background:#f3f6f9;border-color:#b9c7d2;color:#26343d}
+.wb-coach-col .from-user .coach-bubble{background:#087a55;border-color:#087a55;color:#fff}
+.wb-coach-col .coach-actions .coach-chip{background:#fff;border-color:#b9c7d2;color:#304653}
+.wb-coach-col .coach-ask{border-color:#b9c7d2;background:#fff}
+.wb-coach-col .agent-suggestion{background:#fff6e6;border-color:#e3bd70;color:#624d2e}
+.coach-cursor{display:inline-block;margin-left:2px;color:#0b8a5a;animation:pulse 1s steps(2,end) infinite}
+
+/* 其他卡片内容统一提高正文与辅助文字对比度 */
+.task-reason,.why-section p,.deferred-list li,.dim-legend,.dim-row,.evidence-list li,.evidence-list small{color:#526575}
+.task-reason,.why-section p,.deferred-list li{font-size:10.5px}
+.deferred-list strong,.evidence-list strong{color:#294e5c}
+.chip{background:#f3f6f9;border-color:#b9c7d2;color:#526575}.chip b{color:#294e5c}
+.coach-providers span,.coach-endpoint,.pace-options span,.oral-judge{background:#f3f6f9;border-color:#b9c7d2}
+.coach-providers strong,.pace-options strong,.coach-providers legend,.pace-options legend{color:#294e5c}
+.coach-providers small,.pace-options small{color:#667785}
+.mock-stages li,.mock-score label span{background:#f3f6f9;border-color:#b9c7d2;color:#526575}
+.mock-score legend,.mock-clock output,.focus-list li,.dim-row{color:#294e5c}
+.dim-row output,.mock-score legend small{color:#667785}
+.profile-lines li,.mainline-note,.mastery-level,.weak-more,.advice-meta,.advice-empty{color:#526575}
+.profile-next{background:#e7f1f4;color:#294e5c}.goal-facts div{background:#f3f6f9}.goal-facts dt{color:#667785}.goal-facts dd{color:#294e5c}
+.mastery-row{color:#294e5c}.weak-list li{background:#fff8ee;border-color:#e1cda8}.weak-list p,.weak-question{color:#6b583b}
+.oral-choice{border-color:#b9c7d2;color:#294e5c}.oral-judge textarea{background:#fff;color:#26343d}
+.mark{color:#294e5c}.ask-msg.coach{background:#f3f6f9;border-color:#b9c7d2;color:#26343d}.ask-msg small{color:#667785}
 

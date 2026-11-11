@@ -16,9 +16,20 @@ MAIN_LINE = ["双指针", "滑动窗口", "链表", "哈希", "字符串", "栈�
 
 DIFFICULTY = {"E": "Easy", "M": "Medium", "H": "Hard"}
 
+# 面试时间有限时，不要求先清空某个专题；优先覆盖 LeetCode 100、剑指 Offer、
+# CodeTop 中反复出现的核心模型。这里使用项目内的交集候选，不把来源当成硬性标签。
+INTERVIEW_CORE = {
+    "1", "3", "11", "15", "20", "21", "33", "42", "49", "53", "70", "76", "94", "98", "102", "104",
+    "105", "121", "125", "128", "141", "142", "144", "150", "155", "160", "167", "198", "199", "200",
+    "206", "207", "215", "226", "230", "234", "235", "236", "239", "283", "300", "322", "347", "438",
+    "450", "543", "560", "617", "704", "739", "904", "977", "1004", "1047", "1143",
+}
+
 
 def item(pid, title, topic, level, freq, focus):
-    return {"id": pid, "title": title, "topic": topic, "difficulty": DIFFICULTY[level], "frequency": freq, "focus": focus}
+    priority = 3 if pid in INTERVIEW_CORE else 2 if freq >= 2 else 1
+    return {"id": pid, "title": title, "topic": topic, "difficulty": DIFFICULTY[level], "frequency": freq,
+            "priority": priority, "focus": focus}
 
 
 # frequency：3 = 大厂面试高频，2 = 常见，1 = 专题补充。

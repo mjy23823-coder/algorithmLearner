@@ -603,13 +603,13 @@
       }
     },
     "101": {
-      "count": 3,
+      "count": 4,
       "title": "对称二叉树",
       "topic": "二叉树",
-      "last_done": "2026-10-25",
-      "status": "needs_review",
+      "last_done": "2026-11-10",
+      "status": "learning",
       "stage": 0,
-      "next_due": "2026-10-28",
+      "next_due": "2026-11-13",
       "first_done": "2026-09-26",
       "count_is_lower_bound": true,
       "history_import": {
@@ -704,6 +704,29 @@
             }
           },
           "note": "思路不难，但是还是存在一点小小的细节问题"
+        },
+        {
+          "date": "2026-11-10",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 3,
+            "title": "对称二叉树",
+            "topic": "二叉树",
+            "last_done": "2026-10-25",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-28",
+            "first_done": "2026-09-26",
+            "count_is_lower_bound": true,
+            "history_import": {
+              "source": "learning-log.md",
+              "audit_id": "learning-log-recovery-2026-10-17",
+              "imported_on": "2026-10-17",
+              "note": "完成次数仅累计日志能确认的记录；口述和建议不算完成"
+            }
+          },
+          "note": "简单题目，通过一个递归左右子树进行判断就能得出，考虑三种不用的状况"
         }
       ]
     },
@@ -3180,13 +3203,14 @@
       ]
     },
     "21": {
-      "count": 1,
+      "count": 2,
       "title": "合并两个有序链表",
       "topic": "链表",
-      "last_done": "2026-10-23",
-      "status": "needs_review",
+      "last_done": "2026-11-08",
+      "status": "learning",
       "stage": 0,
-      "next_due": "2026-10-26",
+      "next_due": "2026-11-11",
+      "first_done": "2026-10-23",
       "history": [
         {
           "date": "2026-10-23",
@@ -3196,18 +3220,34 @@
             "count": 0
           },
           "note": "本题其实并不难，但是自己思考的思路还是有点不太清晰，理清楚思路之后代码的撰写还是比较简单的"
+        },
+        {
+          "date": "2026-11-08",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "合并两个有序链表",
+            "topic": "链表",
+            "last_done": "2026-10-23",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-26",
+            "first_done": "2026-10-23"
+          },
+          "note": "难度不算高，循环两个链表将其拼接到一个新的链表上面，如果有某一个的链表的值先用完则将另一个链表的值全部拼接上去"
         }
-      ],
-      "first_done": "2026-10-23"
+      ]
     },
     "234": {
-      "count": 1,
+      "count": 2,
       "title": "回文链表",
       "topic": "链表",
-      "last_done": "2026-10-23",
+      "last_done": "2026-11-08",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-26",
+      "next_due": "2026-11-11",
+      "first_done": "2026-10-23",
       "history": [
         {
           "date": "2026-10-23",
@@ -3217,9 +3257,24 @@
             "count": 0
           },
           "note": "本题的数据范围可以用暴力的方式进行解答，就是将其转为一个数组，然后之后就是对这个数组利用双指针进行对称的判断，比直接链表进行判断简单些。这种就需要一个额外的空间。\n但是这个题目可以有一个优化的方法是利用快慢指针来对本题目进行一个解答，这种方式就不需要一个额外的空间复杂度，这道题目利用这种方式相当于三道题目，首先是利用快慢指针的性质找到链表的中点，然后对后半段的链表进行反转，之后就是对这两个链表进行一个回文的判断，一道题目顶三道题目"
+        },
+        {
+          "date": "2026-11-08",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "回文链表",
+            "topic": "链表",
+            "last_done": "2026-10-23",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-26",
+            "first_done": "2026-10-23"
+          },
+          "note": "本题可以用数组双指针和链表快慢指针+链表反转+双指针两种方法进行求解，思路理解上没什么问题，具体代码的细节方面还是想要加强"
         }
-      ],
-      "first_done": "2026-10-23"
+      ]
     },
     "2": {
       "count": 2,
@@ -3339,13 +3394,14 @@
       "first_done": "2026-10-24"
     },
     "155": {
-      "count": 1,
+      "count": 2,
       "title": "最小栈",
       "topic": "栈与队列",
-      "last_done": "2026-10-25",
+      "last_done": "2026-11-10",
       "status": "needs_review",
       "stage": 0,
-      "next_due": "2026-10-28",
+      "next_due": "2026-11-13",
+      "first_done": "2026-10-25",
       "history": [
         {
           "date": "2026-10-25",
@@ -3355,18 +3411,34 @@
             "count": 0
           },
           "note": "开始这个题目就没怎么看懂想表达的是什么意思，实际上本题的目的就是利用两个list去模拟两个栈，总体的思路并不难，多熟悉下应该就是简单的题目"
+        },
+        {
+          "date": "2026-11-10",
+          "result": "hinted",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "最小栈",
+            "topic": "栈与队列",
+            "last_done": "2026-10-25",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-28",
+            "first_done": "2026-10-25"
+          },
+          "note": "本道题目的核心是要能想到用两个栈来组成一个最小栈，一个普通栈，一个存放对应位置最小值的栈，两个栈保证相同的大小，这样就能保证同步的问题。"
         }
-      ],
-      "first_done": "2026-10-25"
+      ]
     },
     "904": {
-      "count": 1,
+      "count": 2,
       "title": "水果成篮",
       "topic": "滑动窗口",
-      "last_done": "2026-10-26",
-      "status": "needs_review",
+      "last_done": "2026-11-09",
+      "status": "learning",
       "stage": 0,
-      "next_due": "2026-10-29",
+      "next_due": "2026-11-12",
+      "first_done": "2026-10-26",
       "history": [
         {
           "date": "2026-10-26",
@@ -3376,9 +3448,24 @@
             "count": 0
           },
           "note": "简单的滑动窗口题目，但是需要将键进行移除，不然还是会占据在字典里面"
+        },
+        {
+          "date": "2026-11-09",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "水果成篮",
+            "topic": "滑动窗口",
+            "last_done": "2026-10-26",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-29",
+            "first_done": "2026-10-26"
+          },
+          "note": "这道题已经算简单题目了，思路就是哈希表+双指针，哈希表中维护一个大小为2的哈希来更新滑动窗口的长度"
         }
-      ],
-      "first_done": "2026-10-26"
+      ]
     },
     "1004": {
       "count": 1,
@@ -3444,13 +3531,14 @@
       "first_done": "2026-10-27"
     },
     "121": {
-      "count": 1,
+      "count": 2,
       "title": "买卖股票的最佳时机",
       "topic": "动态规划",
-      "last_done": "2026-10-28",
-      "status": "needs_review",
+      "last_done": "2026-11-09",
+      "status": "learning",
       "stage": 0,
-      "next_due": "2026-10-31",
+      "next_due": "2026-11-12",
+      "first_done": "2026-10-28",
       "history": [
         {
           "date": "2026-10-28",
@@ -3460,9 +3548,24 @@
             "count": 0
           },
           "note": "难度不算高，适合练手，可以用多种解法来进行，也可以用最简单的思路来进行求解"
+        },
+        {
+          "date": "2026-11-09",
+          "result": "independent",
+          "kind": "review",
+          "before": {
+            "count": 1,
+            "title": "买卖股票的最佳时机",
+            "topic": "动态规划",
+            "last_done": "2026-10-28",
+            "status": "needs_review",
+            "stage": 0,
+            "next_due": "2026-10-31",
+            "first_done": "2026-10-28"
+          },
+          "note": "简单题目，核心要点就是找一个最小值，然后用最小值之后的每个数算差值，最后返回最大的差值"
         }
-      ],
-      "first_done": "2026-10-28"
+      ]
     },
     "142": {
       "count": 1,
@@ -3673,6 +3776,132 @@
         }
       ],
       "first_done": "2026-11-04"
+    },
+    "17": {
+      "count": 1,
+      "title": "电话号码的字母组合",
+      "topic": "回溯",
+      "last_done": "2026-11-08",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-11",
+      "history": [
+        {
+          "date": "2026-11-08",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "太久没接触，现在基本需要重新开始学习"
+        }
+      ],
+      "first_done": "2026-11-08"
+    },
+    "215": {
+      "count": 1,
+      "title": "数组中的第K个最大元素",
+      "topic": "堆",
+      "last_done": "2026-11-08",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-11",
+      "history": [
+        {
+          "date": "2026-11-08",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "思路有点高级，普通的快排在极端的边界情况下会退化到O（n2），小顶堆排序是O（nlogn），优化后的快排是O（n），需要多多练习"
+        }
+      ],
+      "first_done": "2026-11-08"
+    },
+    "200": {
+      "count": 1,
+      "title": "岛屿数量",
+      "topic": "图论",
+      "last_done": "2026-11-09",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-12",
+      "history": [
+        {
+          "date": "2026-11-09",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "刚开始接触不怎么会，但是思路还是简单易懂的"
+        }
+      ],
+      "first_done": "2026-11-09"
+    },
+    "695": {
+      "count": 1,
+      "title": "岛屿的最大面积",
+      "topic": "图论",
+      "last_done": "2026-11-09",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-12",
+      "history": [
+        {
+          "date": "2026-11-09",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "掌握DFS返回值累加面积思想；注意沉岛顺序、行列坐标对应与整数0/1细节"
+        }
+      ],
+      "first_done": "2026-11-09"
+    },
+    "994": {
+      "count": 1,
+      "title": "腐烂的橘子",
+      "topic": "图论",
+      "last_done": "2026-11-10",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-13",
+      "history": [
+        {
+          "date": "2026-11-10",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "掌握多源BFS层序扩散；while queue and fresh > 0控制计时边界；入队即染色并扣减fresh"
+        }
+      ],
+      "first_done": "2026-11-10"
+    },
+    "207": {
+      "count": 1,
+      "title": "课程表",
+      "topic": "图论",
+      "last_done": "2026-11-10",
+      "status": "needs_review",
+      "stage": 0,
+      "next_due": "2026-11-13",
+      "history": [
+        {
+          "date": "2026-11-10",
+          "result": "hinted",
+          "kind": "new",
+          "before": {
+            "count": 0
+          },
+          "note": "有点难理解"
+        }
+      ],
+      "first_done": "2026-11-10"
     }
   },
   "next_new": [],
@@ -3710,30 +3939,24 @@
     "404",
     "27",
     "538",
-    "21",
-    "234",
     "42",
     "104",
     "11",
     "19",
     "209",
     "94",
-    "101",
     "145",
-    "155",
     "18",
     "1004",
     "105",
     "206",
     "226",
     "230",
-    "904",
     "199",
     "450",
     "501",
     "70",
     "704",
-    "121",
     "142",
     "49",
     "198",
@@ -3754,13 +3977,27 @@
     "53",
     "150",
     "560",
+    "17",
+    "21",
+    "215",
+    "234",
+    "121",
+    "200",
+    "695",
+    "904",
+    "101",
+    "155",
+    "207",
+    "994",
     "242"
   ],
   "session": {
-    "last_date": "2026-11-05",
+    "last_date": "2026-11-10",
     "last_completed": [
-      "560",
-      "150"
+      "101",
+      "155",
+      "994",
+      "207"
     ],
     "open_questions": [],
     "next_action": "2026-11-03 DP 按用户要求循序渐进：先用 5～10 分钟短时回忆 LC62 不同路径和 LC64 最小路径和，仅检查状态含义、上方/左方来源与第一行第一列边界，不作为次日正式重写任务，不计完成次数。先以二维数组讲清，不要求空间压缩。若能自己解释并手推，再选 LC63 不同路径 II 作为唯一 DP 新题，只增加障碍格这一项变化；若仍卡在状态或初始化，就留在小网格手推和分层提示，当天不追加 DP 新题。保留其他专题到期复习，已完成题计入题量，不为补名额加难；暂缓新背包、子序列和复杂二维 DP。LC64 当前仅有聊天本地验证，不据此自动补录完成。"
@@ -4198,6 +4435,54 @@
     "88459775-d4c7-45e5-9c85-86e16b614cec": {
       "message": "LC150 已记录，下次复习 2026-11-08",
       "next_due": "2026-11-08"
+    },
+    "c106a7dd-a2af-41d3-9906-01bad655d7dc": {
+      "message": "LC21 已记录，下次复习 2026-11-11",
+      "next_due": "2026-11-11"
+    },
+    "e105cbdd-85b3-444a-9f79-b6bb495d6142": {
+      "message": "LC234 已记录，下次复习 2026-11-11",
+      "next_due": "2026-11-11"
+    },
+    "ea8c2aac-feac-431d-863f-e9584e936dc9": {
+      "message": "LC17 已记录，下次复习 2026-11-11",
+      "next_due": "2026-11-11"
+    },
+    "9b26057f-fa21-4779-905b-d4139a234589": {
+      "message": "LC215 已记录，下次复习 2026-11-11",
+      "next_due": "2026-11-11"
+    },
+    "b686bc3a-e0c0-4963-9e02-0b5bf9e7ad89": {
+      "message": "LC904 已记录，下次复习 2026-11-12",
+      "next_due": "2026-11-12"
+    },
+    "69a39464-6b38-4519-bd32-1048bf2578e7": {
+      "message": "LC121 已记录，下次复习 2026-11-12",
+      "next_due": "2026-11-12"
+    },
+    "f1c62306-074c-4fa5-9b14-af43f7f0fb27": {
+      "message": "LC200 已记录，下次复习 2026-11-12",
+      "next_due": "2026-11-12"
+    },
+    "98e03af7-9878-4968-b6bb-28183638aea3": {
+      "message": "LC695 已记录，下次复习 2026-11-12",
+      "next_due": "2026-11-12"
+    },
+    "ea461df9-ddb7-4443-9f16-3326584308ba": {
+      "message": "LC101 已记录，下次复习 2026-11-13",
+      "next_due": "2026-11-13"
+    },
+    "b98c02af-8e81-4d68-b71a-4eb8707240a9": {
+      "message": "LC155 已记录，下次复习 2026-11-13",
+      "next_due": "2026-11-13"
+    },
+    "ee5e44e7-8e05-4ae7-9741-4f835fd1a7f5": {
+      "message": "LC994 已记录，下次复习 2026-11-13",
+      "next_due": "2026-11-13"
+    },
+    "debcc73e-7dad-4ebd-8010-8a2effd63f72": {
+      "message": "LC207 已记录，下次复习 2026-11-13",
+      "next_due": "2026-11-13"
     }
   },
   "recommend_skips": {

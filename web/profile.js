@@ -2,7 +2,8 @@
 
 // “我的画像”：学习画像、个性化推荐与 AI 阶段建议。数据来自 /api/dashboard 的 profile 与 plan，页面只负责展示和发起操作。
 window.AlgoProfile = (() => {
-  const tagClass = {"当前专题": "current", "推进主线": "advance", "弱项巩固": "weak", "补弱专题": "weak"};
+  const tagClass = {"当前专题": "current", "推进主线": "advance", "弱项巩固": "weak", "补弱专题": "weak", "未接触专题": "advance"};
+  const MAIN_TOPICS = ["双指针", "滑动窗口", "链表", "哈希", "字符串", "栈与队列", "二叉树", "回溯", "贪心", "动态规划", "二分查找", "堆", "图论"];
   const minuteOptions = [45, 60, 90, 120, 150, 180, 240];
 
   function tagList(tags, esc) {
@@ -35,12 +36,14 @@ window.AlgoProfile = (() => {
 
   // 单一系列的横向条形：一种颜色，数值写在条的末端，等级用文字说明；悬停或聚焦显示明细。
   function masteryPanel(p, {esc}) {
-    if (!p.topics.length) return `<section class="panel"><div class="panel-header"><h2>专题掌握度</h2></div><div class="empty">记录一次练习后，这里会显示各专题的掌握度。</div></section>`;
-    const rows = p.topics.map(t => {
+    const known = Object.fromEntries((p.topics || []).map(t => [t.name, t]));
+    // 与后端保持完整主线一致；这样旧状态或旧服务返回部分专题时，未接触专题也不会消失。
+    const topics = MAIN_TOPICS.map(name => known[name] || {name, problems: 0, graded: 0, independent: 0, hinted: 0, failed: 0, due: 0, mastery: 0, level: "未接触", level_note: "还没有练习记录", idle_days: null});
+    const rows = topics.map(t => {
       const detail = `${t.problems} 道题 · ${t.graded} 次有结果（独立 ${t.independent} · 提示后 ${t.hinted} · 未完成 ${t.failed}）· 到期 ${t.due} 道${t.idle_days !== null ? ` · ${t.idle_days} 天没练` : ""}`;
-      return `<li class="mastery-row" tabindex="0" aria-label="${esc(t.name)}：掌握度 ${t.mastery}%，${esc(t.level)}。${esc(detail)}"><span class="mastery-name">${esc(t.name)}</span><span class="mastery-track"><i class="mastery-fill${t.level === "起步" ? " sparse" : ""}" data-width="${t.mastery}"></i></span><span class="mastery-value">${t.mastery}%</span><span class="mastery-level">${esc(t.level)}</span><span class="mastery-tip" role="tooltip"><b>${esc(t.name)} · ${esc(t.level_note)}</b>${esc(detail)}</span></li>`;
+      return `<li class="mastery-row" tabindex="0" aria-label="${esc(t.name)}：掌握度 ${t.mastery}%，${esc(t.level)}。${esc(detail)}"><span class="mastery-name">${esc(t.name)}</span><span class="mastery-track"><i class="mastery-fill${t.level === "起步" || t.level === "未接触" ? " sparse" : ""}" data-width="${t.mastery}"></i></span><span class="mastery-value">${t.mastery}%</span><span class="mastery-level">${esc(t.level)}</span><span class="mastery-tip" role="tooltip"><b>${esc(t.name)} · ${esc(t.level_note)}</b>${esc(detail)}</span></li>`;
     }).join("");
-    return `<section class="panel"><div class="panel-header"><div><h2>专题掌握度</h2><p class="muted">按练习结果计分（独立 1、提示后 0.4、未完成 0），近期权重更高；有结果的练习少于 2 次时显示“起步”。</p></div></div><div class="panel-body"><ul class="mastery-list">${rows}</ul></div></section>`;
+    return `<section class="panel"><div class="panel-header"><div><h2>专题掌握度</h2><p class="muted">按练习结果计分（独立 1、提示后 0.4、未完成 0），近期权重更高；未接触的专题也会显示为 0%“未接触”。</p></div></div><div class="panel-body"><ul class="mastery-list">${rows}</ul></div></section>`;
   }
 
   function page(data, ui) {

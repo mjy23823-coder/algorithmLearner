@@ -23,7 +23,7 @@ SKIP_DAYS = 7
 HALF_LIFE_DAYS = 30
 SCORES = {"independent": 1.0, "hinted": 0.4, "failed": 0.0}
 # 掌握度分档：记录太少时只说明“起步”，不下结论。
-LEVELS = (("起步", "记录还少"), ("需要加强", "先把基础题做独立"), ("巩固中", "同模板再练几道"), ("较稳", "可以加难度或推进主线"))
+LEVELS = (("未接触", "还没有练习记录"), ("起步", "记录还少"), ("需要加强", "先把基础题做独立"), ("巩固中", "同模板再练几道"), ("较稳", "可以加难度或推进主线"))
 DIFFICULTY_FIT = {
     "起步": {"Easy": 2, "Medium": 1, "Hard": -4},
     "需要加强": {"Easy": 2, "Medium": 0, "Hard": -5},
@@ -101,13 +101,19 @@ def minutes_of(entry):
 
 
 def level_of(graded, mastery):
+    if graded == 0:
+        return "未接触"
     if graded < 2:
         return "起步"
     return "需要加强" if mastery < 50 else "巩固中" if mastery < 75 else "较稳"
 
 
 def topic_stats(state, today, events):
-    rows = {}
+    # 画像要覆盖完整主线；没有练习记录的专题也明确显示为“未接触”，
+    # 避免用户误以为专题从画像中消失。
+    rows = {name: {"name": name, "problems": 0, "learned": 0, "due": 0, "calibration": 0,
+                   "graded": 0, "independent": 0, "hinted": 0, "failed": 0, "weight": 0.0,
+                   "points": 0.0, "last_practiced": None} for name in catalog.MAIN_LINE}
     for pid, rec in state.get("completed", {}).items():
         name = catalog.family(rec.get("topic"))
         row = rows.setdefault(name, {"name": name, "problems": 0, "learned": 0, "due": 0, "calibration": 0,
@@ -136,7 +142,7 @@ def topic_stats(state, today, events):
     topics = []
     for row in rows.values():
         # 平滑：相当于先验一次 0.5 分的练习，记录少时掌握度靠近 50%。
-        mastery = round(100 * (row["points"] + 1) / (row["weight"] + 2))
+        mastery = 0 if row["graded"] == 0 else round(100 * (row["points"] + 1) / (row["weight"] + 2))
         level = level_of(row["graded"], mastery)
         idle = (today - coach.parse_date(row["last_practiced"])).days if row["last_practiced"] else None
         topics.append({**{k: v for k, v in row.items() if k not in ("weight", "points")}, "mastery": mastery, "level": level,
@@ -169,11 +175,16 @@ def habits(events, today, extra_days=()):
 
 
 def current_families(current):
+    # 高频轮换不是一个需要“学完”的专题，不能把推荐锁在双指针或某个单一主线位置。
+    if current == "高频核心轮换":
+        return []
     names = [name for name in catalog.MAIN_LINE if catalog.related(name, current)]
     return names or [catalog.MAIN_LINE[catalog.line_position(current)]]
 
 
 def next_family(current):
+    if current == "高频核心轮换":
+        return None
     families = current_families(current)
     later = [name for name in catalog.MAIN_LINE[catalog.line_position(current) + 1:] if name not in families]
     return later[0] if later else None
@@ -297,6 +308,8 @@ def recommend_new(state, profile, excluded, limit=4, has_exercise=None):
     index = {t["name"]: t for t in profile["topics"]}
     families = current_families(profile["current_topic"])
     nxt = profile["next_topic"]
+    untouched = [t["name"] for t in profile["topics"] if t["level"] == "未接触"]
+    coverage_topic = untouched[0] if untouched else None
     _, current_level = current_mastery(profile)
     ready = current_level == "较稳"
     pace = profile["settings"]["pace"]
@@ -328,6 +341,10 @@ def recommend_new(state, profile, excluded, limit=4, has_exercise=None):
             tags.append("补弱专题")
         else:
             score -= 1.5 * max(0, order.get(name, len(catalog.MAIN_LINE)) - next_position)
+        if name == coverage_topic:
+            score += 8
+            reasons.append(f"覆盖主线中最早未接触专题「{name}」")
+            tags.append("未接触专题")
         shared = [(w, w_patterns & patterns_of(p["id"])) for w, w_patterns in weak]
         shared = [(w, s) for w, s in shared if s]
         if shared:
@@ -335,7 +352,7 @@ def recommend_new(state, profile, excluded, limit=4, has_exercise=None):
             score += 2 + min(2, top["count"] / 2)
             reasons.append(f"能练到你近期常错的「{top['title']}」（近 4 周 {top['count']} 次）")
             tags.append("弱项巩固")
-        fit = DIFFICULTY_FIT[level][p["difficulty"]] + PACE_FIT[pace][p["difficulty"]]
+        fit = DIFFICULTY_FIT.get(level, DIFFICULTY_FIT["起步"])[p["difficulty"]] + PACE_FIT[pace][p["difficulty"]]
         if dependent and p["difficulty"] == "Hard":
             fit -= 2
         score += fit
@@ -343,9 +360,13 @@ def recommend_new(state, profile, excluded, limit=4, has_exercise=None):
             reasons.append(f"{p['difficulty']} 适合你在「{name}」的水平（{level}）")
         elif p["difficulty"] == "Hard" and fit >= 1:
             reasons.append(f"你在「{name}」较稳，可以挑战 Hard")
-        weight = 2 if target["urgent"] else 1
+        strategy = state.get("study_strategy", "topic")
+        weight = 3 if strategy == "high_frequency" else 2 if target["urgent"] else 1
         score += FREQUENCY_POINTS[p["frequency"]] * weight
-        if target["urgent"] and p["frequency"] == 3:
+        if strategy == "high_frequency" and p.get("priority", 1) >= 3:
+            score += 3
+            reasons.append("属于高频核心交集，优先覆盖面试常考模型")
+        elif target["urgent"] and p["frequency"] == 3:
             reasons.append(f"离目标面试约 {target['weeks_left']} 周，优先大厂高频")
         reasons.append(f"{p['difficulty']} · {catalog.frequency_label(p)}")
         if runnable(p["id"]):
@@ -355,7 +376,7 @@ def recommend_new(state, profile, excluded, limit=4, has_exercise=None):
             reasons.append("工作台暂无本地用例，可由聊天教练检查")
         scored.append({**p, "score": round(score, 2), "reasons": reasons, "reason": reasons, "tags": tags,
                        "workbench": runnable(p["id"])})
-    scored.sort(key=lambda r: (-r["score"], -r["frequency"], int(r["id"])))
+    scored.sort(key=lambda r: (-r["score"], -r.get("priority", 1), -r["frequency"], int(r["id"])))
     picks, per_topic = [], {}
     for row in scored:
         name = catalog.family(row["topic"])
@@ -365,6 +386,11 @@ def recommend_new(state, profile, excluded, limit=4, has_exercise=None):
         per_topic[name] = per_topic.get(name, 0) + 1
         if len(picks) >= limit:
             break
+    # 只要还有未接触专题，至少保留一道最早未接触专题，推动主线覆盖。
+    if coverage_topic and picks and not any("未接触专题" in r["tags"] for r in picks):
+        extra = next((r for r in scored if "未接触专题" in r["tags"] and r not in picks), None)
+        if extra:
+            picks[-1] = extra
     # 有反复错因时，至少保留一道能练到它的题。
     if weak and picks and not any("弱项巩固" in r["tags"] for r in picks):
         extra = next((r for r in scored if "弱项巩固" in r["tags"] and r not in picks), None)

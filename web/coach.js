@@ -6,8 +6,9 @@ window.AlgoCoach = (() => {
   const modeOrder = ["explain", "hint", "review", "reflect"];
   const modeIcons = {explain: "chat", hint: "bulb", review: "code", reflect: "book"};
   const mockLabels = {explain: "复述思路给面试官", hint: "向面试官求助", review: "请面试官看代码", reflect: "面试后复盘"};
-  const agentLabels = {counterexample: "找反例", complexity: "实测复杂度", edge_cases: "补边界用例", draft: "草拟记录"};
+  const agentLabels = {test_cases: "检查用例", counterexample: "找反例", complexity: "实测复杂度", edge_cases: "补边界用例", draft: "草拟记录"};
   const agentInfo = {
+    test_cases: ["play", "运行全部基础用例，判断当前代码能否全部通过"],
     counterexample: ["compare", "写暴力解对拍，找出让代码出错的最小输入"],
     complexity: ["timer", "逐级放大输入规模计时，核对你写的复杂度"],
     edge_cases: ["target", "补 3～5 个关键边界用例，用你的代码运行"],
@@ -30,7 +31,7 @@ window.AlgoCoach = (() => {
     const {esc, icon, api, post, toast} = ctx;
     let settings = ctx.settings;
     let transcript = ctx.transcript || [];
-    let busy = false, sending = false, disposed = false, tab = "chat", job = null, poll = null, started = 0, liveKey = "";
+    let busy = false, sending = false, disposed = false, tab = "chat", job = null, poll = null, started = 0, liveKey = "", streamingText = "";
     // 已显示过的消息与步骤数：只有新出现的才播放入场动画。
     let seen = transcript.length, seenSteps = 0;
     const typed = {chat: "", agent: ""};
@@ -80,7 +81,7 @@ window.AlgoCoach = (() => {
     }
     function chatPane() {
       const items = transcript.map((m, i) => [m, i]).filter(([m]) => m.mode !== "agent");
-      return `<div class="coach-log" role="log" aria-live="polite">${items.length ? items.map(([m, i]) => bubble(m, i)).join("") : empty("chat")}${sending ? typingBubble() : ""}</div>
+      return `<div class="coach-log" role="log" aria-live="polite">${items.length ? items.map(([m, i]) => bubble(m, i)).join("") : empty("chat")}${streamingText ? `<div class="coach-msg from-coach enter">${avatar("coach")}<div class="coach-bubble"><p>${esc(streamingText)}<span class="coach-cursor">▌</span></p></div></div>` : sending ? typingBubble() : ""}</div>
         <div class="coach-actions">${modeOrder.map(mode => `<button class="coach-chip" data-coach-mode="${mode}" ${busy ? "disabled" : ""}>${icon(modeIcons[mode])}<span>${esc(labels(mode))}</span></button>`).join("")}</div>
         ${composer("chat")}
         <p class="coach-rule">${settings.provider === "offline" ? "离线模式下“帮我看代码”只复述测试结果，不计提示。" : "模型给出解题方向、或在用例通过前定位错误时，会计为提示。"}</p>`;
@@ -134,12 +135,12 @@ window.AlgoCoach = (() => {
     }
     async function send(mode, message = "") {
       if (busy) return;
-      busy = sending = true; typed.chat = "";
+      busy = sending = true; typed.chat = ""; streamingText = "";
       transcript = [...transcript, {role: "user", mode, text: message || labels(mode)}];
       render();
       try {
         // 由宿主页面排在草稿保存之后发送，回复返回的新草稿版本也由宿主接收。
-        const response = await ctx.exchange({mode, message});
+        const response = await ctx.exchange({mode, message, onDelta: chunk => { streamingText += chunk; render(); }});
         transcript = response.transcript;
         seen = transcript.length - 1;
         if (response.notice) toast(response.notice, !response.counted && /离线/.test(response.notice));
@@ -148,7 +149,7 @@ window.AlgoCoach = (() => {
         if (message) typed.chat = message;
         return fail(error.message);
       }
-      busy = sending = false; render();
+      busy = sending = false; streamingText = ""; render();
     }
     async function runAgent(action, message = "") {
       if (busy || !ctx.agentStart) return;
@@ -279,7 +280,7 @@ window.AlgoCoach = (() => {
       else send("ask", text);
     }, {signal: abort.signal});
     render();
-    return {destroy() { disposed = true; clearTimeout(poll); abort.abort(); }, busy: () => busy, send};
+    return {destroy() { disposed = true; clearTimeout(poll); abort.abort(); }, busy: () => busy, send, openSettings};
   }
   return {mount};
 })();

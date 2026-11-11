@@ -32,19 +32,31 @@
 .graph-edge.edge-more { stroke-dasharray: 4 4; }
 .graph-edge.is-muted { opacity: .23; }
 .graph-link { pointer-events: none; --flow-color: var(--node-color, #8aa4c6); }
+.graph-workspace[data-reveal="true"] .reveal-step-0{--reveal-delay:0ms}.graph-workspace[data-reveal="true"] .reveal-step-1{--reveal-delay:100ms}.graph-workspace[data-reveal="true"] .reveal-step-2{--reveal-delay:200ms}.graph-workspace[data-reveal="true"] .reveal-step-3{--reveal-delay:300ms}.graph-workspace[data-reveal="true"] .reveal-step-4{--reveal-delay:400ms}.graph-workspace[data-reveal="true"] .reveal-step-5{--reveal-delay:500ms}.graph-workspace[data-reveal="true"] .reveal-step-6{--reveal-delay:600ms}.graph-workspace[data-reveal="true"] .reveal-step-7{--reveal-delay:700ms}.graph-workspace[data-reveal="true"] .reveal-step-8{--reveal-delay:800ms}.graph-workspace[data-reveal="true"] .reveal-step-9{--reveal-delay:900ms}.graph-workspace[data-reveal="true"] .reveal-step-10{--reveal-delay:1000ms}.graph-workspace[data-reveal="true"] .reveal-step-11{--reveal-delay:1100ms}.graph-workspace[data-reveal="true"] .reveal-step-12{--reveal-delay:1200ms}.graph-workspace[data-reveal="true"] .reveal-step-13{--reveal-delay:1300ms}.graph-workspace[data-reveal="true"] .reveal-step-14{--reveal-delay:1400ms}.graph-workspace[data-reveal="true"] .reveal-step-15{--reveal-delay:1500ms}.graph-workspace[data-reveal="true"] .reveal-step-16{--reveal-delay:1600ms}.graph-workspace[data-reveal="true"] .reveal-step-17{--reveal-delay:1700ms}.graph-workspace[data-reveal="true"] .reveal-step-18{--reveal-delay:1800ms}.graph-workspace[data-reveal="true"] .reveal-step-19{--reveal-delay:1900ms}.graph-workspace[data-reveal="true"] .reveal-step-20{--reveal-delay:2000ms}.graph-workspace[data-reveal="true"] .reveal-step-21{--reveal-delay:2100ms}.graph-workspace[data-reveal="true"] .reveal-step-22{--reveal-delay:2200ms}.graph-workspace[data-reveal="true"] .reveal-step-23{--reveal-delay:2300ms}.graph-workspace[data-reveal="true"] .reveal-step-24{--reveal-delay:2400ms}
+.graph-workspace[data-reveal="true"] .graph-node { opacity: 0; animation: graph-reveal-node .62s cubic-bezier(.2,.75,.25,1) var(--reveal-delay,0ms) both; }
+.graph-workspace[data-reveal="true"] .graph-link { opacity: 0; animation: graph-reveal-edge .48s ease-out var(--reveal-delay,0ms) both; }
+@keyframes graph-reveal-node { 0% { opacity: 0; filter: blur(3px) drop-shadow(0 0 0 transparent); } 65% { opacity: 1; } 100% { opacity: 1; filter: blur(0) drop-shadow(0 0 8px #8db5ad66); } }
+@keyframes graph-reveal-edge { 0% { opacity: 0; } 100% { opacity: 1; } }
+.graph-workspace[data-reveal="true"] .graph-node-aura { animation-name: graph-reveal-aura, graph-liquid; animation-duration: .62s, 7.5s; animation-delay: var(--reveal-delay,0ms), -3s; animation-fill-mode: both, both; }
+.graph-workspace[data-reveal="true"] .graph-node-aura-secondary { animation-name: graph-reveal-aura, graph-liquid-reverse; animation-duration: .62s, 9s; animation-delay: var(--reveal-delay,0ms), -5s; }
+@keyframes graph-reveal-aura { 0% { opacity: 0; transform: scale(.55); } 100% { opacity: .75; transform: scale(1); } }
 .graph-link.is-muted .graph-flow, .graph-link.is-muted .graph-particle { visibility: hidden; }
 .graph-flow { fill: none; stroke: var(--flow-color); stroke-width: 2.5px; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 .graph-particle { fill: var(--flow-color); pointer-events: none; }
 .graph-particle-dot { stroke: #fff; stroke-width: .8px; }
-.graph-node-aura { fill: var(--node-color, #7a9fc1); fill-opacity: .07; pointer-events: none; transform-origin: 0 0; animation: graph-breathe 6s ease-in-out infinite; }
-.node-topic .graph-node-aura { fill-opacity: .14; animation-delay: -2s; }
-.node-problem .graph-node-aura { fill-opacity: .055; animation-delay: -3s; }
+.graph-node-aura { fill: var(--node-color, #7a9fc1); fill-opacity: .12; pointer-events: none; transform-box: fill-box; transform-origin: center; animation: graph-liquid 7.5s ease-in-out infinite; }
+.graph-node-aura-secondary { fill-opacity: .07; animation: graph-liquid-reverse 9s ease-in-out -5s infinite; }
+.node-topic .graph-node-aura { fill-opacity: .18; animation-delay: -2s; }
+.node-topic .graph-node-aura-secondary { fill-opacity: .1; animation-delay: -5s; }
+.node-problem .graph-node-aura { fill-opacity: .09; animation-delay: -3s; }
+.node-problem .graph-node-aura-secondary { fill-opacity: .055; animation-delay: -5s; }
 .graph-workspace[data-motion="off"] .graph-flow, .graph-workspace[data-motion="off"] .graph-particle,
 .graph-workspace[data-motion="off"] .graph-node-aura { display: none; }
 .graph-workspace[data-running="false"] .graph-node-aura { animation-play-state: paused; }
 .graph-workspace[data-motion="on"] .graph-node-circle { filter: drop-shadow(0 2px 3px #6986a51b); }
 .graph-workspace[data-motion="on"] .graph-label-bg { fill-opacity: .76; }
-@keyframes graph-breathe { 0%, 100% { transform: scale(.93); opacity: .55; } 50% { transform: scale(1.12); opacity: 1; } }
+@keyframes graph-liquid { 0%, 100% { transform: rotate(-14deg) scale(1.04, .92); opacity: .55; } 50% { transform: rotate(19deg) scale(.89, 1.17); opacity: 1; } }
+@keyframes graph-liquid-reverse { 0%, 100% { transform: rotate(18deg) scale(.9, 1.13); opacity: .75; } 50% { transform: rotate(-20deg) scale(1.16, .89); opacity: .45; } }
 .graph-node { cursor: grab; outline: none; transition: opacity .15s; }
 .graph-node.is-muted { opacity: .27; }
 .graph-node:hover, .graph-node:focus-visible { opacity: 1; }
@@ -209,6 +221,7 @@
   .graph-bottom-note { font-size: 9px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .graph-workspace[data-reveal="true"] .graph-node,.graph-workspace[data-reveal="true"] .graph-link,.graph-workspace[data-reveal="true"] .graph-node-aura { animation: none; opacity: 1; filter: none; }
   .graph-node, .graph-edge { transition: none; }
   .graph-node-aura { animation: none; display: none; }
   .graph-flow, .graph-particle { display: none; }

@@ -24,6 +24,7 @@ MAX_ROUNDS = 5
 MAX_CALLS = 8
 JOB_TTL = 1800
 ACTIONS = {
+    "test_cases": "只运行当前代码的全部内置基础用例，明确判断是否全部通过；列出通过数量、失败用例、期望结果和实际结果，不要修改代码。",
     "counterexample": "帮我找出让当前代码出错的输入（用例通过后也可以用来查隐藏的边界问题）。",
     "complexity": "实测我当前代码的运行时间，核对我写的复杂度对不对。",
     "edge_cases": "为这道题补 3～5 个关键边界用例，用我当前的代码运行，告诉我哪些通过、哪些没通过。",
@@ -66,7 +67,7 @@ TOOLS = [
 OPENAI_TOOLS = [{"type": "function", "function": {"name": t["name"], "description": t["description"], "parameters": t["input_schema"]}}
                 for t in TOOLS]
 RESULT_LABELS = {"independent": "独立完成", "hinted": "提示后完成", "failed": "暂未完成"}
-TOOL_LABELS = {"run_tests": "运行用例", "find_counterexample": "对拍找反例", "measure_complexity": "实测复杂度", "draft_record": "草拟记录"}
+TOOL_LABELS = {"run_tests": "判断用例", "find_counterexample": "对拍找反例", "measure_complexity": "实测复杂度", "draft_record": "草拟记录"}
 
 SYSTEM = """你是嵌在用户算法练习工作台里的 AI 智能体，帮助用户（Python，准备大厂实习面试）练习当前这道题。你可以调用工具获取证据：运行用例、对拍找反例、实测复杂度、草拟记录。
 规则：

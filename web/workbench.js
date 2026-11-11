@@ -1,5 +1,8 @@
 "use strict";
 
+const LEETCODE_SLUGS = {"1":"two-sum","2":"add-two-numbers","3":"longest-substring-without-repeating-characters","5":"longest-palindromic-substring","11":"container-with-most-water","14":"longest-common-prefix","15":"3sum","16":"3sum-closest","17":"letter-combinations-of-a-phone-number","18":"4sum","19":"remove-nth-node-from-end-of-list","20":"valid-parentheses","21":"merge-two-sorted-lists","22":"generate-parentheses","23":"merge-k-sorted-lists","24":"swap-nodes-in-pairs","26":"remove-duplicates-from-sorted-array","27":"remove-element","33":"search-in-rotated-sorted-array","34":"find-first-and-last-position-of-element-in-sorted-array","35":"search-insert-position","39":"combination-sum","42":"trapping-rain-water","45":"jump-game-ii","46":"permutations","49":"group-anagrams","53":"maximum-subarray","55":"jump-game","62":"unique-paths","70":"climbing-stairs","74":"search-a-2d-matrix","75":"sort-colors","76":"minimum-window-substring","77":"combinations","78":"subsets","79":"word-search","84":"largest-rectangle-in-histogram","92":"reverse-linked-list-ii","94":"binary-tree-inorder-traversal","98":"validate-binary-search-tree","100":"same-tree","101":"symmetric-tree","102":"binary-tree-level-order-traversal","104":"maximum-depth-of-binary-tree","105":"construct-binary-tree-from-preorder-and-inorder-traversal","108":"convert-sorted-array-to-binary-search-tree","110":"balanced-binary-tree","112":"path-sum","114":"flatten-binary-tree-to-linked-list","121":"best-time-to-buy-and-sell-stock","122":"best-time-to-buy-and-sell-stock-ii","124":"binary-tree-maximum-path-sum","125":"valid-palindrome","128":"longest-consecutive-sequence","141":"linked-list-cycle","142":"linked-list-cycle-ii","144":"binary-tree-preorder-traversal","145":"binary-tree-postorder-traversal","150":"evaluate-reverse-polish-notation","151":"reverse-words-in-a-string","153":"find-minimum-in-rotated-sorted-array","155":"min-stack","160":"intersection-of-two-linked-lists","167":"two-sum-ii-input-array-is-sorted","198":"house-robber","199":"binary-tree-right-side-view","200":"number-of-islands","203":"remove-linked-list-elements","206":"reverse-linked-list","207":"course-schedule","209":"minimum-size-subarray-sum","215":"kth-largest-element-in-an-array","217":"contains-duplicate","222":"count-complete-tree-nodes","226":"invert-binary-tree","230":"kth-smallest-element-in-a-bst","232":"implement-queue-using-stacks","234":"palindrome-linked-list","235":"lowest-common-ancestor-of-a-binary-search-tree","236":"lowest-common-ancestor-of-a-binary-tree","239":"sliding-window-maximum","242":"valid-anagram","257":"binary-tree-paths","283":"move-zeroes","295":"find-median-from-data-stream","300":"longest-increasing-subsequence","322":"coin-change","344":"reverse-string","347":"top-k-frequent-elements","383":"ransom-note","404":"sum-of-left-leaves","416":"partition-equal-subset-sum","424":"longest-repeating-character-replacement","437":"path-sum-iii","438":"find-all-anagrams-in-a-string","450":"delete-node-in-a-bst","454":"4sum-ii","455":"assign-cookies","459":"repeated-substring-pattern","501":"find-mode-in-binary-search-tree","513":"find-bottom-left-tree-value","530":"minimum-absolute-difference-in-bst","538":"convert-bst-to-greater-tree","543":"diameter-of-binary-tree","547":"number-of-provinces","560":"subarray-sum-equals-k","567":"permutation-in-string","617":"merge-two-binary-trees","669":"trim-a-binary-search-tree","695":"max-area-of-island","700":"search-in-a-binary-search-tree","701":"insert-into-a-binary-search-tree","704":"binary-search","733":"flood-fill","739":"daily-temperatures","746":"min-cost-climbing-stairs","763":"partition-labels","876":"middle-of-the-linked-list","904":"fruit-into-baskets","977":"squares-of-a-sorted-array","994":"rotting-oranges","1004":"max-consecutive-ones-iii","1047":"remove-all-adjacent-duplicates-in-string","1143":"longest-common-subsequence"};
+window.leetcodeUrl = id => `https://leetcode.cn/problems/${LEETCODE_SLUGS[String(id)] || `search-${encodeURIComponent(id)}`}/description/`;
+
 window.AlgoWorkbench = (() => {
   let selected = null;
   try { const value=localStorage.getItem("algorithm-workbench-selected"); if(/^[1-9]\d{0,5}$/.test(value||"")) selected=value; } catch {}
@@ -137,6 +140,7 @@ window.AlgoWorkbench = (() => {
     let info = null, revision = null, elapsed = 0, since = null, timer = null, debounce = null;
     let dirty = false, conflict = false, busy = false, disposed = false, stamp = 0, saveChain = Promise.resolve();
     let lastRun = null, runCode = "", runCases = "", hints = [], savedResult = false, coachHints = 0, agentHints = 0, coachPanel = null;
+    let debugId = null, debugPoll = null, debugPending = false, debugPolling = false, debugGeneration = 0, debugLine = null, debugErrorLine = false;
     const abort = new AbortController();
     const get = key => root.querySelector(`[data-wb-field="${key}"]`);
     const content = root.querySelector("#wb-content");
@@ -200,10 +204,73 @@ window.AlgoWorkbench = (() => {
       lastInput = performance.now(); since = lastInput;
       updateClock(); timer = setInterval(tick, 1000);
     }
+    function parseBreakpoints(value) {
+      const input=value.trim();
+      if(input && !/^[0-9\s,，]+$/.test(input)) throw new Error("断点只支持逗号分隔的正整数行号。");
+      const lines=input ? input.split(/[\s,，]+/).filter(Boolean).map(Number) : [];
+      if(lines.some(n=>!Number.isSafeInteger(n) || n<1 || n>100000)) throw new Error("断点行号应在 1～100000 之间。");
+      if(new Set(lines).size>100) throw new Error("最多设置 100 个断点。");
+      return new Set(lines);
+    }
+    function syncBreakpointMarks() {
+      const field=root.querySelector("#wb-breakpoints");
+      if(!field) return;
+      let lines;
+      try { lines=parseBreakpoints(field.value); } catch { lines=new Set(); }
+      root.querySelectorAll(".wb-gutter-line").forEach(item=>{
+        const line=Number(item.dataset.line), active=lines.has(line);
+        item.classList.toggle("has-breakpoint",active);
+        item.setAttribute("aria-pressed",String(active));
+        item.setAttribute("aria-label",`第 ${line} 行，${active?"取消":"设置"}断点`);
+      });
+    }
+    function toggleBreakpoint(line) {
+      const field=root.querySelector("#wb-breakpoints");
+      if(!field) return;
+      try {
+        const lines=parseBreakpoints(field.value);
+        if(lines.has(line)) lines.delete(line);
+        else {
+          if(lines.size>=100) throw new Error("最多设置 100 个断点。");
+          lines.add(line);
+        }
+        field.value=[...lines].sort((a,b)=>a-b).join(", ");
+        syncBreakpointMarks();
+        message("");
+      } catch(error) { message(error.message); }
+    }
     function updateEditor() {
       const code=get("code");
-      root.querySelector("#wb-lines").textContent=code.value.split("\n").map((_,i)=>String(i+1)).join("\n");
+      root.querySelector("#wb-lines").innerHTML=code.value.split("\n").map((_,i)=>`<span class="wb-gutter-line${debugLine===i+1?(debugErrorLine?" is-error":" is-current"):""}" role="button" tabindex="0" data-line="${i+1}">${i+1}</span>`).join("");
+      syncBreakpointMarks();
       root.querySelector("#wb-highlight").innerHTML=highlightPython(code.value,esc);
+      syncDebugLine();
+    }
+    function syncDebugLine() {
+      const marker=root.querySelector("#wb-execution-line"), code=get("code");
+      if(!marker || !code) return;
+      marker.hidden=debugLine===null;
+      marker.classList.toggle("is-error",debugErrorLine);
+      if(debugLine!==null) marker.style.top=`${17+(debugLine-1)*23-code.scrollTop}px`;
+    }
+    function setDebugLine(value, error=false) {
+      const code=get("code");
+      if(!code) {debugLine=null;debugErrorLine=false;return;}
+      const line=Number(value);
+      debugLine=Number.isInteger(line) && line>=1 && line<=code.value.split("\n").length ? line : null;
+      debugErrorLine=debugLine!==null && error;
+      root.querySelectorAll(".wb-gutter-line").forEach((item,i)=>{
+        item.classList.toggle("is-current",i+1===debugLine && !debugErrorLine);
+        item.classList.toggle("is-error",i+1===debugLine && debugErrorLine);
+      });
+      if(debugLine!==null) {
+        const top=17+(debugLine-1)*23;
+        if(top<code.scrollTop || top+23>code.scrollTop+code.clientHeight)
+          code.scrollTop=Math.max(0,top-code.clientHeight/2);
+        root.querySelector("#wb-lines").scrollTop=code.scrollTop;
+        root.querySelector("#wb-highlight").scrollTop=code.scrollTop;
+      }
+      syncDebugLine();
     }
     let completionItems = [], completionIndex = 0;
     function hideCompletions() {
@@ -242,8 +309,12 @@ window.AlgoWorkbench = (() => {
     function updateActions() {
       if(!info || !get("code")) return;
       root.querySelector('[data-wb="run"]').disabled=busy || conflict || !info.exercise;
+      for (const control of root.querySelectorAll('[data-wb-debug]')) {
+        const action = control.dataset.wbDebug;
+        control.disabled = debugPending || (action === "start" ? busy || conflict || !info.exercise || !!debugId :
+          action === "stop" ? !debugId : !debugId || root.querySelector("#wb-debug-state")?.dataset.paused !== "true");
+      }
       root.querySelector('[data-wb="complete"]').disabled=busy || conflict || !currentRun();
-      root.querySelector('[data-wb="save"]').disabled=busy || conflict;
       root.querySelector('[data-wb="fresh"]').disabled=busy || conflict || !info.exercise;
       root.querySelector("#wb-problem").disabled=busy;
       for(const field of root.querySelectorAll("[data-wb-field]")) field.readOnly=busy;
@@ -281,7 +352,12 @@ window.AlgoWorkbench = (() => {
       await save();
       const task=saveChain.catch(()=>{}).then(async()=>{
         const mark=stamp;
-        const response=await post("/api/workbench/coach",{id,...read(),draft_revision:revision,...extra},undefined,undefined,100000);
+        const {onDelta, ...request}=extra;
+        const payload={id,...read(),draft_revision:revision,...request};
+        const streaming=onDelta && ["openai","anthropic"].includes(info.coach.provider);
+        const response=streaming
+          ? await ui.streamPost("/api/workbench/coach/stream",payload,undefined,undefined,onDelta,100000)
+          : await post("/api/workbench/coach",payload,undefined,undefined,100000);
         revision=response.draft.revision; info.draft=response.draft; coachHints=(response.draft.coach_hints || 0)+agentHints;
         if(stamp===mark) dirty=false;
         if(response.hints) hints=response.hints;
@@ -346,10 +422,99 @@ window.AlgoWorkbench = (() => {
     }
     function showRun(run) {
       const result=run.result;
-      root.querySelector("#wb-test-results").innerHTML=`<div class="wb-test-summary ${result.passed?"pass":"fail"}">${icon(result.passed?"check":"info")}<strong>${result.passed?"本地用例全部通过":"还需要调整"}</strong><span>${result.passed_count} / ${result.total} · ${result.elapsed_ms} ms</span></div>${runErrorMarkup(result)}${result.cases.map(c=>`<details class="wb-test-case" ${!c.passed?"open":""}><summary><span class="${c.passed?"pass":"fail"}">${c.passed?"通过":"未通过"}</span>${esc(c.name)}</summary><dl><dt>输入参数</dt><dd><pre>${esc(JSON.stringify(c.args))}</pre></dd><dt>期望结果</dt><dd><pre>${esc(JSON.stringify(c.expected))}</pre></dd><dt>${c.error?"错误":"实际结果"}</dt><dd><pre>${esc(c.error || JSON.stringify(c.actual))}</pre></dd></dl></details>`).join("")}${result.stdout?`<details class="wb-test-case"><summary>调试输出</summary><pre>${esc(result.stdout)}</pre></details>`:""}<p class="form-hint">以上只证明这 ${result.total} 组本地用例的结果；平台提交、复杂度和思路表达仍需单独确认。</p>`;
+      const meta=root.querySelector("#wb-results-meta"); if(meta) meta.textContent=`${result.passed_count} / ${result.total} 通过 · ${result.elapsed_ms} ms`;
+      const firstFail=result.cases.findIndex(c=>!c.passed);
+      const activeIndex=firstFail >= 0 ? firstFail : 0;
+      const tabs=result.cases.map((c,index)=>`<button type="button" class="wb-case-tab${index===activeIndex?" active":""}" data-wb-case="${index}"><span class="wb-case-status ${c.passed?"ok":"fail"}">${c.passed?"✓":"!"}</span>Case ${index+1}</button>`).join("");
+      const panels=result.cases.map((c,index)=>`<section class="wb-case-panel${index===activeIndex?" active":""}" data-wb-case-panel="${index}"><h4>${esc(c.name)} <span class="${c.passed?"pass":"fail"}">${c.passed?"通过":"未通过"}</span></h4><dl><dt>输入参数</dt><dd><pre>${esc(JSON.stringify(c.args))}</pre></dd><dt>期望结果</dt><dd><pre>${esc(JSON.stringify(c.expected))}</pre></dd><dt>${c.error?"错误":"实际结果"}</dt><dd><pre>${esc(c.error || JSON.stringify(c.actual))}</pre></dd></dl></section>`).join("");
+      root.querySelector("#wb-test-results").innerHTML=`<div class="wb-test-summary ${result.passed?"pass":"fail"}">${icon(result.passed?"check":"info")}<strong>${result.passed?"本地用例全部通过":"还需要调整"}</strong><span>${result.passed_count} / ${result.total} · ${result.elapsed_ms} ms</span></div>${runErrorMarkup(result)}<div class="wb-case-workbench"><div class="wb-case-tabs" role="tablist" aria-label="测试用例">${tabs}</div><div class="wb-case-panels">${panels}</div></div>${result.stdout?`<details class="wb-test-case"><summary>调试输出</summary><pre>${esc(result.stdout)}</pre></details>`:""}<p class="form-hint">以上只证明这 ${result.total} 组本地用例的结果；平台提交、复杂度和思路表达仍需单独确认。</p>`;
       if(!result.passed) root.querySelector("#wb-result").value="failed";
       else if(hints.length || coachHints) root.querySelector("#wb-result").value="hinted";
       updateActions();
+    }
+
+    function debugState(text, paused=false, state=paused?"paused":"idle") {
+      const label=root.querySelector("#wb-debug-state");
+      if(!label || disposed) return;
+      label.textContent=text;
+      label.dataset.paused=String(paused);
+      label.dataset.state=state;
+      if(!paused) setDebugLine(null);
+      updateActions();
+    }
+    function finishDebug() {
+      debugId=null;
+      clearInterval(debugPoll);debugPoll=null;
+      updateActions();
+    }
+    function debugEvents(events) {
+      for(const event of events || []) {
+        if(event.event === "paused") {
+          debugState(`停在第 ${event.line} 行 · 首组本地用例`,true);
+          setDebugLine(event.line);
+          if(event.case) showDebugCase(event.case);
+          root.querySelector("#wb-debug-locals").textContent=JSON.stringify(event.locals || {},null,2);
+        } else if(event.event === "done") {
+          debugState(event.stopped ? "调试已停止。" : "调试执行结束；结果仅供定位问题，不计为完成。",false,event.stopped?"stopped":"completed");
+          if(!event.stopped) root.querySelector("#wb-debug-locals").textContent=JSON.stringify({实际结果:event.actual,期望结果:event.expected},null,2);
+          finishDebug();
+        } else if(event.event === "error") {
+          const timedOut=String(event.error || "").includes("超时");
+          debugState(event.error || "调试进程已结束。",false,timedOut?"timeout":"error");
+          if(event.line) setDebugLine(event.line,true);
+          finishDebug();
+        }
+      }
+    }
+    function showDebugCase(testCase) {
+      const display=root.querySelector("#wb-debug-case");
+      if(display) display.textContent=JSON.stringify({输入参数:testCase.args,期望结果:testCase.expected},null,2);
+    }
+    function stopDebug(unloading=false) {
+      setDebugLine(null);
+      ++debugGeneration;
+      clearInterval(debugPoll);debugPoll=null;
+      const id=debugId;debugId=null;
+      if(id) {
+        if(unloading) ui.debugStopOnUnload(id);
+        else post("/api/workbench/debug/command",{debug_id:id,command:"stop"}).catch(()=>{});
+      }
+      if(!disposed) updateActions();
+    }
+    async function pollDebug() {
+      if(!debugId || debugPending || debugPolling || disposed) return;
+      const id=debugId;debugPolling=true;
+      try {
+        const response=await api(`/api/workbench/debug?debug_id=${encodeURIComponent(id)}`);
+        if(id===debugId && !disposed) debugEvents(response.events);
+      } catch(error) {
+        if(id===debugId && !disposed) {stopDebug();debugState(error.message,false,"error");}
+      } finally {debugPolling=false;}
+    }
+    async function debugAction(action) {
+      if(action === "stop") {stopDebug();debugState("调试已停止。",false,"stopped");return;}
+      debugPending=true;updateActions();
+      try {
+        if(action === "start") {
+          const breakpoints=[...parseBreakpoints(root.querySelector("#wb-breakpoints").value)];
+          const generation=++debugGeneration;
+          root.querySelector("#wb-debug-locals").textContent="";
+          debugState("调试启动中…",false,"starting");
+          const response=await post("/api/workbench/debug/start",{id,code:get("code").value,breakpoints});
+          if(disposed || generation!==debugGeneration) {
+            post("/api/workbench/debug/command",{debug_id:response.debug_id,command:"stop"}).catch(()=>{});
+            return;
+          }
+          debugId=response.debug_id;
+          debugState("正在运行首组本地用例…",false,"running");debugEvents(response.events);
+          if(debugId) debugPoll=setInterval(pollDebug,250);
+        } else {
+          debugState("正在运行首组本地用例…",false,"running");
+          const response=await post("/api/workbench/debug/command",{debug_id:debugId,command:action});
+          if(!disposed && debugId) debugEvents(response.events);
+        }
+      } catch(error) {if(!disposed) {stopDebug();debugState(error.message,false,"error");}}
+      finally {debugPending=false;if(!disposed) updateActions();}
     }
 
     function formMarkup() {
@@ -372,23 +537,24 @@ window.AlgoWorkbench = (() => {
       // 主栏按“理清问题 → 写代码验证 → 复盘”自上而下；教练固定在右栏，窄屏时排到代码之后。
       return `<div id="wb-conflict" class="notice" hidden><div><p>本机有尚未同步的草稿，磁盘版本也已变化。请选择保留哪一份。</p><div class="wb-conflict-actions"><button class="button secondary" data-wb="use-local">保留本机草稿</button><button class="button secondary" data-wb="use-remote">使用磁盘草稿</button></div></div></div><p id="wb-error" class="wb-error" role="alert"></p>
       <div class="wb-studio">
-        <section class="panel wb-problem">${step(1,"理清问题",`LC${esc(id)} · ${esc(row.title)}`,`<p class="wb-meta"><span>${esc(row.topic)}</span><span class="wb-status status-${esc(row.status)}">${esc(statusText)}</span>${info.patterns.map(p=>`<span class="badge neutral">${esc(p.title)}</span>`).join("")}</p>`)}</div>
+        <section class="panel wb-problem">${step(1,"理清问题",`LC${esc(id)} · ${esc(row.title)}`,`<div class="wb-header-actions"><a class="wb-lc-link" href="${leetcodeUrl(id)}" target="_blank" rel="noopener noreferrer">力扣原题 ↗</a><p class="wb-meta"><span>${esc(row.topic)}</span><span class="wb-status status-${esc(row.status)}">${esc(statusText)}</span>${info.patterns.map(p=>`<span class="badge neutral">${esc(p.title)}</span>`).join("")}</p></div>`)}</div>
           <div class="panel-body">
             ${statementBody}
             ${exercise?`<p class="wb-contract">方法 <code>Solution.${esc(exercise.method)}(${esc(exercise.params.join(", "))})</code><span>输入参数按顺序填写，已提供 ListNode、TreeNode、List 和 Optional。</span></p><details class="wb-cases"><summary>${icon("layers")}本地基础用例 · ${exercise.cases.length} 组</summary><div class="wb-default-cases">${exercise.cases.map(c=>`<details><summary>${esc(c.name)}</summary><pre>${esc(JSON.stringify({args:c.args,expected:c.expected},null,2))}</pre></details>`).join("")}</div></details>`:""}
           </div>
         </section>
         <section class="panel wb-code-panel">${step(2,"写代码并验证","你的 Python 实现")}<div class="wb-card-tags"><span class="subtle-pill">Python 3</span><span id="wb-run-state" class="subtle-pill">尚未运行</span></div></div>
-          <div class="wb-code-editor"><pre id="wb-lines" aria-hidden="true">1</pre><div class="wb-code-pane"><pre id="wb-highlight" aria-hidden="true"></pre><textarea data-wb-field="code" aria-label="Python 代码" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off"></textarea><div id="wb-completions" class="wb-completions" role="listbox" aria-label="代码补全" hidden></div></div></div>
-          <div class="wb-code-actions"><span>Tab 缩进 · Ctrl+Enter 运行 · Ctrl+S 保存</span><div><button class="button secondary" data-wb="save">保存草稿</button><button class="button primary" data-wb="run">${icon("play")}运行本地用例</button></div></div>
-          <div class="wb-results"><p id="wb-stale" class="wb-stale" hidden>代码或用例已修改，需要重新运行后才能记录结果。</p><div id="wb-test-results"><div class="empty">完成实现后，运行基础用例与自己补充的边界。</div></div><details class="wb-extra"><summary>追加自定义用例（JSON 数组）</summary><p class="form-hint">格式：[{"args": [按参数顺序填写], "expected": 期望结果}]。基础用例始终会运行。</p><textarea data-wb-field="extra_cases" rows="6" aria-label="自定义测试用例" spellcheck="false">[]</textarea></details></div>
+          <div class="wb-code-editor"><pre id="wb-lines" aria-label="编辑器行号及断点">1</pre><div class="wb-code-pane"><div id="wb-execution-line" aria-hidden="true" hidden></div><pre id="wb-highlight" aria-hidden="true"></pre><textarea data-wb-field="code" aria-label="Python 代码" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off"></textarea><div id="wb-completions" class="wb-completions" role="listbox" aria-label="代码补全" hidden></div></div></div>
+          <div class="wb-code-actions"><span>Tab 缩进 · Ctrl+Enter 运行 · 自动保存</span><div><button class="button primary" data-wb="run">${icon("play")}运行本地用例</button></div></div>
+          <details class="wb-debug"><summary>逐步调试 · 首组本地用例</summary><div class="wb-debug-body"><p class="form-hint">点击行号设置断点，也可填写逗号分隔的行号；没有断点时从首行暂停。调试不会保存完成记录。</p><label>断点行号（可留空）<input id="wb-breakpoints" inputmode="numeric" placeholder="例如 3, 8" aria-label="调试断点行号"></label><div class="wb-debug-actions"><button type="button" class="button secondary" data-wb-debug="start">开始调试</button><button type="button" class="button secondary" data-wb-debug="step" disabled>单步</button><button type="button" class="button secondary" data-wb-debug="continue" disabled>继续</button><button type="button" class="button secondary" data-wb-debug="stop" disabled>停止</button></div><p id="wb-debug-state" role="status" aria-live="polite" data-state="idle">尚未开始调试。</p><div class="wb-debug-snapshot"><span>本地用例输入</span><pre id="wb-debug-case" aria-label="调试用例输入"></pre><span>当前局部变量 / 结果</span><pre id="wb-debug-locals" aria-label="调试局部变量"></pre></div></div></details>
+          <div class="wb-results"><div class="wb-results-head"><strong>测试结果</strong><span id="wb-results-meta">运行代码后查看每个 Case 的详细结果</span></div><p id="wb-stale" class="wb-stale" hidden>代码或用例已修改，需要重新运行后才能记录结果。</p><div id="wb-test-results"><div class="empty">完成实现后，运行基础用例与自己补充的边界。</div></div><details class="wb-extra"><summary>追加自定义用例（JSON 数组）</summary><p class="form-hint">格式：[{"args": [按参数顺序填写], "expected": 期望结果}]。基础用例始终会运行。</p><textarea data-wb-field="extra_cases" rows="6" aria-label="自定义测试用例" spellcheck="false">[]</textarea></details></div>
         </section>
         <section class="panel wb-approach">${step("A","作答前检查","先说思路，再写代码",`<p class="wb-meta"><span>先写下你的判断，再开始修改实现。</span></p>`)}</div>
           <div class="panel-body"><div class="wb-think"><label>我的核心思路<textarea data-wb-field="idea" rows="3" maxlength="2000" placeholder="先用自己的话解释：题型、关键变量各代表什么。"></textarea></label><label>一个边界情况<textarea data-wb-field="boundary" rows="3" maxlength="2000" placeholder="最小输入、重复值、空节点或指针相遇时会怎样？"></textarea></label></div><div class="wb-hintbar"><div class="wb-hintbar-row"><span class="wb-hintbar-title">${icon("bulb")}卡住了？逐层提示</span><div class="wb-hint-buttons">${[1,2,3].map(n=>`<button class="button secondary" data-wb="hint" data-level="${n}">提示 ${n}</button>`).join("")}</div><button class="text-button" data-action="coach" data-id="${esc(id)}">聊天教练 ${icon("arrow")}</button></div><p id="wb-hint-note" class="form-hint"></p><div id="wb-hints"></div></div></div>
         </section>
         <aside class="wb-coach-col"><section class="panel coach-panel" id="wb-coach"></section></aside>
         <section class="panel wb-reflect">${step(3,"复盘与下次复习","把这次练习留下来")}</div>
-          <div class="panel-body"><div class="form-row"><label>时间复杂度<input data-wb-field="time_complexity" maxlength="2000" placeholder="例如 O(n)"></label><label>额外空间复杂度<input data-wb-field="space_complexity" maxlength="2000" placeholder="例如 O(1)"></label></div><fieldset class="wb-error-tags"><legend>本次遇到的错因（可多选，没有就不选）</legend>${info.errors.map(tag=>`<label><input type="checkbox" name="wb-error-tag" value="${esc(tag.id)}">${esc(tag.title)}</label>`).join("")}</fieldset><label>一句话复盘<textarea data-wb-field="takeaway" rows="3" maxlength="2000" placeholder="关键规律、修改了什么、下次怎样避免同样的问题。"></textarea></label><div class="wb-finish"><label>真实完成情况<select id="wb-result"><option value="">请选择</option><option value="independent">独立完成</option><option value="hinted">提示后完成</option><option value="failed">暂未完成</option></select></label><button class="button primary" data-wb="complete" disabled>${icon("check")}保存结果并更新复习</button></div><p class="form-hint">仅运行用例不会增加完成次数。保存结果后更新进度、复习排期和错因关系。</p></div>
+          <div class="panel-body"><div class="form-row"><label>时间复杂度<input data-wb-field="time_complexity" maxlength="2000" placeholder="例如 O(n)"></label><label>额外空间复杂度<input data-wb-field="space_complexity" maxlength="2000" placeholder="例如 O(1)"></label></div><fieldset class="wb-error-tags"><legend>本次遇到的错因（可多选，没有就不选）</legend>${info.errors.map(tag=>`<label><input type="checkbox" name="wb-error-tag" value="${esc(tag.id)}">${esc(tag.title)}</label>`).join("")}</fieldset><label>一句话复盘<textarea data-wb-field="takeaway" rows="3" maxlength="2000" placeholder="关键规律、修改了什么、下次怎样避免同样的问题。"></textarea></label><div class="wb-finish"><label>真实完成情况<select id="wb-result"><option value="">请选择</option><option value="independent">独立完成</option><option value="hinted">提示后完成</option><option value="failed">暂未完成</option></select></label><button class="button primary" data-wb="complete" disabled>${icon("check")}保存结果并更新复习</button><button class="text-button" data-wb="record">在力扣完成后直接记录</button></div><p class="form-hint">仅运行用例不会增加完成次数。保存结果后更新进度、复习排期和错因关系。</p></div>
         </section>
         <div class="wb-foot"><div class="wb-bottom"><button class="text-button" data-wb="fresh">从空白开始新一轮练习</button><span>旧草稿和已测试代码会保留版本</span></div><details class="wb-versions"><summary>最近的测试版本（${info.versions.length}）</summary>${info.versions.map(v=>`<button class="text-button" data-wb="version" data-run="${esc(v.run_id)}">${esc(v.created_at.slice(0,19).replace("T"," "))} · ${v.passed_count}/${v.total} 通过</button>`).join("")}</details></div>
       </div>`;
@@ -400,6 +566,7 @@ window.AlgoWorkbench = (() => {
         if(disposed) return;
         revision=info.draft.revision; hints=info.exercise?.revealed_hints || []; agentHints=info.coach.agent_hints || 0; coachHints=(info.draft.coach_hints || 0)+agentHints;
         content.innerHTML=formMarkup();
+        if(info.exercise?.cases?.length) showDebugCase(info.exercise.cases[0]);
         root.querySelector("#wb-result").setAttribute("aria-label","真实完成情况");
         populate(info.draft); showHints();
         const local=cached(id);
@@ -410,7 +577,7 @@ window.AlgoWorkbench = (() => {
         root.querySelector('[data-wb="timer"]').disabled=false;
         coachPanel=AlgoCoach.mount(root.querySelector("#wb-coach"),coachContext(info.coach.transcript));
         updateActions();
-        on(get("code"),"scroll",()=>{root.querySelector("#wb-lines").scrollTop=get("code").scrollTop;const highlight=root.querySelector("#wb-highlight");highlight.scrollTop=get("code").scrollTop;highlight.scrollLeft=get("code").scrollLeft;renderCompletions();});
+        on(get("code"),"scroll",()=>{root.querySelector("#wb-lines").scrollTop=get("code").scrollTop;const highlight=root.querySelector("#wb-highlight");highlight.scrollTop=get("code").scrollTop;highlight.scrollLeft=get("code").scrollLeft;syncDebugLine();renderCompletions();});
         on(get("code"),"keydown",event=>{
           if(event.key==="Tab") {event.preventDefault(); if(!acceptCompletion()){const el=get("code"); el.setRangeText("    ",el.selectionStart,el.selectionEnd,"end"); updateEditor(); edited();} return;}
           if((event.ctrlKey||event.metaKey)&&event.code==="Space") {event.preventDefault(); renderCompletions(true); return;}
@@ -432,8 +599,20 @@ window.AlgoWorkbench = (() => {
     for(const type of ["pointerdown","keydown","wheel","scroll"]) root.addEventListener(type,active,{capture:true,passive:true,signal:abort.signal});
     on(window,"scroll",active);
     on(root,"input",event=>{
+      if(event.target.id==="wb-breakpoints") {
+        syncBreakpointMarks();
+        try {
+          parseBreakpoints(event.target.value);
+          if(/^(断点|最多设置)/.test(root.querySelector("#wb-error").textContent)) message("");
+        } catch { /* 保留当前手填内容，启动时再显示校验错误。 */ }
+        return;
+      }
       if(!event.target.matches("[data-wb-field], [name=wb-error-tag]")) return;
-      if(event.target===get("code")) { updateEditor(); renderCompletions(); }
+      if(event.target===get("code")) {
+        if(debugId || debugPending) {stopDebug();debugState("代码已修改，本次调试已停止。",false,"stopped");}
+        else if(debugErrorLine) {setDebugLine(null);debugState("代码已修改，旧错误位置已清除。",false,"idle");}
+        updateEditor();renderCompletions();
+      }
       if(event.target.matches('[data-wb-field="idea"], [data-wb-field="boundary"], [data-wb-field="code"]') && !savedResult && !conflict) {
         lastInput=performance.now();
         if(since===null) startTimer();
@@ -447,8 +626,19 @@ window.AlgoWorkbench = (() => {
       try {await save(); choose(next); ui.onSelect();} catch(error){event.target.value=id;message(error.message);}
     });
     on(root,"click",async event=>{
+      const gutter=event.target.closest(".wb-gutter-line");
+      if(gutter && root.contains(gutter)) { toggleBreakpoint(Number(gutter.dataset.line)); return; }
       const completion=event.target.closest("[data-completion]");
       if(completion){acceptCompletion(completionItems.indexOf(completion.dataset.completion));return;}
+      const caseTab=event.target.closest("[data-wb-case]");
+      if(caseTab){
+        const index=caseTab.dataset.wbCase;
+        root.querySelectorAll("[data-wb-case]").forEach(tab=>tab.classList.toggle("active",tab===caseTab));
+        root.querySelectorAll("[data-wb-case-panel]").forEach(panel=>panel.classList.toggle("active",panel.dataset.wbCasePanel===index));
+        return;
+      }
+      const debugControl=event.target.closest("[data-wb-debug]");
+      if(debugControl) {if(!debugControl.disabled && info) debugAction(debugControl.dataset.wbDebug);return;}
       const control=event.target.closest("[data-wb]");
       if(!control || control.disabled || !info) return;
       const action=control.dataset.wb;
@@ -457,6 +647,10 @@ window.AlgoWorkbench = (() => {
         const start=lines.slice(0,line-1).reduce((sum,item)=>sum+item.length+1,0);
         code.focus(); code.setSelectionRange(start,Math.min(code.value.length,start+lines[line-1].length));
         code.scrollTop=Math.max(0,(line-1)*23-100); hideCompletions(); return;
+      }
+      if(action==="record") {
+        ui.onRecord?.(id);
+        return;
       }
       if(action==="timer") {
         if(since!==null) {pauseTimer();save().catch(e=>message(e.message));}
@@ -516,11 +710,17 @@ window.AlgoWorkbench = (() => {
       finally {busy=false;if(!disposed){get("code").readOnly=false;updateActions();}}
     });
     on(document,"visibilitychange",()=>{if(document.hidden && info){pauseTimer();save().catch(()=>{});}});
-    on(window,"pagehide",()=>{pauseTimer();cache();});
+    on(root,"keydown",event=>{
+      const gutter=event.target.closest(".wb-gutter-line");
+      if(gutter && (event.key==="Enter" || event.key===" ")) {
+        event.preventDefault();toggleBreakpoint(Number(gutter.dataset.line));
+      }
+    });
+    on(window,"pagehide",()=>{stopDebug(true);pauseTimer();cache();});
     initialize();
     return {
       async beforeLeave(){ if(busy || coachPanel?.busy()){message("请等待当前操作完成。");return false;} pauseTimer();try{await save();return true;}catch(error){message(error.message);return false;} },
-      destroy(){pauseTimer();cache();disposed=true;coachPanel?.destroy();abort.abort();clearTimeout(debounce);if(timer)clearInterval(timer);},
+      destroy(){stopDebug();pauseTimer();cache();disposed=true;coachPanel?.destroy();abort.abort();clearTimeout(debounce);if(timer)clearInterval(timer);},
     };
   }
   return {page,mount,choose};

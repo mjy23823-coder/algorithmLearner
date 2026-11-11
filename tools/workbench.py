@@ -41,7 +41,55 @@ class Workbench:
         self.fixed_today = today
         self.lock = threading.RLock()
         self.runners = threading.BoundedSemaphore(2)
+        self.debug_sessions = {}
         self.agents = agent.AgentRunner(self)
+
+    def start_debug(self, payload):
+        pid = coach.problem_id(payload.get("id", ""))
+        exercise = problem_bank.get_exercise(pid)
+        if not exercise:
+            raise ValueError("这道题没有可调试的本地练习")
+        code = text_field(payload, "code", 48000)
+        breakpoints = payload.get("breakpoints") or []
+        with self.lock:
+            # 已结束但页面未轮询的会话不会继续占用名额。
+            self.debug_sessions = {key: value for key, value in self.debug_sessions.items() if not value.closed}
+            if len(self.debug_sessions) >= 2:
+                raise ValueError("最多同时调试 2 道题，请先停止已有会话")
+            session = code_runner.DebugSession(code, exercise, breakpoints)
+            self.debug_sessions[session.id] = session
+        return {"debug_id": session.id, "events": session.poll()}
+
+    def debug_status(self, debug_id):
+        with self.lock:
+            session = self.debug_sessions.get(debug_id)
+            if not session:
+                raise ValueError("调试会话不存在或已结束")
+            events = session.poll()
+            if any(e.get("event") in ("done", "error") for e in events):
+                session.stop()
+                self.debug_sessions.pop(debug_id, None)
+            return {"events": events}
+
+    def debug_command(self, debug_id, command):
+        with self.lock:
+            session = self.debug_sessions.get(debug_id)
+            if not session or session.closed:
+                raise ValueError("调试会话不存在或已结束")
+            if command not in ("step", "continue", "stop"):
+                raise ValueError("不支持的调试命令")
+            if command == "stop":
+                session.stop()
+                self.debug_sessions.pop(debug_id, None)
+                return {"events": [{"event": "done", "stopped": True}]}
+            session.command(command)
+            return {"events": session.poll()}
+
+    def close_debug(self):
+        with self.lock:
+            for session in self.debug_sessions.values():
+                session.stop()
+            self.debug_sessions.clear()
 
     def agent_hints(self, pid, session_id):
         """智能体在本轮计为提示的次数，记在对话记录里，避免长任务改动草稿版本。"""
@@ -182,7 +230,7 @@ class Workbench:
         draft = self.save_draft(payload, reveal=level)
         return {"draft": draft, "hints": exercise["hints"][:draft["hints_used"]]}
 
-    def coach_chat(self, state, payload):
+    def coach_chat(self, state, payload, on_delta=None):
         """一轮教练对话。提示类帮助计入本轮提示次数，完成时按“提示后完成”记录。"""
         pid = coach.problem_id(payload.get("id", ""))
         mode = payload.get("mode")
@@ -213,8 +261,11 @@ class Workbench:
         if provider != "offline":
             prompt = coach_ai.context_text(info, draft, run, transcript, mock) + f"\n\n用户这次选择「{coach_ai.MODES[mode]}」" + (f"，并说：{question}" if question else "。")
             try:
-                text, assisted = coach_ai.split_assist(coach_ai.ask_model(provider, coach_ai.system_prompt(mode, min(level, 3), mock), prompt, settings["model"],
-                                                                          conn=coach_ai.connection(self.root, provider=provider) if provider in coach_ai.RELAYS else None))
+                system = coach_ai.system_prompt(mode, min(level, 3), mock)
+                conn = coach_ai.connection(self.root, provider=provider) if provider in coach_ai.RELAYS else None
+                raw = (coach_ai.ask_model_stream(provider, system, prompt, settings["model"], on_delta, conn=conn)
+                       if on_delta else coach_ai.ask_model(provider, system, prompt, settings["model"], conn=conn))
+                text, assisted = coach_ai.split_assist(raw)
             except coach_ai.CoachError as exc:
                 notice = f"{exc}；本次改用离线引导。"
         if text is None:

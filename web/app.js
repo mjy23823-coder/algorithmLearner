@@ -31,6 +31,7 @@ const paths = {
   note: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9.5 13h6M9.5 17h4"/>',
   sliders: '<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
   alert: '<path d="M12 4 2.8 20h18.4z"/><path d="M12 10v4M12 17v.01"/>',
+  bug: '<path d="M9 8V5m6 3V5M7 11H3m18 0h-4M7 16H4m16 0h-3M9 19v-3m6 3v-3"/><rect x="7" y="8" width="10" height="10" rx="5"/><path d="M12 3v3"/>',
   user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
   menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
 };
@@ -150,7 +151,7 @@ function taskRow(row) {
   // 排题理由只说明为什么排这道题，不写解法要点。
   const reasons = (row.reasons || []).filter(r => r !== "为你推荐");
   const reason = !row.recorded && reasons.length ? `<p class="task-reason">${esc(reasons.join(" · "))}</p>` : "";
-  return `<div class="task-row"><span class="task-check ${done ? "done" : row.result === "failed" ? "failed" : ""}">${icon(done ? "check" : "clock")}</span><div class="task-main"><div class="task-title"><span class="task-id">LC ${esc(row.id)}</span>${esc(row.title)}</div><div class="task-meta"><span class="badge ${badge}">${kind}</span><span>${esc(row.topic)}</span><span>·</span><span>${esc(result)}</span>${row.recorded && row.next_due ? `<span>· ${esc(row.next_due.slice(5))} 再复习</span>` : ""}</div>${reason}</div><div class="task-action">${row.recorded ? `<button class="text-button" data-action="practice" data-id="${esc(row.id)}">${done ? "已记录" : "更新结果"}${icon(done ? "check" : "edit")}</button>` : `<button class="text-button" data-action="workbench" data-id="${esc(row.id)}">去练习${icon("code")}</button><button class="text-button" data-action="practice" data-id="${esc(row.id)}">记录${icon("arrow")}</button>${recommended ? `<button class="text-button muted-action" data-action="skip-recommend" data-id="${esc(row.id)}">换一题${icon("refresh")}</button>` : ""}`}</div></div>`;
+  return `<div class="task-row"><span class="task-check ${done ? "done" : row.result === "failed" ? "failed" : ""}">${icon(done ? "check" : "clock")}</span><div class="task-main"><div class="task-title"><span class="task-id">LC ${esc(row.id)}</span>${esc(row.title)}</div><div class="task-meta"><span class="badge ${badge}">${kind}</span><span>${esc(row.topic)}</span><span>·</span><span>${esc(result)}</span>${row.recorded && row.next_due ? `<span>· ${esc(row.next_due.slice(5))} 再复习</span>` : ""}</div>${reason}</div><div class="task-action">${row.recorded ? `<button class="text-button" data-action="practice" data-id="${esc(row.id)}">${done ? "已记录" : "更新结果"}${icon(done ? "check" : "edit")}</button>` : `<button class="text-button" data-action="workbench" data-id="${esc(row.id)}">编辑器练习${icon("code")}</button><button class="text-button" data-action="practice" data-id="${esc(row.id)}">记录${icon("arrow")}</button>${recommended ? `<button class="text-button muted-action" data-action="skip-recommend" data-id="${esc(row.id)}">换一题${icon("refresh")}</button>` : ""}`}</div></div>`;
 }
 function planWhy(plan) {
   const weak = plan.weak_errors || [], backlog = plan.backlog || {count:0};
@@ -296,14 +297,15 @@ function render() {
   document.querySelectorAll("[data-view]").forEach(button => { const active = button.dataset.view === view; button.classList.toggle("active",active); if(active) button.setAttribute("aria-current","page"); else button.removeAttribute("aria-current"); });
   $("#breadcrumb").textContent = labels[view];
   $("#review-count").textContent = data.stats.due;
+  $("#main").dataset.page = view;
   $("#main").classList.toggle("graph-page", view === "graph");
   $("#main").classList.toggle("workbench-page", view === "workbench" || view === "mock");
   $("#main").classList.toggle("mock-page", view === "mock");
   $("#main").innerHTML = view === "graph" ? AlgoGraph.page(data, {icon, esc, button}) : view === "workbench" ? AlgoWorkbench.page(data, {icon, esc, button}) : view === "mock" ? AlgoMock.page() : view === "today" ? homePage() : view === "profile" ? AlgoProfile.page(data, profileUi()) : view === "review" ? tablePage(true) : view === "problems" ? tablePage(false) : view === "log" ? logPage() : weeklyPage();
   if (view === "graph") graphController = AlgoGraph.mount($("#main"), data, {icon, esc, button});
   if (view === "profile") profileController = AlgoProfile.mount($("#main"), data, profileUi());
-  if (view === "workbench") workbenchController = AlgoWorkbench.mount($("#main"), data, {icon, esc, button, api, post, toast,
-    onComplete: async (pid, message) => { view = "graph"; AlgoGraph.setRelation("topics"); history.replaceState(null,"","#graph"); await load(); graphController?.focusProblem(pid); window.scrollTo({top:0,behavior:"instant"}); suggestNext(message); }, onSelect: () => render()});
+  if (view === "workbench") workbenchController = AlgoWorkbench.mount($("#main"), data, {icon, esc, button, api, post, streamPost, debugStopOnUnload, toast,
+    onComplete: async (pid, message) => { view = "graph"; AlgoGraph.setRelation("topics"); history.replaceState(null,"","#graph"); await load(); graphController?.focusProblem(pid); window.scrollTo({top:0,behavior:"instant"}); suggestNext(message); }, onRecord: (pid) => openPractice(pid), onSelect: () => render()});
   if (view === "mock") {
     mockController = AlgoMock.mount($("#main"), data, {icon, esc, api, post, toast, notice:mockNotice,
       onComplete: async (text) => { mockNotice = text; logs = null; await load(); }});
@@ -384,6 +386,58 @@ function openWrap() {
 async function post(path, payload, revision = data.revision, requestId = crypto.randomUUID(), timeout = 12000) {
   return api(path,{method:"POST",timeout,headers:{"Content-Type":"application/json","X-Coach-Token":data.token},body:JSON.stringify({...payload,revision,request_id:requestId})});
 }
+function debugStopOnUnload(debugId) {
+  // 页面刷新/关闭时普通异步请求可能被取消；keepalive 允许小型停止指令发完。
+  fetch("/api/workbench/debug/command", {method:"POST", keepalive:true,
+    headers:{"Content-Type":"application/json","X-Coach-Token":data.token},
+    body:JSON.stringify({debug_id:debugId,command:"stop"})}).catch(()=>{});
+}
+async function streamPost(path, payload, revision = data.revision, requestId = crypto.randomUUID(), onDelta = () => {}, timeout = 100000) {
+  const controller = new AbortController(), timer = setTimeout(() => controller.abort(), timeout);
+  let reader;
+  try {
+    const response = await fetch(path, {method:"POST", signal:controller.signal,
+      headers:{"Content-Type":"application/json","X-Coach-Token":data.token},
+      body:JSON.stringify({...payload,revision,request_id:requestId})});
+    if (!response.ok || !response.body) throw new Error(`请求失败（${response.status}）`);
+    reader = response.body.getReader();
+    const decoder = new TextDecoder(), events = [];
+    let buffer = "", received = 0, terminal = false;
+    const consume = block => {
+      const event = block.match(/^event: ([^\n]+)\ndata: ([\s\S]+)$/);
+      if (!event) return;
+      const value = JSON.parse(event[2]);
+      if (event[1] === "delta") onDelta(value.text || "");
+      else {
+        events.push({type:event[1], value});
+        if (event[1] === "done" || event[1] === "error") terminal = true;
+      }
+    };
+    for (;;) {
+      const part = await reader.read();
+      received += part.value?.byteLength || 0;
+      if (received > 1000000) throw new Error("模型回复过长，已停止读取");
+      buffer += decoder.decode(part.value || new Uint8Array(), {stream:!part.done});
+      buffer = buffer.replace(/\r\n/g, "\n");
+      const chunks = buffer.split("\n\n"); buffer = chunks.pop() || "";
+      chunks.forEach(consume);
+      if (terminal || part.done) break;
+    }
+    if (buffer.trim()) consume(buffer.trim());
+    const error = events.find(item => item.type === "error");
+    if (error) throw new Error(error.value.error || "流式请求失败");
+    const done = events.find(item => item.type === "done");
+    if (!done) throw new Error("流式响应未完成");
+    return done.value;
+  } catch (error) {
+    if (error.name === "AbortError") throw new Error("本地服务响应超时，请确认启动窗口仍在运行");
+    throw error;
+  } finally {
+    clearTimeout(timer);
+    if (reader) reader.cancel().catch(() => {});
+  }
+}
+
 async function submitDialog(form, path, payload) {
   const dialog = form.closest("dialog");
   const submit = form.querySelector('[type="submit"]');
@@ -411,6 +465,12 @@ document.addEventListener("click", async event => {
   if (!target || target.disabled) return;
   const action = target.dataset.action;
   if (action === "refresh") { logs = null; await load(); return; }
+  if (action === "model-settings") {
+    if (!data) return;
+    if (view !== "workbench") await navigate("workbench");
+    workbenchController?.openModelSettings();
+    return;
+  }
   if (!data) return;
   if (action === "practice") openPractice(target.dataset.id);
   if (action === "workbench") { AlgoWorkbench.choose(target.dataset.id); await navigate("workbench"); }

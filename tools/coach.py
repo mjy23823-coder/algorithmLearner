@@ -499,14 +499,8 @@ def build_plan(state, today, minutes=120, mentioned=None, events=None):
         picks.append({**row, "kind": "new", "recorded": False, "reasons": reasons})
     shortage = new_left - len(picks)
     extra = []
-    if shortage and calibration and calibration[0]["id"] in completed:
-        pick = calibration[0]
-        extra.append({**pick, "recorded": False, "reasons": [
-            "待学队列不足，用这个名额核对旧题，不计作新题",
-            "历史记录未注明是否独立完成；不看代码重做一次，按实际结果记录",
-        ] + (["属于当前专题"] if related(pick["topic"], current) else [])})
-        shortage -= 1
-    # 待学队列不足时，按学习画像推荐新题直接补进计划；“换一题”过的 7 天内不再推荐。
+    # 待学队列不足时，先用画像推荐补足“2 道新题”名额；校准题不能挤掉新题。
+    # “换一题”过的 7 天内不再推荐。
     try:
         from . import learner
     except ImportError:
@@ -518,6 +512,14 @@ def build_plan(state, today, minutes=120, mentioned=None, events=None):
     suggested = [{**problem(state, r["id"]), "kind": "new", "source": "recommended", "recorded": False,
                   "reasons": ["为你推荐"] + r["reasons"], "tags": r["tags"]} for r in recommended[:max(0, shortage)]]
     shortage -= len(suggested)
+    # 只有新题目录和推荐都无法补足时，才用校准题填补空位；校准不算新题。
+    if shortage and calibration and calibration[0]["id"] in completed:
+        pick = calibration[0]
+        extra.append({**pick, "recorded": False, "reasons": [
+            "待学队列不足，用这个名额核对旧题，不计作新题",
+            "历史记录未注明是否独立完成；不看代码重做一次，按实际结果记录",
+        ] + (["属于当前专题"] if related(pick["topic"], current) else [])})
+        shortage -= 1
     # 正式复习先给需要完整重写的题；已经写对过两次的题放进口述复习，不占正式名额。
     written = [r for r in formal if not oral_eligible(completed[r["id"]])]
     speakable = [r for r in formal if oral_eligible(completed[r["id"]])]
@@ -587,8 +589,8 @@ def pick_mode(minutes):
     if minutes <= 90:
         return "项目较忙日", 1, 1, ""
     if minutes <= 150:
-        return "普通日", 1, 2, ""
-    return "时间充足日", 2, 2, "可再加 1 道 Medium，或做一次限时模拟（/algo-mock）"
+        return "普通日", 2, 2, "默认 2 道旧题复习 + 2 道新题"
+    return "时间充足日", 2, 2, "默认 2 道旧题复习 + 2 道新题；可再加 1 道 Medium，或做一次限时模拟（/algo-mock）"
 
 
 def learner_module():

@@ -1,13 +1,17 @@
 """有时间/内存预算的本地算法测试进程。"""
 import json
 import os
+import queue
 import subprocess
 import sys
 import tempfile
+import threading
 import time
+import uuid
 from pathlib import Path
 
 MEMORY_LIMIT = 384 * 1024 * 1024
+DEBUG_TIMEOUT = 120  # 单次调试最长保留两分钟，包括停在断点等待用户。
 
 
 class WindowsJob:
@@ -54,6 +58,108 @@ class WindowsJob:
         if self.handle:
             self.kernel.CloseHandle(self.handle)
             self.handle = None
+
+
+class DebugSession:
+    def __init__(self, code, exercise, breakpoints, timeout=None):
+        if not isinstance(code, str) or not code.strip() or len(code.encode("utf-8")) > 48000:
+            raise ValueError("请输入代码，长度不能超过 48 KB")
+        if not isinstance(breakpoints, list) or len(breakpoints) > 100 or any(type(n) is not int or not 1 <= n <= 100000 for n in breakpoints):
+            raise ValueError("断点应为不超过 100 个正整数行号")
+        self.id = uuid.uuid4().hex
+        self.events = queue.Queue()
+        self.lock = threading.Lock()
+        self.closed = False
+        self.folder = tempfile.TemporaryDirectory(prefix="algorithm-debug-")
+        self.process = None
+        self.job = None
+        self.timer = None
+        try:
+            worker = Path(__file__).with_name("debug_worker.py")
+            self.process = subprocess.Popen([sys.executable, "-X", "utf8", "-I", "-S", "-B", str(worker)], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                            stderr=subprocess.PIPE, cwd=self.folder.name, env={k: v for k, v in os.environ.items() if k.upper() in ("SYSTEMROOT", "WINDIR", "TEMP", "TMP", "LANG")},
+                                            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0), text=True, encoding="utf-8", errors="replace", bufsize=1)
+            self.job = WindowsJob(self.process)
+            payload = {"code": code, "exercise": exercise, "breakpoints": sorted(set(breakpoints))}
+            self.process.stdin.write(json.dumps(payload, ensure_ascii=False) + "\n")
+            self.process.stdin.flush()
+            threading.Thread(target=self._read, daemon=True).start()
+            self.timer = threading.Timer(DEBUG_TIMEOUT if timeout is None else timeout, self._expire)
+            self.timer.daemon = True
+            self.timer.start()
+        except BaseException:
+            self.stop()
+            raise
+
+    def _expire(self):
+        with self.lock:
+            if self.closed:
+                return
+        # 先入队终态，避免轮询在 stop() 已标记 closed、事件尚未入队时丢失超时原因。
+        self.events.put({"event": "error", "error": "调试超时，进程已终止，请重新开始"})
+        self.stop()
+
+    def _read(self):
+        finished = False
+        try:
+            for line in self.process.stdout:
+                try:
+                    event = json.loads(line)
+                    finished |= event.get("event") in ("done", "error")
+                    self.events.put(event)
+                except ValueError:
+                    pass
+        except (OSError, ValueError):
+            pass  # 停止会话时关闭管道，读取线程随之退出。
+        finally:
+            with self.lock:
+                if not self.closed and not finished:
+                    self.events.put({"event": "error", "error": "调试进程已退出"})
+            self.stop()
+
+    def poll(self):
+        items = []
+        while True:
+            try:
+                items.append(self.events.get_nowait())
+            except queue.Empty:
+                break
+        return items
+
+    def command(self, command):
+        with self.lock:
+            if self.closed:
+                raise ValueError("调试会话已结束")
+            self.process.stdin.write(json.dumps({"command": command}) + "\n")
+            self.process.stdin.flush()
+
+    def stop(self):
+        with self.lock:
+            if self.closed:
+                return
+            self.closed = True
+        if self.timer:
+            self.timer.cancel()
+        try:
+            if self.process:
+                try:
+                    if self.process.poll() is None:
+                        try:
+                            self.process.kill()
+                        except ProcessLookupError:
+                            pass
+                    self.process.wait(timeout=5)
+                finally:
+                    for pipe in (self.process.stdin, self.process.stdout, self.process.stderr):
+                        if pipe:
+                            try:
+                                pipe.close()
+                            except OSError:
+                                pass
+        finally:
+            if self.job:
+                self.job.close()
+            self.folder.cleanup()
 
 
 def run_code(code, exercise, extra_cases=None, timeout=5):

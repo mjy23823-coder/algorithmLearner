@@ -419,6 +419,79 @@ def call_cli(system, prompt, model, timeout=TIMEOUT):
     return str(data["result"]).strip()
 
 
+def stream_http(conn, path, body, on_delta, timeout=TIMEOUT):
+    """读取 OpenAI/Anthropic SSE，并把新增文本片段交给页面。"""
+    if not conn["source"]:
+        raise CoachError("还没有配置模型接口：请在教练设置里填写服务地址和 API Key")
+    version = {"anthropic-version": "2023-06-01"} if conn.get("format", "anthropic") == "anthropic" else {}
+    headers = {"content-type": "application/json", "accept": "text/event-stream", **version, **conn["headers"]}
+    request = Request(conn["base_url"] + path, data=json.dumps({**body, "stream": True}, ensure_ascii=False).encode("utf-8"), headers=headers, method="POST")
+    text = []
+    size = 0
+    complete = False
+    started = time.monotonic()
+    try:
+        with urlopen(request, timeout=timeout) as response:
+            for raw in response:
+                if time.monotonic() - started > timeout:
+                    raise CoachError("模型流式回复超时，请重试")
+                line = raw.decode("utf-8", errors="replace").strip()
+                if not line.startswith("data:"):
+                    continue
+                payload = line[5:].strip()
+                if payload == "[DONE]":
+                    complete = True
+                    break
+                try:
+                    event = json.loads(payload)
+                except ValueError:
+                    continue
+                if event.get("type") == "error" or event.get("error"):
+                    raise CoachError("模型流式回复失败，请重试")
+                delta = ""
+                if conn.get("format") == "openai":
+                    choice = (event.get("choices") or [{}])[0]
+                    delta = (choice.get("delta") or {}).get("content") or ""
+                    finish = choice.get("finish_reason")
+                    if finish and finish != "stop":
+                        raise CoachError("模型回复被截断或改为工具调用，请重试")
+                    complete |= finish == "stop"
+                else:
+                    delta = ((event.get("delta") or {}).get("text") or "")
+                    if not delta and event.get("type") == "content_block_start":
+                        delta = ((event.get("content_block") or {}).get("text") or "")
+                    if event.get("type") == "message_delta" and (event.get("delta") or {}).get("stop_reason") not in (None, "end_turn"):
+                        raise CoachError("模型回复被截断或改为工具调用，请重试")
+                    complete |= event.get("type") == "message_stop"
+                if delta:
+                    size += len(delta)
+                    if size > 128000:
+                        raise CoachError("模型回复过长，已停止读取")
+                    text.append(delta)
+                    on_delta(delta)
+    except HTTPError as exc:
+        raise CoachError(HTTP_ERRORS.get(exc.code, f"模型服务返回 {exc.code}"))
+    except (URLError, TimeoutError, OSError) as exc:
+        raise CoachError(f"连接不到模型服务（{conn['base_url']}）：{getattr(exc, 'reason', exc)}")
+    if not complete:
+        raise CoachError("模型流式回复意外中断，请重试")
+    result = "".join(text).strip()
+    if not result:
+        raise CoachError("模型没有返回文字内容")
+    return result
+
+
+def ask_model_stream(provider, system, prompt, model, on_delta, timeout=TIMEOUT, conn=None):
+    if provider == "openai":
+        return stream_http(conn or connection(provider="openai"), "/v1/chat/completions",
+                           {"model": model, "messages": [{"role": "system", "content": system}, {"role": "user", "content": prompt}]}, on_delta, timeout)
+    if provider == "anthropic":
+        return stream_http(conn or connection(provider="anthropic"), "/v1/messages",
+                           {"model": model, "max_tokens": 16000, "system": system,
+                            "messages": [{"role": "user", "content": prompt}]}, on_delta, timeout)
+    return ask_model(provider, system, prompt, model, timeout, conn)
+
+
 def ask_model(provider, system, prompt, model, timeout=TIMEOUT, conn=None):
     if provider == "openai":
         return call_openai(system, prompt, model, timeout, conn)

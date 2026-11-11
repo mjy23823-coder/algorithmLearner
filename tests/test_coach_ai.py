@@ -1,3 +1,4 @@
+import io
 import json
 import os
 import shutil
@@ -128,6 +129,22 @@ class ModelCoachTests(WorkspaceCase):
         self.assertEqual(reply["provider"], "offline")
         self.assertIn("改用离线引导", reply["notice"])
         self.assertFalse(reply["counted"])
+
+    def test_interrupted_stream_falls_back_without_recording_partial_model_reply(self):
+        self.use_model("openai")
+        def interrupted(provider, system, prompt, model, on_delta, **kwargs):
+            on_delta("半句")
+            raise coach_ai.CoachError("模型流式回复意外中断，请重试")
+        draft = self.store.read_draft("42")
+        with patch.object(coach_ai, "connection", return_value={"source": "test"}), \
+                patch.object(coach_ai, "ask_model_stream", side_effect=interrupted):
+            reply = self.store.coach_chat(self.state, {**self.payload, "draft_revision": draft["revision"],
+                                                       "mode": "explain", "message": ""}, on_delta=lambda _: None)
+        self.assertEqual(reply["provider"], "offline")
+        self.assertIn("离线引导", reply["notice"])
+        self.assertNotIn("半句", reply["reply"])
+        self.assertFalse(reply["counted"])
+        self.assertEqual(reply["transcript"][-1]["text"], reply["reply"])
 
     def test_mock_prompt_hides_problem_identity_and_history(self):
         self.use_model()
@@ -272,6 +289,39 @@ class BackendTests(unittest.TestCase):
         self.assertEqual(coach_ai.split_assist("没有标记"), ("没有标记", None))
 
 
+class StreamBackendTests(unittest.TestCase):
+    def setUp(self):
+        self.conn = {"source": "test", "format": "openai", "headers": {}, "base_url": "http://127.0.0.1"}
+
+    def stream(self, chunks, fmt="openai"):
+        seen = []
+        with patch.object(coach_ai, "urlopen", return_value=io.BytesIO("".join(chunks).encode("utf-8"))):
+            result = coach_ai.stream_http({**self.conn, "format": fmt}, "/v1/messages", {}, seen.append)
+        return result, seen
+
+    def test_openai_and_anthropic_streams_finish_only_with_terminal_event(self):
+        result, seen = self.stream(['data: {"choices":[{"delta":{"content":"你"}}]}\n\n',
+                                    'data: {"choices":[{"delta":{"content":"好"},"finish_reason":"stop"}]}\n\n'])
+        self.assertEqual((result, seen), ("你好", ["你", "好"]))
+        result, seen = self.stream(['data: {"type":"content_block_delta","delta":{"text":"你好"}}\n\n',
+                                    'data: {"type":"message_stop"}\n\n'], "anthropic")
+        self.assertEqual((result, seen), ("你好", ["你好"]))
+
+    def test_truncated_stream_provider_error_and_timeout_do_not_save_partial_answer(self):
+        with self.assertRaisesRegex(coach_ai.CoachError, "意外中断"):
+            self.stream(['data: {"choices":[{"delta":{"content":"半句话"}}]}\n\n'])
+        with self.assertRaisesRegex(coach_ai.CoachError, "回复失败"):
+            self.stream(['data: {"type":"error","error":{"message":"internal"}}\n\n'])
+        with self.assertRaisesRegex(coach_ai.CoachError, "被截断"):
+            self.stream(['data: {"choices":[{"delta":{"content":"半句话"},"finish_reason":"length"}]}\n\n', 'data: [DONE]\n\n'])
+        with self.assertRaisesRegex(coach_ai.CoachError, "被截断"):
+            self.stream(['data: {"type":"message_delta","delta":{"stop_reason":"max_tokens"}}\n\n',
+                         'data: {"type":"message_stop"}\n\n'], "anthropic")
+        with patch.object(coach_ai, "urlopen", side_effect=TimeoutError("read timeout")):
+            with self.assertRaisesRegex(coach_ai.CoachError, "连接不到模型服务"):
+                coach_ai.stream_http(self.conn, "/v1/messages", {}, lambda chunk: None, timeout=.1)
+
+
 class CoachEndpointTests(unittest.TestCase):
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory(prefix="coach-http-")
@@ -296,6 +346,41 @@ class CoachEndpointTests(unittest.TestCase):
             return response.status, json.loads(response.read())
         finally:
             connection.close()
+
+    def test_coach_stream_emits_deltas_and_final_draft_without_changing_progress(self):
+        _, dashboard_data = self.request("/api/dashboard")
+        token = dashboard_data["token"]
+        body = {"id": "42", "code": solution("42"), "extra_cases": [], "draft_revision": None,
+                "mode": "explain", "message": "我来讲思路"}
+        def model_stream(provider, system, prompt, model, on_delta, **kwargs):
+            on_delta("先讲变量。")
+            return "先讲变量。\n[[ASSIST:no]]"
+        settings = {"provider": "openai", "model": "test-model"}
+        with patch.object(coach_ai, "load_settings", return_value=settings), \
+                patch.object(coach_ai, "connection", return_value={"source": "test"}), \
+                patch.object(coach_ai, "ask_model_stream", side_effect=model_stream):
+            connection = HTTPConnection("127.0.0.1", self.server.server_port, timeout=10)
+            try:
+                connection.request("POST", "/api/workbench/coach/stream", json.dumps(body).encode(),
+                                   {"Content-Type": "application/json", "X-Coach-Token": token})
+                response = connection.getresponse()
+                self.assertEqual(response.status, 200)
+                lines = []
+                while True:
+                    line = response.fp.readline().decode("utf-8")
+                    if not line:
+                        break
+                    lines.append(line)
+                    if line.startswith("event: done"):
+                        lines.append(response.fp.readline().decode("utf-8"))
+                        break
+                raw = "".join(lines)
+            finally:
+                connection.close()
+        self.assertIn('event: delta\ndata: {"text": "先讲变量。"}', raw)
+        self.assertIn("event: done", raw)
+        self.assertIn('"reply": "先讲变量。"', raw)
+        self.assertEqual(self.state.read_bytes(), self.original)
 
     def test_coach_and_mock_endpoints_never_change_progress(self):
         _, data = self.request("/api/dashboard")
